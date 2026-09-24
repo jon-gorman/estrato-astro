@@ -1,0 +1,143 @@
+---
+import { Image } from "astro:assets";
+import citrus from "../assets/batch/batch-citrus.png";
+import photo from "../assets/batch/batch-photo.jpg";
+---
+
+<section class="batch" aria-labelledby="batch-title">
+  <div class="batch__copy">
+    <Image class="batch__citrus" src={citrus} alt="" widths={[700, 1100]} sizes="50vw" loading="lazy" />
+    <div class="batch__text">
+      <p class="batch__eyebrow">Make it for the table.</p>
+      <h2 class="batch__title" id="batch-title">Batch Margarita</h2>
+      <p class="batch__sub">Eight drinks. One easy pour.</p>
+      <a class="batch__cta" href="/cocktails/batch-margarita/">
+        View full recipe <span aria-hidden="true">&#8594;</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="batch__art">
+    <Image
+      class="batch__photo"
+      src={photo}
+      alt="A glass pitcher of margarita with lime wheels beside a bottle of Estrato and four salt-rimmed rocks glasses on a sunlit stone table"
+      widths={[700, 1100, 1600]}
+      sizes="(max-width: 860px) 100vw, 50vw"
+      loading="lazy"
+    />
+    <div class="batch__serves">
+      <p class="batch__serveshead">Serves 8</p>
+      <ul>
+        <li>16 oz Estrato</li>
+        <li>8 oz orange liqueur</li>
+        <li>8 oz fresh lime</li>
+      </ul>
+      <p class="batch__how">Stir cold. Pour over ice.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .batch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .batch__copy {
+    position: relative;
+    overflow: clip;
+    isolation: isolate;
+    background: #e0481f;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    padding: clamp(1.75rem, 4vw, 3.5rem) calc(var(--frame-inset) + clamp(1rem, 3vw, 3rem));
+  }
+  .batch__citrus {
+    position: absolute;
+    right: clamp(-5rem, -6vw, -1rem);
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(115%, 760px);
+    height: auto;
+    z-index: -1;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .batch__text { position: relative; }
+
+  .batch__eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: clamp(0.66rem, 0.58rem + 0.25vw, 0.82rem);
+  }
+  .batch__title {
+    margin-top: clamp(0.4rem, 1.2vw, 0.8rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+    font-size: clamp(2.8rem, 1rem + 6.4vw, 6.2rem);
+  }
+  .batch__sub {
+    margin-top: clamp(0.7rem, 1.6vw, 1.1rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 0.72rem + 0.5vw, 1.15rem);
+  }
+  .batch__cta {
+    display: inline-flex;
+    gap: 1.1rem;
+    align-items: center;
+    margin-top: clamp(1.2rem, 3vw, 2rem);
+    padding: 1em 1.8em;
+    border: 1px solid var(--ink);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: clamp(0.64rem, 0.56rem + 0.3vw, 0.8rem);
+    transition: background 0.15s, color 0.15s;
+  }
+  .batch__cta:hover { background: var(--ink); color: #e0481f; }
+
+  .batch__art {
+    position: relative;
+    background: #efe3d2;
+    overflow: clip;
+    aspect-ratio: 1.85 / 1;
+  }
+  .batch__art :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+  .batch__serves {
+    position: absolute;
+    top: clamp(0.9rem, 3.4vw, 3.2rem);
+    right: clamp(0.9rem, 2.2vw, 2.2rem);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: clamp(0.5rem, 0.4rem + 0.35vw, 0.75rem);
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .batch__serves ul { list-style: none; margin-top: 0.6em; }
+  .batch__serveshead { font-weight: 700; }
+  .batch__how { margin-top: 1em; }
+
+  @media (max-width: 860px) {
+    .batch { grid-template-columns: 1fr; }
+    .batch__art { aspect-ratio: 16 / 9; }
+    .batch__copy { min-height: 320px; }
+    .batch__citrus { width: 110%; right: -20%; }
+    .batch__title { font-size: clamp(2.6rem, 14vw, 4.4rem); }
+  }
+</style>

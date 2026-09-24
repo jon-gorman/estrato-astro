@@ -1,0 +1,387 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import photo from "../../assets/batch/batch-photo.jpg";
+import citrus from "../../assets/batch/batch-citrus.png";
+
+const ingredients = [
+  "16 oz Estrato",
+  "8 oz orange liqueur",
+  "8 oz fresh lime juice",
+  "Lime wheels",
+  "Coarse salt",
+  "Ice",
+];
+
+const steps = [
+  { h: "Chill everything", p: "Place the Estrato, orange liqueur, and lime juice in the refrigerator before mixing. Starting cold keeps the batch crisp without unnecessary dilution." },
+  { h: "Build the pitcher", p: "Add the Estrato, orange liqueur, and fresh lime juice to a large pitcher. Stir until everything is thoroughly combined." },
+  { h: "Taste and adjust", p: "Taste before adding ice. If you prefer a slightly softer Margarita, stir in 4–6 ounces of cold water. Add a small amount of agave syrup only if you want additional sweetness." },
+  { h: "Prep the glasses", p: "Run a lime wedge around the rim of each glass and dip it into coarse salt. Fill the glasses with fresh ice." },
+  { h: "Pour and serve", p: "Add several lime wheels and ice to the pitcher immediately before serving. Stir briefly, pour over fresh ice, and serve." },
+];
+
+const variations = [
+  { h: "Spicy", p: "Add sliced jalapeño to the pitcher and let it rest for 10–15 minutes before serving. Taste frequently and remove the peppers when the heat feels right." },
+  { h: "Fruit forward", p: "Add a small amount of fresh grapefruit, blood orange, watermelon, or pineapple juice. Keep the lime present so the drink stays bright." },
+  { h: "A little sweeter", p: "Stir in agave syrup half an ounce at a time. Taste after each addition—the orange liqueur already brings sweetness." },
+  { h: "Top it with bubbles", p: "Finish each glass with a short pour of sparkling mineral water for a lighter, longer drink." },
+];
+
+const needs = [
+  "A large pitcher",
+  "A long bar spoon",
+  "A citrus juicer",
+  "Eight rocks glasses",
+  "A small plate for salt",
+];
+---
+
+<Base title="Batch Margarita — Estrato" description="Eight drinks. One easy pour. A classic Margarita made for the whole table.">
+  <SiteHeader />
+
+  <article class="bm">
+    <div class="bm__wrap">
+      <a class="bm__back" href="/cocktails/">&#8592;&nbsp; All cocktails</a>
+
+      <header class="bm__head">
+        <p class="eyebrow">Make it for the table</p>
+        <h1 class="bm__title">Batch Margarita</h1>
+        <p class="bm__deck">Eight drinks. One easy pour.</p>
+        <p class="bm__intro">
+          The classic Margarita&mdash;made for the whole table. Bright lime, orange
+          liqueur, and Estrato come together in one pitcher, so you can spend less
+          time measuring and more time with everyone else.
+        </p>
+      </header>
+
+      <div class="bm__top">
+        <figure class="bm__fig">
+          <Image src={photo} alt="A glass pitcher of margarita with lime wheels beside a bottle of Estrato and four salt-rimmed rocks glasses on a sunlit stone table" widths={[600, 1000, 1600]} sizes="(max-width: 860px) 92vw, 56vw" />
+        </figure>
+
+        <div class="bm__ing">
+          <p class="bm__serves">Serves 8</p>
+          <ul>
+            {ingredients.map((i) => <li>{i}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <section class="bm__steps" aria-labelledby="bm-make">
+        <h2 class="bm__h" id="bm-make">Make the batch</h2>
+        <ol>
+          {steps.map((s) => (
+            <li>
+              <h3>{s.h}</h3>
+              <p>{s.p}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="bm__ratio" aria-labelledby="bm-ratio">
+        <Image class="bm__ratiobg" src={citrus} alt="" widths={[600, 1000]} sizes="50vw" loading="lazy" />
+        <h2 class="bm__h" id="bm-ratio">The ratio</h2>
+        <p class="bm__big">2 : 1 : 1</p>
+        <ul>
+          <li>2 parts Estrato</li>
+          <li>1 part orange liqueur</li>
+          <li>1 part fresh lime</li>
+        </ul>
+        <p class="bm__scale">Use the same ratio to make two drinks or twenty.</p>
+      </section>
+
+      <section class="bm__mods" aria-labelledby="bm-yours">
+        <h2 class="bm__h" id="bm-yours">Make it yours</h2>
+        <dl>
+          {variations.map((v) => (
+            <div>
+              <dt>{v.h}</dt>
+              <dd>{v.p}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <div class="bm__cols">
+        <section aria-labelledby="bm-notes">
+          <h2 class="bm__h" id="bm-notes">Batch notes</h2>
+          <p>For the freshest flavor, mix the batch no more than a few hours before serving and keep it refrigerated. Wait to add ice until guests arrive so the pitcher does not become overly diluted.</p>
+          <p>Fresh lime matters here. Bottled lime juice will not have the same bright flavor or aroma.</p>
+          <p>For a smaller group, cut every measurement in half. For a larger gathering, keep the 2:1:1 ratio and scale as needed.</p>
+        </section>
+        <section aria-labelledby="bm-need">
+          <h2 class="bm__h" id="bm-need">What you&rsquo;ll need</h2>
+          <ul class="bm__need">
+            {needs.map((n) => <li>{n}</li>)}
+          </ul>
+        </section>
+      </div>
+
+      <section class="bm__cta" aria-labelledby="bm-table">
+        <p class="eyebrow">Made for the table</p>
+        <h2 class="bm__ctatitle" id="bm-table">One pitcher. Eight glasses. No complicated bar setup.</h2>
+        <p class="bm__ctabody">
+          <!-- GUARDRAIL: facts follow the approved estratomx.com set (100% Blue Weber agave, double-distilled in Tequila, Jalisco) -->
+          Estrato is made from 100% Blue Weber agave and double-distilled in
+          Tequila, Jalisco. Its clear, versatile profile makes it an easy starting
+          point for the classic agave cocktails everyone already knows.
+        </p>
+        <h3 class="bm__add">Add Estrato to the table</h3>
+        <a class="bm__shop" href="/#shop">Shop Estrato</a>
+        <p class="bm__fine">Availability, pricing, and shipping eligibility vary by location.</p>
+        <p class="bm__fine">Please enjoy responsibly. For adults of legal drinking age only.</p>
+      </section>
+    </div>
+  </article>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .bm {
+    background: var(--cream);
+    padding: clamp(1.5rem, 4vw, 3rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+  }
+  .bm__wrap { max-width: 1040px; margin-inline: auto; }
+
+  .bm__back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    padding: 0.4rem 0;
+  }
+  .bm__back:hover { color: var(--ink); }
+
+  .bm__head { margin-top: clamp(1rem, 3vw, 2rem); max-width: 60ch; }
+  .bm__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.92;
+    font-size: clamp(3rem, 1rem + 8vw, 6.5rem);
+    margin-top: clamp(0.4rem, 1vw, 0.7rem);
+  }
+  .bm__deck {
+    margin-top: clamp(0.6rem, 1.5vw, 1rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.95rem, 0.8rem + 0.4vw, 1.15rem);
+  }
+  .bm__intro {
+    margin-top: clamp(0.8rem, 2vw, 1.25rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.82rem, 0.74rem + 0.2vw, 0.95rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .bm__top {
+    margin-top: clamp(1.75rem, 5vw, 3rem);
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: clamp(1.25rem, 4vw, 3rem);
+    align-items: start;
+  }
+  .bm__fig { margin: 0; border: 1px solid var(--line); padding: clamp(6px, 0.7vw, 10px); }
+  .bm__fig :global(img) { display: block; width: 100%; height: auto; }
+
+  .bm__serves {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(1.6rem, 1rem + 1.6vw, 2.4rem);
+    line-height: 1;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .bm__ing ul { list-style: none; }
+  .bm__ing li {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: clamp(0.72rem, 0.66rem + 0.15vw, 0.84rem);
+  }
+
+  .bm__h {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: clamp(0.85rem, 0.72rem + 0.4vw, 1.05rem);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bm__steps { margin-top: clamp(2.25rem, 5vw, 3.5rem); }
+  .bm__steps ol { list-style: none; counter-reset: step; }
+  .bm__steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0 1rem;
+    padding: clamp(0.9rem, 2vw, 1.25rem) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+  .bm__steps li::before {
+    content: counter(step);
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--rust);
+  }
+  .bm__steps h3 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.78rem, 0.7rem + 0.2vw, 0.9rem);
+  }
+  .bm__steps p {
+    margin-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.2vw, 0.92rem);
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  .bm__ratio {
+    position: relative;
+    overflow: clip;
+    isolation: isolate;
+    margin-top: clamp(2.25rem, 5vw, 3.5rem);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: #e0481f;
+  }
+  .bm__ratiobg {
+    position: absolute;
+    right: -8%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(70%, 520px);
+    height: auto;
+    z-index: -1;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .bm__ratio .bm__h { border-color: var(--ink); }
+  .bm__big {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 1.4rem + 5vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+  }
+  .bm__ratio ul {
+    list-style: none;
+    margin-top: 0.6rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: clamp(0.72rem, 0.66rem + 0.2vw, 0.86rem);
+    line-height: 1.9;
+  }
+  .bm__scale { margin-top: 0.8rem; font-family: var(--font-mono); font-size: 0.85rem; }
+
+  .bm__mods { margin-top: clamp(2.25rem, 5vw, 3.5rem); }
+  .bm__mods dl { display: grid; grid-template-columns: 1fr 1fr; gap: 0 clamp(1.5rem, 4vw, 3rem); }
+  .bm__mods dl > div { padding: clamp(0.9rem, 2vw, 1.25rem) 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+  .bm__mods dt {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.78rem, 0.7rem + 0.2vw, 0.9rem);
+    color: var(--rust);
+  }
+  .bm__mods dd {
+    margin: 0.35rem 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(0.78rem, 0.72rem + 0.15vw, 0.88rem);
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .bm__cols {
+    margin-top: clamp(2.25rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+  }
+  .bm__cols p {
+    margin-top: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.2vw, 0.92rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .bm__need { list-style: none; margin-top: 0.4rem; }
+  .bm__need li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.2vw, 0.92rem);
+  }
+
+  .bm__cta {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-top: clamp(1.75rem, 4vw, 2.5rem);
+    border-top: 1px solid var(--line);
+  }
+  .bm__ctatitle {
+    margin-top: 0.6rem;
+    max-width: 22ch;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.98;
+    font-size: clamp(1.8rem, 1rem + 3vw, 3.2rem);
+  }
+  .bm__ctabody {
+    margin-top: 0.9rem;
+    max-width: 60ch;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.2vw, 0.92rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .bm__add {
+    margin-top: clamp(1.25rem, 3vw, 1.75rem);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.8rem;
+  }
+  .bm__shop {
+    display: inline-block;
+    margin-top: 0.8rem;
+    padding: 1em 2.2em;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.7rem, 0.6rem + 0.3vw, 0.82rem);
+    transition: background 0.15s ease;
+  }
+  .bm__shop:hover { background: var(--rust-dark); }
+  .bm__fine {
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: color-mix(in srgb, var(--ink) 55%, transparent);
+  }
+
+  @media (max-width: 820px) {
+    .bm__top, .bm__cols, .bm__mods dl { grid-template-columns: 1fr; }
+  }
+</style>
