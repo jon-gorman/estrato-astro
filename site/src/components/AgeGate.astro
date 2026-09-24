@@ -1,0 +1,109 @@
+---
+/* GUARDRAIL: age gate is required. Compliance wording + persistence policy = ⚠ VERIFY.
+   Mockup behaviour: shows on load unless sessionStorage flag is set. */
+import { Image } from "astro:assets";
+import logo from "../assets/brand/logo-ink.png";
+---
+
+<div class="gate" id="age-gate" data-gate>
+  <div class="gate__inner">
+    <Image class="gate__logo" src={logo} alt="Estrato Indigo" widths={[260, 420]} sizes="260px" />
+    <p class="gate__eyebrow">Mexican Agave Spirit</p>
+    <h1 class="gate__q">Are you of legal<br />drinking age?</h1>
+    <div class="gate__actions">
+      <button type="button" data-gate-yes>Yes, enter</button>
+      <a class="gate__no" href="https://www.responsibility.org/" data-gate-no>No</a>
+    </div>
+    <p class="gate__fine">
+      <!-- GUARDRAIL: jurisdiction-specific wording pending counsel; keep this line generic until supplied -->
+      By entering, you agree to our Terms and Privacy Policy. Please enjoy
+      responsibly.
+    </p>
+  </div>
+</div>
+
+<style>
+  .gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  .gate[hidden] { display: none; }
+  .gate__inner { max-width: 34rem; }
+  .gate__logo {
+    width: clamp(190px, 34vw, 260px);
+    height: auto;
+    margin: 0 auto;
+  }
+  .gate__eyebrow {
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+  }
+  .gate__q {
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.98;
+    font-size: clamp(1.8rem, 1rem + 3.4vw, 3.4rem);
+  }
+  .gate__actions {
+    margin-top: clamp(1.5rem, 4vw, 2.25rem);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .gate__actions button,
+  .gate__no {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.68rem, 0.58rem + 0.3vw, 0.82rem);
+    padding: 1em 2.4em;
+  }
+  .gate__actions button {
+    background: var(--rust);
+    color: var(--cream-warm);
+    transition: background 0.15s;
+  }
+  .gate__actions button:hover { background: var(--rust-dark); }
+  .gate__no {
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .gate__fine {
+    margin-top: clamp(1.5rem, 4vw, 2.25rem);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--ink) 45%, transparent);
+  }
+</style>
+
+<script>
+  (() => {
+    const gate = document.querySelector<HTMLElement>("[data-gate]");
+    if (!gate) return;
+    if (location.search.includes("nogate")) { gate.hidden = true; return; } /* QA/mockup bypass */
+    try {
+      if (sessionStorage.getItem("estrato-age-ok") === "1") { gate.hidden = true; return; }
+    } catch {}
+    document.documentElement.style.overflow = "hidden";
+    gate.querySelector("[data-gate-yes]")?.addEventListener("click", () => {
+      try { sessionStorage.setItem("estrato-age-ok", "1"); } catch {}
+      gate.hidden = true;
+      document.documentElement.style.overflow = "";
+    });
+  })();
+</script>

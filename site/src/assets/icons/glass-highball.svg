@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66 150" fill="none"
+     stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+  <!-- rim -->
+  <ellipse cx="33" cy="12" rx="24" ry="5" />
+  <!-- walls (near-vertical, faint taper) -->
+  <path d="M9 12 L13 137" />
+  <path d="M57 12 L53 137" />
+  <!-- base -->
+  <path d="M13 137 Q33 144 53 137" />
+  <path d="M16 130 Q33 135 50 130" />
+  <!-- liquid line -->
+  <path d="M11 31 Q33 37 55 31" />
+</svg>

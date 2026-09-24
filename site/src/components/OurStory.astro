@@ -1,0 +1,105 @@
+---
+import { Image } from "astro:assets";
+import jalisco from "../assets/story/jalisco.jpg";
+/* GUARDRAILS
+   - origin + production facts sourced from the approved estratomx.com fact set
+   - no "ancestral / generations" or a named farm/distillery until documented
+   - photo is an AI-generated placeholder standing in for a real Jalisco shot
+*/
+---
+
+<section class="story" id="story">
+  <div class="story__wrap">
+    <figure class="story__media">
+      <Image src={jalisco} alt="Rows of blue agave on a Jalisco farm, a jimador working among them at golden hour" widths={[560, 900, 1400]} sizes="(max-width: 900px) 92vw, 46vw" />
+      <span class="story__tick" aria-hidden="true">
+        <svg viewBox="0 0 16 16" width="12"><path d="M8 0v16M0 8h16" stroke="currentColor" stroke-width="1" /></svg>
+      </span>
+    </figure>
+
+    <div class="story__body">
+      <p class="eyebrow">This is Estrato</p>
+      <h2 class="story__title">Agave with its<br />own energy.</h2>
+      <p class="story__p">
+        Estrato Indigo is a Mexican agave spirit made from 100% Blue Weber
+        agave, produced without additives, and double-distilled in Tequila,
+        Jalisco. It is approachable, easy to mix, and never too precious for
+        the party.
+      </p>
+      <p class="story__p">
+        A good agave drink should not need a special occasion&mdash;or a
+        complicated recipe. Estrato keeps it bright, social, and ready when
+        you are.
+      </p>
+      <a class="story__link" href="#faq">Why agave spirit? &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    background: var(--cream);
+    padding: clamp(3rem, 7vw, 5.5rem) calc(var(--frame-inset) + 0.5rem);
+  }
+  .story__wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .story__media {
+    position: relative;
+    margin: 0;
+    border: 1px solid var(--line);
+    padding: clamp(6px, 0.7vw, 10px);
+  }
+  .story__media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 5;
+    object-fit: cover;
+  }
+  .story__tick {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    color: var(--ink);
+  }
+  .story__tick svg { overflow: visible; display: block; }
+
+  .story__body { max-width: 44ch; }
+  .story__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.96;
+    font-size: clamp(1.9rem, 1rem + 3vw, 3.4rem);
+    margin-top: clamp(0.6rem, 1.5vw, 1rem);
+  }
+  .story__p {
+    margin-top: clamp(0.9rem, 2vw, 1.3rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.25vw, 0.95rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .story__link {
+    display: inline-block;
+    margin-top: clamp(1rem, 2.5vw, 1.5rem);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.76rem;
+    border-bottom: 2px solid var(--rust);
+    padding-bottom: 0.2rem;
+  }
+
+  @media (max-width: 900px) {
+    .story__wrap { grid-template-columns: 1fr; gap: clamp(1.5rem, 6vw, 2.5rem); }
+    .story__body { max-width: none; }
+  }
+</style>

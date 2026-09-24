@@ -1,0 +1,172 @@
+---
+import { Image } from "astro:assets";
+import box from "../assets/icons/box.svg?raw";
+import tag from "../assets/icons/tag.svg?raw";
+import truck from "../assets/icons/truck.svg?raw";
+import shaker from "../assets/icons/shaker.svg?raw";
+import party from "../assets/trade/party.jpg";
+
+const points = [
+  { icon: box, label: "Restaurant\ninquiries" },
+  { icon: tag, label: "Distribution\nquestions" },
+  { icon: truck, label: "Menu\nsupport" },
+  { icon: shaker, label: "Event & volume\norders" },
+];
+---
+
+<section class="trade" id="restaurants">
+  <Image class="trade__bg" src={party} alt="" widths={[900, 1400, 2000]} sizes="100vw" loading="lazy" />
+  <div class="trade__wrap">
+    <div class="trade__lede">
+      <p class="trade__flourish" aria-hidden="true">&#10022;</p>
+      <h2 class="trade__title">Poured at<br />scale.</h2>
+      <p class="trade__flourish trade__flourish--btm" aria-hidden="true">&#10022;</p>
+      <p class="trade__sub">
+        One agave bottle across the menu — house margaritas, palomas, ranch
+        waters, frozen drinks, and event pours.
+      </p>
+      <a class="trade__cta" href="#contact">Trade inquiry</a>
+      <p class="trade__note">
+        <!-- GUARDRAIL: no margin / pour-cost / yield claims until trade pricing + terms verified -->
+        Tell us your market, concept, and distributor.
+      </p>
+    </div>
+
+    <ul class="trade__grid">
+      <li class="trade__eyebrow">For restaurants</li>
+      {points.map((p) => (
+        <li class="trade__point">
+          <span class="trade__icon" set:html={p.icon} />
+          <span class="trade__label">{p.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .trade {
+    position: relative;
+    overflow: clip;
+    background: var(--night);
+    color: var(--cream);
+    padding: clamp(2.75rem, 6vw, 4.5rem) calc(var(--frame-inset) + 0.5rem);
+  }
+  /* the same trade-proof photo, stretched full-bleed behind the section at
+     very low opacity — just enough to break up the flat black, never enough
+     to compete with the text */
+  .trade__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 32%;
+    opacity: 0.14;
+    pointer-events: none;
+  }
+  .trade__wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1240px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .trade__lede { max-width: 34ch; }
+  .trade__flourish {
+    font-size: 1rem;
+    letter-spacing: 0.5em;
+    color: color-mix(in srgb, var(--cream) 55%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 28%, transparent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.9rem;
+  }
+  .trade__flourish--btm { border-bottom: 0; border-top: 1px solid color-mix(in srgb, var(--cream) 28%, transparent); padding: 0.6rem 0 0; margin: 0.9rem 0 1.25rem; }
+
+  .trade__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.92;
+    font-size: clamp(2.4rem, 1rem + 4.4vw, 4.4rem);
+  }
+  .trade__sub {
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.25vw, 0.95rem);
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--cream) 76%, transparent);
+  }
+  .trade__cta {
+    display: inline-block;
+    margin-top: clamp(1.1rem, 2.6vw, 1.6rem);
+    padding: 0.9em 2.1em;
+    border: 1px solid currentColor;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.66rem, 0.56rem + 0.32vw, 0.8rem);
+    transition: background 0.15s, color 0.15s;
+  }
+  .trade__cta:hover { background: var(--cream); color: var(--night); }
+  .trade__note {
+    margin-top: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: color-mix(in srgb, var(--cream) 55%, transparent);
+  }
+
+  .trade__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-left: 1px solid color-mix(in srgb, var(--cream) 22%, transparent);
+  }
+  .trade__eyebrow {
+    grid-column: 1 / -1;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: clamp(0.66rem, 0.58rem + 0.2vw, 0.8rem);
+    color: color-mix(in srgb, var(--cream) 70%, transparent);
+    padding: 0 0 clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 3vw, 2rem);
+  }
+  .trade__point {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.7rem, 1.8vw, 1.1rem);
+    padding: 0 clamp(0.75rem, 2.2vw, 1.5rem);
+    border-right: 1px solid color-mix(in srgb, var(--cream) 22%, transparent);
+  }
+  .trade__point:last-child { border-right: 0; }
+  .trade__icon { color: var(--cream); }
+  .trade__icon :global(svg) { height: clamp(38px, 4.5vw, 54px); width: auto; }
+  .trade__label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.7rem, 0.62rem + 0.2vw, 0.85rem);
+    line-height: 1.35;
+    white-space: pre-line;
+  }
+
+  @media (max-width: 860px) {
+    .trade__wrap { grid-template-columns: 1fr; gap: clamp(2rem, 8vw, 3rem); align-items: start; }
+    .trade__lede { max-width: none; }
+    .trade__grid { border-left: 0; }
+    .trade__eyebrow { padding-left: 0; }
+    .trade__point:first-of-type { padding-left: 0; }
+  }
+  @media (max-width: 520px) {
+    .trade__grid { grid-template-columns: 1fr 1fr; gap: 1.5rem 0; }
+    .trade__point { border-right: 0; }
+    .trade__point:nth-child(odd) { padding-left: 0; }
+  }
+</style>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 116 130" fill="none"
+     stroke="#2c2a26" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round">
+  <!-- bowl: near-vertical at the rim, flaring into a rounded body, with a small
+       stepped collar where it necks down to the stem -->
+  <path d="M9 6
+           C8 14, 10 22, 18 30
+           C25 37, 33 43, 40 49
+           C45 53, 49 57, 52 62
+           C54 65, 54 68, 53 70
+           C53 72, 55 73, 56 74
+           Q58 75, 60 74
+           C61 73, 63 72, 63 70
+           C62 68, 62 65, 64 62
+           C67 57, 71 53, 76 49
+           C83 43, 91 37, 98 30
+           C106 22, 108 14, 107 6" />
+  <!-- top rim -->
+  <path d="M9 6 L107 6" />
+  <!-- inner rim line -->
+  <path d="M15 20 L101 20" />
+  <!-- stem -->
+  <path d="M55 74 L55 117" />
+  <path d="M61 74 L61 117" />
+  <!-- foot -->
+  <path d="M33 121 Q58 116 83 121 Q58 125 33 121 Z" />
+</svg>

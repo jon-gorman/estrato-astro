@@ -1,0 +1,229 @@
+---
+import { Image, getImage } from "astro:assets";
+import scene from "../assets/hero/alt-scene.png";
+import accent from "../assets/flourish/new.png";
+import center from "../assets/flourish/center.png";
+
+const Plus = `<svg viewBox="0 0 18 18" width="14" aria-hidden="true"><path d="M9 0v18M0 9h18" stroke="currentColor" stroke-width="1"/></svg>`;
+
+// poster frame shown until the hero video can play
+const poster = await getImage({ src: scene, width: 1300, format: "webp" });
+---
+
+<section class="heroalt">
+  <div class="heroalt__frame">
+    <div class="heroalt__inner">
+      <Image class="heroalt__accent" src={accent} alt="" widths={[200, 320]} sizes="150px" loading="eager" />
+
+      <div class="heroalt__copy">
+        <div class="heroalt__lede">
+          <Image class="heroalt__centermark" src={center} alt="" widths={[240, 380]} sizes="150px" loading="eager" />
+          <p class="heroalt__eyebrowrow">
+            <span class="eyebrow">Estrato Indigo</span>
+            <span class="heroalt__rule" aria-hidden="true"></span>
+            <span class="heroalt__plus" set:html={Plus} />
+          </p>
+          <h1 class="heroalt__title">Big Agave<br />Energy.</h1>
+          <p class="heroalt__sub">A bright Mexican agave spirit made for palomas, ranch waters, margaritas&mdash;and whatever the night brings.</p>
+        </div>
+
+        <div class="heroalt__buy">
+          <p class="heroalt__rulerow" aria-hidden="true">
+            <span class="heroalt__rule"></span>
+            <span class="heroalt__plus" set:html={Plus} />
+          </p>
+          <p class="heroalt__spec">
+            100% Blue Weber Agave &nbsp;&bull;&nbsp; Double-Distilled in Tequila, Jalisco &nbsp;&bull;&nbsp; Additive-Free
+            <br />750 ml
+          </p>
+          <p class="heroalt__price">
+            {/* GUARDRAIL: qualified "From" pending a live Bottle Nexus price feed — see report */}
+            <span class="heroalt__from">From</span> <span class="heroalt__cur">$</span>16.99
+          </p>
+          <a class="heroalt__cta" href="#shop">Shop Estrato</a>
+          <a class="heroalt__find" href="#cocktails">Mix a drink <span aria-hidden="true">&#8594;</span></a>
+        </div>
+      </div>
+
+      <div class="heroalt__art">
+        <video
+          class="heroalt__photo"
+          poster={poster.src}
+          autoplay
+          muted
+          loop
+          playsinline
+          disablepictureinpicture
+          aria-label="A salt-rimmed Estrato margarita and the Estrato bottle on a bar counter at sunset, with friends gathered in the background, drinking and laughing"
+        >
+          <source src="/video/hero-scene.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .heroalt {
+    position: relative;
+    padding: 0 var(--frame-inset) var(--frame-inset);
+  }
+
+  .heroalt__frame {
+    border: 1px solid var(--line);
+    background: var(--cream);
+    overflow: clip;
+  }
+
+  .heroalt__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(320px, 0.56fr) 1fr;
+    min-height: min(58vw, calc(100svh - 90px));
+  }
+
+  .heroalt__copy {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(1.75rem, 4.5vw, 3.25rem) clamp(1.5rem, 4vw, 3rem);
+  }
+
+  /* corner flourish — a grid overlay pinned to column 1's own top-right,
+     so it always lands exactly on the frame divider regardless of viewport */
+  .heroalt__accent {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    width: clamp(140px, 15vw, 230px);
+    height: auto;
+    margin: clamp(0.5rem, 1.4vw, 0.9rem) clamp(0.4rem, 1.2vw, 0.75rem) 0 0;
+    opacity: 0.92;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .heroalt__centermark { display: none; }
+
+  .heroalt__lede {
+    margin-top: clamp(1.5rem, 11vw, 7rem);
+  }
+
+  .heroalt__eyebrowrow {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.6vw, 1rem);
+    padding-right: clamp(120px, 13vw, 190px);
+  }
+  .heroalt__eyebrowrow .eyebrow { flex: none; white-space: nowrap; }
+  .heroalt__rule { flex: 1; min-width: clamp(16px, 3vw, 40px); height: 0; border-top: 1px solid var(--line); }
+  .heroalt__plus { flex: none; color: var(--ink); }
+  .heroalt__plus :global(svg) { display: block; overflow: visible; }
+
+  .heroalt__title {
+    margin-top: clamp(1.5rem, 3.2vw, 2.5rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.004em;
+    line-height: 0.9;
+    color: var(--ink);
+    font-size: clamp(2.8rem, 1rem + 8.6vw, 6.6rem);
+  }
+
+  .heroalt__sub {
+    margin-top: clamp(0.9rem, 2vw, 1.4rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.86rem, 0.76rem + 0.3vw, 1.05rem);
+    color: var(--ink-soft);
+  }
+
+  .heroalt__buy { margin-top: clamp(1.75rem, 5vh, 3rem); }
+  .heroalt__rulerow { display: flex; align-items: center; gap: clamp(0.6rem, 1.6vw, 1rem); }
+
+  .heroalt__spec {
+    margin-top: clamp(0.7rem, 1.6vw, 1rem);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    font-size: clamp(0.62rem, 0.56rem + 0.2vw, 0.76rem);
+    color: var(--ink-soft);
+  }
+
+  .heroalt__price {
+    margin-top: clamp(0.6rem, 1.6vw, 1rem);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--rust);
+    font-size: clamp(1.9rem, 1rem + 3vw, 3.1rem);
+    letter-spacing: 0.01em;
+  }
+  .heroalt__cur { font-size: 0.62em; vertical-align: 0.14em; margin-right: 0.05em; }
+  .heroalt__from {
+    font-size: 0.36em;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-soft);
+    vertical-align: 0.3em;
+    margin-right: 0.15em;
+  }
+
+  .heroalt__cta {
+    display: block;
+    margin-top: clamp(0.9rem, 2vw, 1.25rem);
+    padding: 1.05em 1.5em;
+    text-align: center;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.74rem, 0.64rem + 0.3vw, 0.88rem);
+    transition: background 0.15s ease;
+  }
+  .heroalt__cta:hover { background: var(--rust-dark); }
+
+  .heroalt__find {
+    display: inline-block;
+    margin-top: clamp(0.9rem, 2vw, 1.25rem);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.66rem, 0.58rem + 0.2vw, 0.78rem);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    color: var(--ink);
+  }
+
+  .heroalt__art { grid-column: 2; grid-row: 1; position: relative; }
+  .heroalt__art :global(img),
+  .heroalt__art :global(video) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+  }
+
+  @media (max-width: 860px) {
+    .heroalt__inner { grid-template-columns: 1fr; min-height: 0; }
+    .heroalt__art { grid-column: 1; grid-row: 1; aspect-ratio: 4 / 3; }
+    .heroalt__copy { grid-column: 1; grid-row: 2; }
+    .heroalt__copy { padding: clamp(2rem, 7vw, 2.75rem) clamp(1.25rem, 5vw, 1.75rem); }
+    .heroalt__accent { display: none; }
+    .heroalt__centermark {
+      display: block;
+      width: clamp(120px, 34vw, 180px);
+      height: auto;
+      margin: 0 auto clamp(1rem, 4vw, 1.5rem);
+      opacity: 0.9;
+    }
+    .heroalt__lede { margin-top: 0; }
+    .heroalt__eyebrowrow { padding-right: 0; }
+    .heroalt__title { font-size: clamp(2.6rem, 12vw, 4rem); }
+  }
+</style>

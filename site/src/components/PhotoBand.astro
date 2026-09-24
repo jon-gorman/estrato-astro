@@ -1,0 +1,68 @@
+---
+import { Image } from "astro:assets";
+import photo from "../assets/band/spicy-margarita.jpg";
+---
+
+<section class="band" aria-label="A spicy margarita built with Estrato">
+  <Image class="band__photo" src={photo} alt="A salt-rimmed spicy margarita built with Estrato — lime, green chile, ice" widths={[900, 1400, 2000, 2400]} sizes="100vw" loading="lazy" />
+
+  <div class="band__caption">
+    <p class="band__label">Serving suggestion</p>
+    <p class="band__line">Salt the rim.<br />Don't overthink it.</p>
+  </div>
+</section>
+
+<style>
+  .band {
+    position: relative;
+    overflow: clip;
+    isolation: isolate;
+    min-height: min(66vw, 78svh);
+    display: flex;
+    align-items: flex-end;
+  }
+  .band__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 62%;
+    z-index: -2;
+  }
+  /* legibility scrim, bottom-left */
+  .band::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(to top, rgba(20, 12, 8, 0.62) 0%, rgba(20, 12, 8, 0.12) 34%, transparent 60%),
+      linear-gradient(to right, rgba(20, 12, 8, 0.5) 0%, transparent 45%);
+  }
+
+  .band__caption {
+    padding: clamp(1.75rem, 5vw, 4rem) clamp(1.5rem, 5vw, 5rem);
+    color: var(--cream);
+  }
+  .band__label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: clamp(0.66rem, 0.58rem + 0.2vw, 0.78rem);
+    color: color-mix(in srgb, var(--cream) 82%, transparent);
+  }
+  .band__line {
+    margin-top: clamp(0.6rem, 1.5vw, 1rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.98;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.8rem, 0.9rem + 3.4vw, 3.6rem);
+    text-shadow: 0 1px 24px rgba(20, 12, 8, 0.4);
+  }
+
+  @media (max-width: 640px) {
+    .band { min-height: 118svw; }
+  }
+</style>

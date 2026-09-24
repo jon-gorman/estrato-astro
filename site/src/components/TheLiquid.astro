@@ -1,0 +1,143 @@
+---
+import { Image } from "astro:assets";
+import bottle from "../assets/products/bottle-750.png";
+
+/* GUARDRAIL: sourced from the approved estratomx.com fact set. Category
+   wording ("Mexican Agave Spirit") is still subject to final approval for
+   every market — keep that internal, do not render a public flag. ABV has
+   no confirmed label value yet, so that row stays omitted rather than
+   shown as a placeholder ("00% — TBC" must never appear). */
+const spec = [
+  { k: "Category", v: "Mexican Agave Spirit" },
+  { k: "Agave", v: "100% Blue Weber Agave" },
+  { k: "Origin", v: "Tequila, Jalisco, Mexico" },
+  { k: "Process", v: "Traditionally produced" },
+  { k: "Cooking", v: "Baked for 18 hours" },
+  { k: "Distillation", v: "Double-distilled in Tequila, Jalisco" },
+  { k: "Additives", v: "None" },
+  { k: "Size", v: "750 ml" },
+];
+---
+
+<section class="liq" id="product">
+  <div class="liq__wrap">
+    <div class="liq__media">
+      <Image src={bottle} alt="Estrato Indigo, 750 ml" widths={[220, 380, 560]} sizes="(max-width: 900px) 55vw, 24vw" />
+    </div>
+
+    <div class="liq__body">
+      <p class="eyebrow">Your new house pour</p>
+      <h2 class="liq__title">Made to mix. Priced to pour.</h2>
+      <p class="liq__lede">
+        Made from 100% Blue Weber agave, additive-free, and double-distilled
+        in Tequila, Jalisco, Estrato is an easy reach behind the bar or at
+        home. Pour the classics, keep the build simple, and let the night do
+        the rest.
+      </p>
+
+      <dl class="liq__spec">
+        {spec.map((s) => (
+          <div class="liq__row">
+            <dt>{s.k}</dt>
+            <dd>{s.v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div class="liq__ctas">
+        <a class="liq__shop" href="#shop">Shop Estrato</a>
+        <a class="liq__trade" href="#restaurants">For bars &amp; restaurants <span aria-hidden="true">&#8594;</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .liq {
+    background: var(--cream-warm);
+    padding: clamp(3rem, 7vw, 5.5rem) calc(var(--frame-inset) + 0.5rem);
+    border-top: 1px solid var(--line);
+  }
+  .liq__wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 0.92fr 1.08fr;
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .liq__media { display: flex; justify-content: center; }
+  .liq__media :global(img) { max-height: clamp(340px, 47vw, 550px); width: auto; }
+
+  .liq__body { max-width: 46ch; }
+  .liq__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 1.02;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.9rem, 1rem + 3vw, 3.4rem);
+    margin-top: clamp(0.6rem, 1.5vw, 1rem);
+    max-width: 16ch;
+  }
+  .liq__lede {
+    margin-top: clamp(0.9rem, 2vw, 1.4rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.25vw, 0.95rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .liq__spec {
+    margin-top: clamp(1.4rem, 3vw, 2rem);
+    border-top: 1px solid var(--line);
+  }
+  .liq__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 0.66rem + 0.15vw, 0.82rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .liq__row dt { color: var(--ink-soft); }
+  .liq__row dd { font-weight: 700; }
+
+  .liq__ctas {
+    margin-top: clamp(1.5rem, 3.5vw, 2.25rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    flex-wrap: wrap;
+  }
+  .liq__shop {
+    display: inline-block;
+    padding: 1em 2.2em;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.7rem, 0.6rem + 0.3vw, 0.82rem);
+    transition: background 0.15s ease;
+  }
+  .liq__shop:hover { background: var(--rust-dark); }
+  .liq__trade {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.76rem;
+    border-bottom: 2px solid var(--rust);
+    padding-bottom: 0.2rem;
+  }
+
+  @media (max-width: 900px) {
+    .liq__wrap { grid-template-columns: 1fr; gap: clamp(1.5rem, 6vw, 2.5rem); }
+    .liq__media :global(img) { max-height: 360px; }
+    .liq__body { max-width: none; }
+  }
+</style>

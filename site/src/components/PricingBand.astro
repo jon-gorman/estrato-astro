@@ -1,0 +1,113 @@
+---
+import { Image } from "astro:assets";
+import bottle from "../assets/products/bottle-750.png";
+import threePack from "../assets/products/three-pack.png";
+import sixBottles from "../assets/products/twelve-pack.png";
+
+/* GUARDRAIL: multi-bottle prices below are placeholder round numbers, not
+   confirmed pricing — pending a real Bottle Nexus feed, same as the single
+   bottle price. */
+const tiers = [
+  { size: "One Bottle", price: "$16.99", cta: "Shop Estrato", img: bottle },
+  { size: "Three Bottles", price: "$47.99", cta: "Shop Estrato", img: threePack },
+  { size: "Six Bottles", price: "$89.99", cta: "Shop Estrato", img: sixBottles },
+];
+---
+
+<section class="tiers" id="shop">
+  <ul class="tiers__grid">
+    {tiers.map((t) => (
+      <li class="tiers__item">
+        <div class="tiers__media">
+          <Image src={t.img} alt={`Estrato ${t.size}`} widths={[280, 460, 720]} sizes="(max-width: 780px) 70vw, 24vw" />
+        </div>
+        <p class="tiers__size">{t.size}</p>
+        <p class="tiers__price">{t.price}</p>
+        <a class="tiers__cta" href="#shop">{t.cta}</a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .tiers {
+    background: var(--rust);
+    color: var(--cream);
+    padding: clamp(3rem, 7vw, 5.5rem) var(--frame-inset);
+  }
+  .tiers__grid {
+    list-style: none;
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .tiers__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 clamp(1rem, 3.5vw, 3rem);
+  }
+  .tiers__item + .tiers__item {
+    border-left: 1px solid color-mix(in srgb, var(--cream) 45%, transparent);
+  }
+
+  .tiers__media {
+    height: clamp(210px, 27vw, 350px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: clamp(1rem, 2.5vw, 1.75rem);
+  }
+  /* one shared rule for every tier — each image scales to fill the same
+     container height, then only shrinks by width if it would overflow the
+     column. This keeps the three tiers visually consistent regardless of
+     how wide or narrow each product photo naturally is. */
+  .tiers__media :global(img) {
+    height: 100%;
+    width: auto;
+    max-width: 94%;
+    object-fit: contain;
+  }
+
+  .tiers__size {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: clamp(0.8rem, 0.68rem + 0.4vw, 1rem);
+  }
+  .tiers__price {
+    font-family: var(--font-mono);
+    font-size: clamp(1.25rem, 0.95rem + 1.1vw, 1.8rem);
+    letter-spacing: 0.04em;
+    margin-top: clamp(0.35rem, 1vw, 0.6rem);
+  }
+  .tiers__cta {
+    margin-top: clamp(1.1rem, 2.6vw, 1.7rem);
+    padding: 0.9em 2.1em;
+    border: 1px solid currentColor;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.66rem, 0.56rem + 0.32vw, 0.8rem);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .tiers__cta:hover {
+    background: var(--cream);
+    color: var(--rust);
+  }
+
+  @media (max-width: 780px) {
+    .tiers__grid { grid-template-columns: 1fr; gap: clamp(2.25rem, 8vw, 3rem); }
+    .tiers__item { padding-inline: 0; }
+    .tiers__item + .tiers__item {
+      border-left: 0;
+      border-top: 1px solid color-mix(in srgb, var(--cream) 40%, transparent);
+      padding-top: clamp(2.25rem, 8vw, 3rem);
+    }
+    .tiers__media { height: clamp(200px, 55vw, 260px); }
+  }
+</style>

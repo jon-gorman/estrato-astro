@@ -1,0 +1,119 @@
+---
+import RuleHeading from "./RuleHeading.astro";
+
+/* GUARDRAIL: sourced from the approved estratomx.com fact set. Category
+   wording ("agave spirit" vs. the specific legal designation) is still
+   subject to final label approval per market — keep that internal, no
+   public flag. Never imply "same craft/process/liquid as tequila," a named
+   farm, or a named distillery unless documented. No health/hangover claims
+   anywhere near the additive-free fact. */
+const faqs = [
+  {
+    q: "Is Estrato tequila?",
+    a: "No. Estrato is an agave spirit. It is made from 100% Blue Weber agave and double-distilled in Tequila, Jalisco, Mexico, but it is not labeled or sold as tequila.",
+  },
+  {
+    q: "What is Estrato made from?",
+    a: "100% Blue Weber agave.",
+  },
+  {
+    q: "Where is Estrato distilled?",
+    a: "Tequila, Jalisco, Mexico.",
+  },
+  {
+    q: "How is Estrato made?",
+    a: "Fully mature Blue Weber agave is baked for 18 hours, fermented with selected yeast, and double-distilled using a traditional production process.",
+  },
+  {
+    q: "Is Estrato additive-free?",
+    a: "Yes. Estrato is produced without additives.",
+  },
+  {
+    q: "How should I drink it?",
+    a: "Start with a Margarita, Paloma, or Ranch Water — or use Estrato anywhere a bright, mix-ready agave spirit makes sense.",
+  },
+];
+---
+
+<section class="faq" id="faq">
+  <div class="faq__wrap">
+    <RuleHeading text="Agave spirit, clearly." />
+
+    <div class="faq__intro">
+      <h2 class="faq__h">It&rsquo;s not tequila.<br />It&rsquo;s Estrato.</h2>
+      <p class="faq__lede">
+        Estrato is made from 100% Blue Weber agave and double-distilled in
+        Tequila, Jalisco, Mexico. It&rsquo;s additive-free and traditionally
+        produced &mdash; but it&rsquo;s labeled and sold as an agave spirit, not
+        tequila. We&rsquo;re proud of what it is, and we&rsquo;d rather say it clearly
+        than borrow a name that doesn&rsquo;t belong to it.
+      </p>
+    </div>
+
+    <dl class="faq__list">
+      {faqs.map((f) => (
+        <div class="faq__item">
+          <dt>{f.q}</dt>
+          <dd>{f.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .faq {
+    background: var(--cream-warm);
+    padding: clamp(2.75rem, 6vw, 4.75rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+    border-top: 1px solid var(--line);
+  }
+  .faq__wrap { max-width: 1120px; margin-inline: auto; }
+
+  .faq__intro {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(1.25rem, 4vw, 3rem);
+    align-items: start;
+  }
+  .faq__h {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.96;
+    font-size: clamp(1.7rem, 1rem + 2.6vw, 3rem);
+  }
+  .faq__lede {
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.25vw, 0.95rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .faq__list {
+    margin-top: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    padding: clamp(1rem, 2.5vw, 1.5rem) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+  .faq__item dt {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: clamp(0.78rem, 0.7rem + 0.2vw, 0.92rem);
+  }
+  .faq__item dd {
+    margin: 0.6rem 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(0.75rem, 0.68rem + 0.18vw, 0.86rem);
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+
+  @media (max-width: 820px) {
+    .faq__intro { grid-template-columns: 1fr; }
+  }
+</style>

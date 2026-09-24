@@ -1,0 +1,228 @@
+---
+import { Image } from "astro:assets";
+import wordmark from "../assets/brand/wordmark-ink.png";
+import wordmarkCream from "../assets/brand/wordmark-cream.png";
+
+/* Top bar + slide-out menu. Sits above the hero frame, on the cream. */
+const menu = [
+  { label: "Shop", href: "/#shop" },
+  { label: "Cocktails", href: "/cocktails/" },
+  { label: "Our story", href: "/#story" },
+  { label: "Find Estrato", href: "/#shop" },
+  { label: "From agave to glass", href: "/#process" },
+  { label: "Behind the glass", href: "/#bartenders" },
+  { label: "For restaurants", href: "/#restaurants" },
+  { label: "FAQ", href: "/#faq" },
+];
+---
+
+<header class="hdr">
+  <button class="hdr__menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-drawer" data-drawer-open>
+    <svg viewBox="0 0 24 16" width="26" aria-hidden="true">
+      <path d="M0 1h24M0 8h24M0 15h24" stroke="currentColor" stroke-width="1.6" />
+    </svg>
+  </button>
+
+  <a class="hdr__wordmark" href="/" aria-label="Estrato — home">
+    <Image src={wordmark} alt="Estrato" widths={[220, 360]} sizes="150px" loading="eager" />
+  </a>
+
+  <div class="hdr__right">
+    <a class="hdr__buy u-label" href="/#shop">Shop</a>
+    <a class="hdr__bag" href="/#cart" aria-label="Cart">
+      <svg viewBox="0 0 22 24" width="20" aria-hidden="true">
+        <path d="M3 7h16l-1.3 15.5a1 1 0 0 1-1 .9H5.3a1 1 0 0 1-1-.9L3 7Z" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path d="M7.5 9V6a3.5 3.5 0 0 1 7 0v3" fill="none" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </a>
+  </div>
+</header>
+
+<!-- slide-out menu -->
+<div class="drawer" id="site-drawer" data-drawer hidden>
+  <div class="drawer__scrim" data-drawer-close></div>
+  <nav class="drawer__panel" aria-label="Main menu">
+    <div class="drawer__top">
+      <a class="drawer__mark" href="/" data-drawer-close aria-label="Estrato — home">
+        <Image src={wordmarkCream} alt="Estrato" widths={[220, 360]} sizes="150px" />
+      </a>
+      <button class="drawer__x" type="button" aria-label="Close menu" data-drawer-close>
+        <svg viewBox="0 0 20 20" width="20" aria-hidden="true"><path d="M2 2l16 16M18 2L2 18" stroke="currentColor" stroke-width="1.6" /></svg>
+      </button>
+    </div>
+
+    <ul class="drawer__nav">
+      {menu.map((m, i) => (
+        <li>
+          <a href={m.href} data-drawer-close>
+            <span class="drawer__num">{String(i + 1).padStart(2, "0")}</span>
+            <span class="drawer__label">{m.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="drawer__foot">
+      <p class="drawer__price"><span class="drawer__from">From $</span>16.99</p>
+      <a class="drawer__cta" href="/#shop" data-drawer-close>Shop Estrato</a>
+    </div>
+  </nav>
+</div>
+
+<style>
+  .hdr {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: clamp(0.9rem, 2vw, 1.5rem) clamp(1rem, 3.2vw, 2.4rem);
+  }
+  .hdr__menu { justify-self: start; color: var(--ink); padding: 4px; }
+  .hdr__menu svg { overflow: visible; }
+
+  .hdr__wordmark { justify-self: center; display: block; }
+  .hdr__wordmark :global(img) {
+    display: block;
+    width: auto;
+    height: clamp(20px, 1rem + 1.4vw, 32px);
+  }
+
+  .hdr__right { justify-self: end; display: flex; align-items: center; gap: clamp(0.9rem, 2vw, 1.6rem); }
+  .hdr__buy { font-size: 0.78rem; }
+  .hdr__bag { color: var(--ink); }
+  @media (max-width: 620px) { .hdr__buy { display: none; } }
+
+  /* ---- drawer ---- */
+  .drawer { position: fixed; inset: 0; z-index: 90; }
+  .drawer[hidden] { display: none; }
+
+  .drawer__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 10, 7, 0.5);
+    opacity: 0;
+    transition: opacity 0.28s ease;
+  }
+  .drawer.is-open .drawer__scrim { opacity: 1; }
+
+  .drawer__panel {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: min(88vw, 400px);
+    background: var(--ink);
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+  }
+  .drawer.is-open .drawer__panel { transform: translateX(0); }
+
+  .drawer__top { display: flex; align-items: center; justify-content: space-between; }
+  .drawer__mark { display: block; }
+  .drawer__mark :global(img) { display: block; width: auto; height: clamp(22px, 3vw, 30px); }
+  .drawer__x { color: var(--cream); padding: 6px; }
+  .drawer__x svg { overflow: visible; }
+
+  .drawer__nav {
+    list-style: none;
+    margin: clamp(1.75rem, 6vw, 3rem) 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .drawer__nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: clamp(0.55rem, 2vw, 0.85rem) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+  }
+  .drawer__num {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--cream) 45%, transparent);
+  }
+  .drawer__label {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    font-size: clamp(1.3rem, 1rem + 2.2vw, 1.85rem);
+    transition: color 0.15s ease;
+  }
+  .drawer__nav a:hover .drawer__label { color: color-mix(in srgb, var(--marigold, #e7a928) 80%, var(--cream)); }
+
+  .drawer__foot {
+    margin-top: clamp(1.5rem, 5vw, 2.5rem);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .drawer__price { font-family: var(--font-mono); font-weight: 700; color: var(--cream); font-size: 1.4rem; }
+  .drawer__price span { font-size: 0.66em; vertical-align: 0.12em; }
+  .drawer__cta {
+    flex: 1;
+    text-align: center;
+    min-width: 9rem;
+    padding: 1em 1.5em;
+    background: var(--rust);
+    color: var(--cream);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.74rem;
+    transition: background 0.15s ease;
+  }
+  .drawer__cta:hover { background: var(--rust-dark); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .drawer__scrim, .drawer__panel { transition: none; }
+  }
+</style>
+
+<script>
+  (() => {
+    const drawer = document.querySelector<HTMLElement>("[data-drawer]");
+    const openBtn = document.querySelector<HTMLElement>("[data-drawer-open]");
+    if (!drawer || !openBtn) return;
+    const root = document.documentElement;
+    let lastFocus: HTMLElement | null = null;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    const open = () => {
+      lastFocus = document.activeElement as HTMLElement;
+      drawer.hidden = false;
+      requestAnimationFrame(() => drawer.classList.add("is-open"));
+      root.style.overflow = "hidden";
+      openBtn.setAttribute("aria-expanded", "true");
+      drawer.querySelector<HTMLElement>(".drawer__x")?.focus();
+      document.addEventListener("keydown", onKey);
+    };
+    const close = () => {
+      drawer.classList.remove("is-open");
+      root.style.overflow = "";
+      openBtn.setAttribute("aria-expanded", "false");
+      document.removeEventListener("keydown", onKey);
+      const done = () => {
+        drawer.hidden = true;
+        drawer.removeEventListener("transitionend", done);
+      };
+      drawer.addEventListener("transitionend", done);
+      lastFocus?.focus();
+    };
+
+    openBtn.addEventListener("click", open);
+    drawer
+      .querySelectorAll("[data-drawer-close]")
+      .forEach((el) => el.addEventListener("click", close));
+  })();
+</script>

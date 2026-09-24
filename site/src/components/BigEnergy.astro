@@ -1,0 +1,162 @@
+---
+import { Image } from "astro:assets";
+import agave from "../assets/process/agave.png";
+import dinner from "../assets/party/dinner-table.png";
+
+const Plus = `<svg viewBox="0 0 18 18" width="14" aria-hidden="true"><path d="M9 0v18M0 9h18" stroke="currentColor" stroke-width="1"/></svg>`;
+---
+
+<section class="party">
+  <div class="party__frame">
+    <div class="party__inner">
+      <div class="party__copy">
+        <div class="party__lede">
+          <p class="party__eyebrow">
+            <span>Pour for the people</span>
+            <span class="party__rule" aria-hidden="true"></span>
+          </p>
+          <h2 class="party__title">Good drinks.<br />Loud friends.<br />No ceremony.</h2>
+          <p class="party__sub">
+            Estrato is made for full tables, crowded bars, backyard speakers, and
+            stay-a-while energy. Easy to mix. Easy to share. Never too precious
+            for the party.
+          </p>
+          <a class="party__cta" href="#shop">
+            Find Estrato <span class="party__arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        </div>
+
+        <div class="party__mark">
+          <Image class="party__agave" src={agave} alt="" widths={[160, 260]} sizes="120px" loading="lazy" />
+          <span class="party__markline" aria-hidden="true"></span>
+          <span class="party__plus" set:html={Plus} />
+        </div>
+      </div>
+
+      <div class="party__art">
+        <Image
+          class="party__photo"
+          src={dinner}
+          alt="Friends sharing Estrato margaritas around a rooftop dinner table at golden hour"
+          widths={[560, 900, 1300, 1700]}
+          sizes="(max-width: 860px) 100vw, 60vw"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .party {
+    position: relative;
+    padding: 0 var(--frame-inset) var(--frame-inset);
+  }
+
+  .party__frame {
+    border: 1px solid var(--line);
+    background: var(--cream);
+    overflow: clip;
+  }
+
+  .party__inner {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.62fr) 1fr;
+    min-height: clamp(440px, 44vw, 620px);
+  }
+
+  .party__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(1.75rem, 4vw, 3rem) clamp(1.5rem, 3.5vw, 3rem);
+  }
+
+  .party__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.66rem, 0.58rem + 0.2vw, 0.8rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .party__rule { flex: 1; height: 0; border-top: 1px solid var(--line); }
+
+  .party__title {
+    margin-top: clamp(0.5rem, 1.5vw, 0.9rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.92;
+    letter-spacing: 0.002em;
+    color: var(--ink);
+    font-size: clamp(2.4rem, 1.1rem + 5.4vw, 4.6rem);
+  }
+
+  .party__sub {
+    margin-top: clamp(1.1rem, 2.8vw, 1.6rem);
+    padding-top: clamp(1.1rem, 2.8vw, 1.6rem);
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    font-size: clamp(0.78rem, 0.7rem + 0.25vw, 0.92rem);
+    color: var(--ink-soft);
+  }
+
+  .party__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: clamp(1.5rem, 3.5vw, 2.25rem);
+    padding: 1.05em 1.6em;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: clamp(0.72rem, 0.62rem + 0.3vw, 0.85rem);
+    transition: background 0.15s ease;
+  }
+  .party__cta:hover { background: var(--rust-dark); }
+  .party__arrow { font-size: 1.1em; }
+
+  .party__mark {
+    margin-top: clamp(2rem, 6vw, 3.5rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+  }
+  .party__agave {
+    flex: none;
+    width: clamp(84px, 9vw, 128px);
+    height: auto;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    object-position: 50% 12%;
+    opacity: 0.92;
+  }
+  .party__markline { flex: 1; height: 0; border-top: 1px solid var(--line); }
+  .party__plus { flex: none; color: var(--ink); }
+  .party__plus :global(svg) { display: block; overflow: visible; }
+
+  .party__art { position: relative; }
+  .party__art :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+  }
+
+  @media (max-width: 860px) {
+    .party__inner { grid-template-columns: 1fr; min-height: 0; }
+    .party__art { aspect-ratio: 4 / 3; }
+    .party__copy { padding: clamp(2rem, 7vw, 2.75rem) clamp(1.25rem, 5vw, 1.75rem); }
+    .party__mark { margin-top: clamp(1.75rem, 8vw, 2.5rem); }
+  }
+</style>

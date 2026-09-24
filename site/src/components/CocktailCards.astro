@@ -1,0 +1,143 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import RuleHeading from "./RuleHeading.astro";
+
+const drinks = (await getCollection("cocktails", (d) => d.data.tasted))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+---
+
+<section class="cx" id="cocktails-full">
+  <div class="cx__wrap">
+    <RuleHeading text="Cocktails" />
+    <h2 class="cx__title">Pick your pour.</h2>
+    <p class="cx__lede">Full recipes for whatever the night calls for.</p>
+
+    <ul class="cx__grid">
+      {drinks.map((d) => (
+        <li>
+          <a class="cx__card" href={`/cocktails/${d.id}/`}>
+            <div class="cx__media">
+              <Image src={d.data.image} alt={`Estrato ${d.data.name} — ${d.data.blurb}`} widths={[360, 560, 760]} sizes="(max-width: 860px) 90vw, 30vw" />
+            </div>
+            <div class="cx__foot">
+              <h3 class="cx__name">{d.data.name}</h3>
+              <span class="cx__rule" aria-hidden="true"></span>
+              <p class="cx__blurb">{d.data.blurb}</p>
+              <span class="cx__link">View full recipe <span aria-hidden="true">&#8594;</span></span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <a class="cx__all" href="/cocktails/">All cocktails &#8594;</a>
+  </div>
+</section>
+
+<style>
+  .cx {
+    background: var(--cream);
+    padding: clamp(2.75rem, 6vw, 4.75rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+  }
+  .cx__wrap { max-width: 1240px; margin-inline: auto; }
+
+  .cx__title {
+    margin-top: clamp(0.6rem, 1.5vw, 1rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.96;
+    font-size: clamp(1.9rem, 1rem + 3vw, 3.4rem);
+  }
+  .cx__lede {
+    margin-top: clamp(0.75rem, 1.8vw, 1.1rem);
+    max-width: 52ch;
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 0.75rem + 0.3vw, 1rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .cx__grid {
+    list-style: none;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+  .cx__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--line);
+    padding: clamp(0.9rem, 2vw, 1.5rem);
+    transition: background 0.15s ease;
+  }
+  .cx__card:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+
+  .cx__media {
+    height: clamp(150px, 19vw, 230px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cx__media :global(img) {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .cx__foot {
+    margin-top: clamp(0.75rem, 2vw, 1.25rem);
+  }
+  .cx__name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.85rem, 0.72rem + 0.35vw, 1rem);
+  }
+  .cx__rule {
+    display: block;
+    width: 34px;
+    height: 2px;
+    background: var(--rust);
+    margin: 0.6rem 0;
+  }
+  .cx__blurb {
+    font-family: var(--font-mono);
+    font-size: clamp(0.7rem, 0.63rem + 0.15vw, 0.8rem);
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .cx__link {
+    display: inline-block;
+    margin-top: clamp(0.7rem, 1.6vw, 1rem);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.7rem;
+    border-bottom: 2px solid var(--rust);
+    padding-bottom: 0.2rem;
+  }
+
+  .cx__all {
+    display: inline-block;
+    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.78rem;
+    border-bottom: 2px solid var(--rust);
+    padding-bottom: 0.25rem;
+  }
+
+  @media (max-width: 860px) {
+    .cx__grid { grid-template-columns: 1fr; max-width: 440px; margin-inline: auto; }
+  }
+</style>

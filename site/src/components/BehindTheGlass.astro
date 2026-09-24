@@ -1,0 +1,118 @@
+---
+import { Image } from "astro:assets";
+import RuleHeading from "./RuleHeading.astro";
+import pour from "../assets/people/pour.png";
+import stir from "../assets/people/stir.png";
+import serve from "../assets/people/serve.png";
+
+const frames = [
+  { step: "Pour", img: pour, alt: "Bartender measuring Estrato from a jigger" },
+  { step: "Stir", img: stir, alt: "Bartender stirring a cocktail" },
+  { step: "Serve", img: serve, alt: "Bartender presenting a finished cocktail" },
+];
+---
+
+<section class="btg" id="bartenders">
+  <div class="btg__wrap">
+    <RuleHeading text="Behind the glass." dark />
+
+    <div class="btg__intro">
+      <h2 class="btg__headline">Built for<br />the bar.</h2>
+      <p class="btg__body">
+        A bottle earns its place behind the bar by working as hard as the
+        people pouring it. Estrato keeps the builds familiar and the service
+        moving.
+      </p>
+    </div>
+
+    <ol class="btg__seq">
+      {frames.map((f) => (
+        <li class="btg__frame">
+          <span class="btg__tick" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="12"><path d="M8 0v16M0 8h16" stroke="currentColor" stroke-width="1" /></svg>
+          </span>
+          <figure>
+            <Image src={f.img} alt={f.alt} widths={[360, 560, 900]} sizes="(max-width: 860px) 90vw, 30vw" />
+            <figcaption>{f.step}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .btg {
+    background: var(--ink);
+    color: var(--cream);
+    padding: clamp(3rem, 7vw, 5.5rem) calc(var(--frame-inset) + 0.5rem) clamp(3.25rem, 7vw, 5.5rem);
+  }
+  .btg__wrap { max-width: 1240px; margin-inline: auto; }
+
+  /* editorial intro */
+  .btg__intro {
+    margin-top: clamp(2rem, 5vw, 3.25rem);
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: end;
+  }
+  .btg__headline {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.92;
+    font-size: clamp(2.4rem, 1rem + 4.6vw, 4.6rem);
+  }
+  .btg__body {
+    font-family: var(--font-mono);
+    font-size: clamp(0.82rem, 0.74rem + 0.25vw, 0.98rem);
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--cream) 78%, transparent);
+    max-width: 42ch;
+  }
+
+  /* sequence */
+  .btg__seq {
+    list-style: none;
+    margin-top: clamp(2.25rem, 6vw, 4rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 3.5vw, 2.75rem);
+  }
+  .btg__frame { position: relative; }
+  .btg__tick {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    z-index: 2;
+    color: var(--cream);
+  }
+  .btg__tick svg { overflow: visible; display: block; }
+
+  .btg__frame figure {
+    margin: 0;
+    border: 1px solid color-mix(in srgb, var(--cream) 32%, transparent);
+    padding: clamp(5px, 0.6vw, 8px);
+  }
+  .btg__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .btg__frame figcaption {
+    margin-top: clamp(0.5rem, 1.2vw, 0.8rem);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: clamp(0.68rem, 0.6rem + 0.2vw, 0.8rem);
+  }
+
+  @media (max-width: 860px) {
+    .btg__intro { grid-template-columns: 1fr; gap: clamp(1rem, 4vw, 1.5rem); align-items: start; }
+    .btg__seq { grid-template-columns: 1fr; gap: clamp(1.75rem, 7vw, 2.5rem); max-width: 460px; margin-inline: auto; }
+  }
+</style>

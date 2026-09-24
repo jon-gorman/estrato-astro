@@ -1,0 +1,54 @@
+@import "@fontsource/anton/400.css";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+
+/* ---- design tokens ---------------------------------------------------- */
+:root {
+  --cream:        #f1e7d8;
+  --cream-warm:   #f4ecdd;
+  --ink:          #171310;
+  --ink-soft:     #4b443c;
+  --rust:         #a63b22;
+  --rust-dark:    #8f3019;
+  --night:        #161616;
+  --engrave:      #3c4a3f;
+  --line:         #171310;
+
+  --font-display: "Anton", "Oswald", Impact, sans-serif;
+  --font-mono:    "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --frame-inset:  clamp(10px, 1.1vw, 18px);
+  --shell:        min(1440px, 100%);
+  --gutter:       clamp(1.25rem, 4vw, 4rem);
+}
+
+/* ---- reset ---------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: clamp(0.82rem, 0.78rem + 0.2vw, 0.95rem);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, picture, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+h1, h2, h3 { font-weight: 400; line-height: 0.98; }
+
+/* ---- shared type helpers ------------------------------------------- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 0.62rem + 0.3vw, 0.9rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.u-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}

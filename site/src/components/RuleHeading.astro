@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import spot from "../assets/flourish/center.png";
+
+interface Props { text: string; id?: string; ornament?: boolean; dark?: boolean; }
+const { text, id, ornament = true, dark = false } = Astro.props;
+const Tick = `<svg viewBox="0 0 18 18" width="15" aria-hidden="true"><path d="M9 0v18M0 9h18" stroke="currentColor" stroke-width="0.9"/></svg>`;
+---
+
+<div class="rh-wrap">
+  <div class="rh">
+    <span class="rh__tick" set:html={Tick} />
+    <span class="rh__rule"></span>
+    <h2 class="rh__title" id={id}>{text}</h2>
+    <span class="rh__rule"></span>
+    <span class="rh__tick" set:html={Tick} />
+  </div>
+  {ornament && (
+    <Image class={`rh__spot ${dark ? "rh__spot--dark" : ""}`} src={spot} alt="" widths={[240, 380]} sizes="150px" loading="lazy" />
+  )}
+</div>
+
+<style>
+  .rh {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.9rem, 2.5vw, 1.75rem);
+  }
+  .rh__rule { flex: 1; height: 0; border-top: 1px solid currentColor; }
+  .rh__tick { flex: none; }
+  .rh__tick :global(svg) { overflow: visible; display: block; }
+  .rh__title {
+    flex: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: clamp(0.95rem, 0.7rem + 0.9vw, 1.35rem);
+  }
+  /* label-style scroll mark — natural engraving tone; inverted for dark sections */
+  .rh__spot {
+    display: block;
+    width: clamp(90px, 10vw, 150px);
+    height: auto;
+    margin: clamp(0.65rem, 1.5vw, 1rem) auto 0;
+    opacity: 0.9;
+  }
+  .rh__spot--dark { filter: invert(1); }
+</style>
