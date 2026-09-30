@@ -4,13 +4,13 @@ import bottle from "../assets/products/bottle-750.png";
 import threePack from "../assets/products/three-pack.png";
 import sixBottles from "../assets/products/twelve-pack.png";
 
-/* GUARDRAIL: multi-bottle prices below are placeholder round numbers, not
-   confirmed pricing — pending a real Bottle Nexus feed, same as the single
-   bottle price. */
+/* GUARDRAIL: $16.99 per bottle, flat — no bulk discount. Multi-bottle prices
+   are a straight multiple of the single-bottle price, pending a real Bottle
+   Nexus feed for the confirmed number. */
 const tiers = [
   { size: "One Bottle", price: "$16.99", cta: "Shop Estrato", img: bottle },
-  { size: "Three Bottles", price: "$47.99", cta: "Shop Estrato", img: threePack },
-  { size: "Six Bottles", price: "$89.99", cta: "Shop Estrato", img: sixBottles },
+  { size: "Three Bottles", price: "$50.97", cta: "Shop Estrato", img: threePack },
+  { size: "Six Bottles", price: "$101.94", cta: "Shop Estrato", img: sixBottles },
 ];
 ---
 
