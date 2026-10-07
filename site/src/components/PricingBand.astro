@@ -4,13 +4,12 @@ import bottle from "../assets/products/bottle-750.png";
 import threePack from "../assets/products/three-pack.png";
 import sixBottles from "../assets/products/twelve-pack.png";
 
-/* GUARDRAIL: $16.99 per bottle, flat — no bulk discount. Multi-bottle prices
-   are a straight multiple of the single-bottle price, pending a real Bottle
-   Nexus feed for the confirmed number. */
+/* $16.99 per bottle, flat — no bulk discount. Each tier adds the same Bottle
+   Nexus product (7652) at the given quantity. */
 const tiers = [
-  { size: "One Bottle", price: "$16.99", cta: "Shop Estrato", img: bottle },
-  { size: "Three Bottles", price: "$50.97", cta: "Shop Estrato", img: threePack },
-  { size: "Six Bottles", price: "$101.94", cta: "Shop Estrato", img: sixBottles },
+  { size: "One Bottle", price: "$16.99", qty: 1, img: bottle },
+  { size: "Three Bottles", price: "$50.97", qty: 3, img: threePack },
+  { size: "Six Bottles", price: "$101.94", qty: 6, img: sixBottles },
 ];
 ---
 
@@ -23,7 +22,7 @@ const tiers = [
         </div>
         <p class="tiers__size">{t.size}</p>
         <p class="tiers__price">{t.price}</p>
-        <a class="tiers__cta" href="#shop">{t.cta}</a>
+        <button class="tiers__cta" type="button" data-bn-add data-bn-qty={t.qty} aria-label={`Add ${t.size.toLowerCase()} to cart`}>Add to cart</button>
       </li>
     ))}
   </ul>

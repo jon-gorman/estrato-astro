@@ -1,0 +1,77 @@
+---
+import { BN_TOKEN } from "../lib/bottlenexus";
+---
+
+{/* Bottle Nexus "Empty plugin activation" (vendor snippet, unchanged apart from
+     the token coming from src/lib/bottlenexus.ts). It loads the vendor script and
+     mounts the cart sidebar. Any element with class "cart-trigger" opens it. */}
+<script is:inline define:vars={{ token: BN_TOKEN }}>
+  (function () {
+    window.BottleNexus ? BottleNexusInit() : loadScript();
+    function loadScript() {
+      var script = document.createElement("script");
+      script.async = true;
+      script.src = "https://buybutton.bottlenexus.com/buybutton.min.js?v=" + Date.now();
+      (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(script);
+      script.onload = BottleNexusInit;
+    }
+    function BottleNexusInit() {
+      BottleNexus.init().setConfig({
+        token: token,
+      });
+    }
+  })();
+</script>
+
+{/* Our own designed buttons: any button with the data-bn-add attribute and a data-bn-qty count adds that many bottles via the vendor's window.bottlenexus.addToCart, then the cart opens. */}
+<script>
+  import { BN_TOKEN, BN_PRODUCT_ID } from "../lib/bottlenexus";
+
+  type BottleNexusApi = {
+    addToCart: (id: number, token: string, opts?: { quantity?: number }) => Promise<unknown>;
+  };
+
+  const waitForApi = (timeoutMs = 10000) =>
+    new Promise<BottleNexusApi | null>((resolve) => {
+      const started = Date.now();
+      const tick = () => {
+        const api = (window as unknown as { bottlenexus?: BottleNexusApi }).bottlenexus;
+        if (api && typeof api.addToCart === "function") return resolve(api);
+        if (Date.now() - started > timeoutMs) return resolve(null);
+        setTimeout(tick, 150);
+      };
+      tick();
+    });
+
+  document.addEventListener("click", async (event) => {
+    const target = event.target as Element | null;
+    const btn = target?.closest<HTMLButtonElement>("[data-bn-add]");
+    if (!btn || btn.disabled) return;
+    event.preventDefault();
+
+    const quantity = Math.max(1, Number(btn.dataset.bnQty) || 1);
+    const original = btn.textContent;
+    const reset = (delay: number) =>
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.disabled = false;
+        btn.removeAttribute("aria-busy");
+      }, delay);
+
+    btn.disabled = true;
+    btn.setAttribute("aria-busy", "true");
+    btn.textContent = "Adding…";
+
+    try {
+      const api = await waitForApi();
+      if (!api) throw new Error("Bottle Nexus did not load");
+      await api.addToCart(BN_PRODUCT_ID, BN_TOKEN, { quantity });
+      btn.textContent = "Added";
+      reset(1500);
+    } catch (err) {
+      console.error("Add to cart failed", err);
+      btn.textContent = "Try again";
+      reset(2500);
+    }
+  });
+</script>

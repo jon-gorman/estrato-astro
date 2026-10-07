@@ -40,7 +40,7 @@ const poster = await getImage({ src: scene, width: 1300, format: "webp" });
             {/* GUARDRAIL: qualified "From" pending a live Bottle Nexus price feed — see report */}
             <span class="heroalt__from">From</span> <span class="heroalt__cur">$</span>16.99
           </p>
-          <a class="heroalt__cta" href="#shop">Shop Estrato</a>
+          <button class="heroalt__cta" type="button" data-bn-add data-bn-qty="1">Add to cart</button>
           <a class="heroalt__find" href="#cocktails">Mix a drink <span aria-hidden="true">&#8594;</span></a>
         </div>
       </div>
@@ -173,6 +173,7 @@ const poster = await getImage({ src: scene, width: 1300, format: "webp" });
 
   .heroalt__cta {
     display: block;
+    width: 100%;
     margin-top: clamp(0.9rem, 2vw, 1.25rem);
     padding: 1.05em 1.5em;
     text-align: center;
