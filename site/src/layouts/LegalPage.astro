@@ -1,0 +1,62 @@
+---
+import Base from "./Base.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  updated: string;
+}
+const { title, description, updated } = Astro.props;
+---
+
+<Base title={`${title} — Estrato`} description={description}>
+  <SiteHeader />
+  <main class="legal">
+    <div class="legal__wrap">
+      <h1 class="legal__title">{title}</h1>
+      <p class="legal__updated">Last updated {updated}</p>
+      <div class="legal__body"><slot /></div>
+    </div>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .legal {
+    background: var(--cream);
+    padding: clamp(2rem, 5vw, 3.5rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+  }
+  .legal__wrap { max-width: 760px; margin-inline: auto; }
+  .legal__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.92;
+    font-size: clamp(2.4rem, 1rem + 4.4vw, 4.2rem);
+    padding-bottom: clamp(1rem, 2.5vw, 1.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .legal__updated {
+    margin-top: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .legal__body { margin-top: clamp(1.5rem, 4vw, 2.5rem); font-family: var(--font-mono); font-size: clamp(0.82rem, 0.76rem + 0.2vw, 0.92rem); line-height: 1.75; color: var(--ink-soft); }
+  .legal__body :global(h2) {
+    margin: clamp(1.75rem, 4vw, 2.5rem) 0 0.6rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.8rem, 0.72rem + 0.3vw, 0.95rem);
+    color: var(--ink);
+  }
+  .legal__body :global(p) { margin-top: 0.8rem; }
+  .legal__body :global(ul) { margin: 0.8rem 0 0 1.2rem; display: grid; gap: 0.4rem; }
+  .legal__body :global(a) { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+  .legal__body :global(strong) { color: var(--ink); }
+</style>

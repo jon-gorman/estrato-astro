@@ -1,0 +1,238 @@
+---
+import Base from "../layouts/Base.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import RuleHeading from "../components/RuleHeading.astro";
+import { CONTACT_EMAIL } from "../lib/site";
+
+const topics = ["A question about Estrato", "Press or media", "Accessibility feedback", "Privacy request", "Something else"];
+---
+
+<Base title="Contact — Estrato" description="Questions about Estrato? Send us a note and we'll get back to you.">
+  <SiteHeader />
+
+  <section class="ct">
+    <div class="ct__wrap">
+      <RuleHeading text="Get in touch." />
+
+      <div class="ct__grid">
+        <div class="ct__lede">
+          <p class="ct__sub">Questions, press, or just want to say hello? Send us a note and we'll get back to you.</p>
+
+          <dl class="ct__list">
+            <div>
+              <dt>Order help</dt>
+              <dd>
+                Orders are fulfilled by licensed retailers. For tracking, damage, or returns, use the retailer named in
+                your confirmation email. See <a href="/shipping-returns/">Shipping &amp; Returns</a>.
+              </dd>
+            </div>
+            <div>
+              <dt>Carry Estrato</dt>
+              <dd>Distributors, retailers, and on-premise groups: use the <a href="/distributors/">distributor inquiry form</a>.</dd>
+            </div>
+            {CONTACT_EMAIL && (
+              <div>
+                <dt>Email</dt>
+                <dd><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></dd>
+              </div>
+            )}
+          </dl>
+        </div>
+
+        <div class="ct__panel">
+          <form class="ct__form" id="contact-form" novalidate>
+            <div class="ct__row">
+              <div class="ct__field">
+                <label for="c-name">Name</label>
+                <input id="c-name" name="name" type="text" autocomplete="name" required />
+              </div>
+              <div class="ct__field">
+                <label for="c-email">Email</label>
+                <input id="c-email" name="email" type="email" autocomplete="email" required />
+              </div>
+            </div>
+
+            <div class="ct__field">
+              <label for="c-topic">What's this about?</label>
+              <select id="c-topic" name="topic" required>
+                <option value="" disabled selected>Select one</option>
+                {topics.map((t) => <option value={t}>{t}</option>)}
+              </select>
+            </div>
+
+            <div class="ct__field">
+              <label for="c-message">Message</label>
+              <textarea id="c-message" name="message" rows="6" required></textarea>
+            </div>
+
+            <!-- spam trap: real visitors never see or fill this -->
+            <div class="ct__hp" aria-hidden="true">
+              <label for="c-website">Website</label>
+              <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <button class="ct__submit" type="submit">Send message</button>
+            <p class="ct__status" role="status" aria-live="polite" data-status></p>
+          </form>
+
+          <div class="ct__done" data-done hidden>
+            <p class="ct__donehead">Thank you.</p>
+            <p class="ct__donebody">Your message is in. We'll get back to you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .ct {
+    background: var(--cream);
+    padding: clamp(2rem, 5vw, 3.5rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+  }
+  .ct__wrap { max-width: 1240px; margin-inline: auto; }
+  .ct__grid {
+    margin-top: clamp(1.75rem, 4.5vw, 3rem);
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .ct__sub {
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 0.75rem + 0.3vw, 1rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .ct__list { margin-top: clamp(1.25rem, 3vw, 2rem); border-top: 1px solid var(--line); }
+  .ct__list > div { padding: 0.9rem 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent); }
+  .ct__list dt {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.68rem, 0.62rem + 0.2vw, 0.8rem);
+  }
+  .ct__list dd { margin-top: 0.4rem; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.6; color: var(--ink-soft); }
+  .ct__list a { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+
+  .ct__panel { border: 1px solid var(--line); padding: clamp(1.25rem, 3.5vw, 2.5rem); }
+  .ct__form { display: grid; gap: clamp(0.9rem, 2vw, 1.25rem); }
+  .ct__row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.9rem, 2vw, 1.25rem); }
+  .ct__field { display: grid; gap: 0.4rem; min-width: 0; }
+  .ct__field label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.68rem;
+  }
+  .ct__field input,
+  .ct__field select,
+  .ct__field textarea {
+    width: 100%;
+    padding: 0.85em 0.9em;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--cream-warm);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    appearance: none;
+  }
+  .ct__field select {
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 1.15rem) 55%, calc(100% - 0.8rem) 55%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.4rem;
+  }
+  .ct__field textarea { resize: vertical; min-height: 8rem; }
+  .ct__field input:focus,
+  .ct__field select:focus,
+  .ct__field textarea:focus { outline: 2px solid var(--rust); outline-offset: -1px; }
+  .ct__field input:user-invalid,
+  .ct__field select:user-invalid,
+  .ct__field textarea:user-invalid { border-color: var(--rust); }
+
+  .ct__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .ct__submit {
+    justify-self: start;
+    padding: 1.05em 2.6em;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.8rem;
+    transition: background 0.15s ease;
+  }
+  .ct__submit:hover { background: var(--rust-dark); }
+  .ct__submit:disabled { opacity: 0.6; cursor: default; }
+  .ct__status { min-height: 1.2em; font-family: var(--font-mono); font-size: 0.8rem; color: var(--rust); }
+
+  .ct__done[hidden] { display: none; }
+  .ct__donehead {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.95;
+    font-size: clamp(2.2rem, 1.2rem + 3.5vw, 3.6rem);
+  }
+  .ct__donebody { margin-top: 0.9rem; font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
+
+  @media (max-width: 860px) { .ct__grid { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) {
+    .ct__row { grid-template-columns: 1fr; }
+    .ct__submit { justify-self: stretch; text-align: center; }
+  }
+</style>
+
+<script>
+  import { trackEvent } from "../lib/klaviyo";
+
+  const form = document.querySelector<HTMLFormElement>("#contact-form");
+  const done = document.querySelector<HTMLElement>("[data-done]");
+  const status = document.querySelector<HTMLElement>("[data-status]");
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    // honeypot filled in → a bot; pretend success and drop it
+    if (String(data.get("website") ?? "").trim()) {
+      form.hidden = true;
+      if (done) done.hidden = false;
+      return;
+    }
+
+    const get = (k: string) => String(data.get(k) ?? "").trim();
+    const [first, ...rest] = get("name").split(/\s+/);
+    const submit = form.querySelector<HTMLButtonElement>(".ct__submit");
+    if (submit) submit.disabled = true;
+    if (status) status.textContent = "";
+
+    try {
+      await trackEvent(
+        "Contact Form",
+        { email: get("email"), first_name: first, last_name: rest.join(" ") || undefined },
+        { topic: get("topic"), message: get("message"), page: location.href },
+      );
+      form.hidden = true;
+      if (done) {
+        done.hidden = false;
+        done.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    } catch (err) {
+      console.error("Contact form failed", err);
+      if (status) status.textContent = "Something went wrong sending that. Please try again in a moment.";
+      if (submit) submit.disabled = false;
+    }
+  });
+</script>

@@ -12,7 +12,13 @@ const nav = [
   { label: "Distributors", href: "/distributors/" },
   { label: "FAQ", href: "/#faq" },
 ];
-const legal = ["Privacy", "Terms", "Accessibility", "Shipping & Returns", "Contact"];
+const legal = [
+  { label: "Privacy", href: "/privacy/" },
+  { label: "Terms", href: "/terms/" },
+  { label: "Accessibility", href: "/accessibility/" },
+  { label: "Shipping & Returns", href: "/shipping-returns/" },
+  { label: "Contact", href: "/contact/" },
+];
 const year = new Date().getFullYear();
 ---
 
@@ -61,8 +67,11 @@ const year = new Date().getFullYear();
     </p>
 
     <div class="ft__legal">
-      <span>&copy; {year} Estrato. All rights reserved.</span>
-      <span class="ft__legal-links">{legal.map((l) => <a href="#">{l}</a>)}</span>
+      <span>
+        &copy; {year} Estrato. All rights reserved.
+        Designed by <a class="ft__credit" href="https://spirits.marketing" target="_blank" rel="noopener noreferrer">Spirits Marketing</a>.
+      </span>
+      <span class="ft__legal-links">{legal.map((l) => <a href={l.href}>{l.label}</a>)}</span>
     </div>
   </div>
 </footer>
@@ -189,6 +198,15 @@ const year = new Date().getFullYear();
     letter-spacing: 0.08em;
     color: color-mix(in srgb, var(--cream) 50%, transparent);
   }
+  .ft__legal a.ft__credit {
+    text-transform: none;
+    letter-spacing: inherit;
+    font-size: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .ft__legal a.ft__credit:hover { color: var(--cream); }
   .ft__legal-links { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; }
 
   @media (max-width: 820px) {
