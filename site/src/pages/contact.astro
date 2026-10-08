@@ -180,6 +180,8 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
   .ct__submit:disabled { opacity: 0.6; cursor: default; }
   .ct__status { min-height: 1.2em; font-family: var(--font-mono); font-size: 0.8rem; color: var(--rust); }
 
+  /* the grid display above would otherwise override the hidden attribute */
+  .ct__form[hidden] { display: none; }
   .ct__done[hidden] { display: none; }
   .ct__donehead {
     font-family: var(--font-display);

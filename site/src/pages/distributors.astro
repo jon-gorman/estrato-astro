@@ -218,6 +218,8 @@ const types = [
 
   .dist__status { min-height: 1.2em; font-family: var(--font-mono); font-size: 0.8rem; color: var(--rust); }
 
+  /* the grid display above would otherwise override the hidden attribute */
+  .dist__form[hidden] { display: none; }
   .dist__done[hidden] { display: none; }
   .dist__donehead {
     font-family: var(--font-display);
