@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import BottleNexus from "../components/BottleNexus.astro";
+import Klaviyo from "../components/Klaviyo.astro";
 
 interface Props {
   title?: string;
@@ -44,5 +45,6 @@ const ogImage = new URL("/og-image.png", Astro.site).href;
   <body>
     <slot />
     <BottleNexus />
+    <Klaviyo />
   </body>
 </html>

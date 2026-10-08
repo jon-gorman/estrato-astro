@@ -1,0 +1,292 @@
+---
+import Base from "../layouts/Base.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import RuleHeading from "../components/RuleHeading.astro";
+
+const types = [
+  "Distributor / wholesaler",
+  "Retailer or chain",
+  "Restaurant or bar group",
+  "Events or hospitality",
+  "Other",
+];
+---
+
+<Base
+  title="Distributor Inquiries — Estrato"
+  description="Interested in carrying Estrato? Tell us your market, your business, and what you carry, and we'll be in touch."
+>
+  <SiteHeader />
+
+  <section class="dist">
+    <div class="dist__wrap">
+      <RuleHeading text="Carry Estrato." />
+
+      <div class="dist__grid">
+        <div class="dist__lede">
+          <p class="dist__sub">
+            Distributors, retailers, and on-premise groups: tell us who you are,
+            where you operate, and what you carry. We read every inquiry and
+            follow up directly.
+          </p>
+          <ul class="dist__list">
+            <li>Your market and territory</li>
+            <li>Your business and current portfolio</li>
+            <li>How you'd like to work together</li>
+          </ul>
+          <p class="dist__note">Looking for a bottle for yourself? <a href="/#shop">Shop Estrato</a>.</p>
+        </div>
+
+        <div class="dist__panel">
+          <form class="dist__form" id="dist-form" novalidate>
+            <div class="dist__row">
+              <div class="dist__field">
+                <label for="d-first">First name</label>
+                <input id="d-first" name="first_name" type="text" autocomplete="given-name" required />
+              </div>
+              <div class="dist__field">
+                <label for="d-last">Last name</label>
+                <input id="d-last" name="last_name" type="text" autocomplete="family-name" required />
+              </div>
+            </div>
+
+            <div class="dist__row">
+              <div class="dist__field">
+                <label for="d-company">Company</label>
+                <input id="d-company" name="company" type="text" autocomplete="organization" required />
+              </div>
+              <div class="dist__field">
+                <label for="d-role">Title <span class="dist__opt">(optional)</span></label>
+                <input id="d-role" name="role" type="text" autocomplete="organization-title" />
+              </div>
+            </div>
+
+            <div class="dist__row">
+              <div class="dist__field">
+                <label for="d-email">Email</label>
+                <input id="d-email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="dist__field">
+                <label for="d-phone">Phone <span class="dist__opt">(optional)</span></label>
+                <input id="d-phone" name="phone" type="tel" autocomplete="tel" />
+              </div>
+            </div>
+
+            <div class="dist__field">
+              <label for="d-type">Type of business</label>
+              <select id="d-type" name="business_type" required>
+                <option value="" disabled selected>Select one</option>
+                {types.map((t) => <option value={t}>{t}</option>)}
+              </select>
+            </div>
+
+            <div class="dist__field">
+              <label for="d-territory">States or territory you cover</label>
+              <input id="d-territory" name="territory" type="text" placeholder="e.g. Texas, Southern California" required />
+            </div>
+
+            <div class="dist__field">
+              <label for="d-message">Anything else we should know <span class="dist__opt">(optional)</span></label>
+              <textarea id="d-message" name="message" rows="5"></textarea>
+            </div>
+
+            <!-- spam trap: real visitors never see or fill this -->
+            <div class="dist__hp" aria-hidden="true">
+              <label for="d-website">Website</label>
+              <input id="d-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <button class="dist__submit" type="submit">Send inquiry</button>
+            <p class="dist__status" role="status" aria-live="polite" data-status></p>
+          </form>
+
+          <div class="dist__done" data-done hidden>
+            <p class="dist__donehead">Thank you.</p>
+            <p class="dist__donebody">Your inquiry is in. We'll be in touch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .dist {
+    background: var(--cream);
+    padding: clamp(2rem, 5vw, 3.5rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+  }
+  .dist__wrap { max-width: 1240px; margin-inline: auto; }
+
+  .dist__grid {
+    margin-top: clamp(1.75rem, 4.5vw, 3rem);
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .dist__sub {
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 0.75rem + 0.3vw, 1rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .dist__list {
+    list-style: none;
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+    border-top: 1px solid var(--line);
+  }
+  .dist__list li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: clamp(0.68rem, 0.62rem + 0.2vw, 0.8rem);
+  }
+  .dist__note {
+    margin-top: clamp(1.25rem, 3vw, 1.75rem);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .dist__note a { color: var(--ink); text-decoration: underline; text-underline-offset: 0.25em; }
+
+  .dist__panel { border: 1px solid var(--line); padding: clamp(1.25rem, 3.5vw, 2.5rem); }
+  .dist__form { display: grid; gap: clamp(0.9rem, 2vw, 1.25rem); }
+  .dist__row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.9rem, 2vw, 1.25rem); }
+  .dist__field { display: grid; gap: 0.4rem; min-width: 0; }
+  .dist__field label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.68rem;
+  }
+  .dist__opt { font-weight: 400; letter-spacing: 0.06em; color: var(--ink-soft); text-transform: none; }
+
+  .dist__field input,
+  .dist__field select,
+  .dist__field textarea {
+    width: 100%;
+    padding: 0.85em 0.9em;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--cream-warm);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    appearance: none;
+  }
+  .dist__field select {
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 1.15rem) 55%, calc(100% - 0.8rem) 55%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.4rem;
+  }
+  .dist__field textarea { resize: vertical; min-height: 7rem; }
+  .dist__field input:focus,
+  .dist__field select:focus,
+  .dist__field textarea:focus { outline: 2px solid var(--rust); outline-offset: -1px; }
+  .dist__field input:user-invalid,
+  .dist__field select:user-invalid { border-color: var(--rust); }
+
+  .dist__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .dist__submit {
+    justify-self: start;
+    padding: 1.05em 2.6em;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.8rem;
+    transition: background 0.15s ease;
+  }
+  .dist__submit:hover { background: var(--rust-dark); }
+  .dist__submit:disabled { opacity: 0.6; cursor: default; }
+
+  .dist__status { min-height: 1.2em; font-family: var(--font-mono); font-size: 0.8rem; color: var(--rust); }
+
+  .dist__done[hidden] { display: none; }
+  .dist__donehead {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.95;
+    font-size: clamp(2.2rem, 1.2rem + 3.5vw, 3.6rem);
+  }
+  .dist__donebody { margin-top: 0.9rem; font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
+
+  @media (max-width: 860px) {
+    .dist__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .dist__row { grid-template-columns: 1fr; }
+    .dist__submit { justify-self: stretch; text-align: center; }
+  }
+</style>
+
+<script>
+  import { trackEvent } from "../lib/klaviyo";
+
+  const form = document.querySelector<HTMLFormElement>("#dist-form");
+  const done = document.querySelector<HTMLElement>("[data-done]");
+  const status = document.querySelector<HTMLElement>("[data-status]");
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    // honeypot filled in → a bot; pretend success and drop it
+    if (String(data.get("website") ?? "").trim()) {
+      form.hidden = true;
+      if (done) done.hidden = false;
+      return;
+    }
+
+    const get = (k: string) => String(data.get(k) ?? "").trim();
+    const submit = form.querySelector<HTMLButtonElement>(".dist__submit");
+    if (submit) submit.disabled = true;
+    if (status) status.textContent = "";
+
+    try {
+      await trackEvent(
+        "Distributor Inquiry",
+        {
+          email: get("email"),
+          first_name: get("first_name"),
+          last_name: get("last_name"),
+          organization: get("company"),
+          title: get("role") || undefined,
+          properties: { "Lead Type": "Distributor" },
+        },
+        {
+          company: get("company"),
+          role: get("role"),
+          phone: get("phone"),
+          business_type: get("business_type"),
+          territory: get("territory"),
+          message: get("message"),
+          page: location.href,
+        },
+      );
+      form.hidden = true;
+      if (done) {
+        done.hidden = false;
+        done.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    } catch (err) {
+      console.error("Distributor inquiry failed", err);
+      if (status) status.textContent = "Something went wrong sending that. Please try again in a moment.";
+      if (submit) submit.disabled = false;
+    }
+  });
+</script>

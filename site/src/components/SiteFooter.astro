@@ -9,6 +9,7 @@ const nav = [
   { label: "Our story", href: "/#story" },
   { label: "Find Estrato", href: "/#shop" },
   { label: "For restaurants", href: "/#restaurants" },
+  { label: "Distributors", href: "/distributors/" },
   { label: "FAQ", href: "/#faq" },
 ];
 const legal = ["Privacy", "Terms", "Accessibility", "Shipping & Returns", "Contact"];
@@ -39,22 +40,15 @@ const year = new Date().getFullYear();
         {nav.map((n) => <a href={n.href}>{n.label}</a>)}
       </nav>
 
-      <form class="ft__signup" aria-label="Newsletter signup" onsubmit="return false">
+      <div class="ft__signup" role="region" aria-label="Newsletter signup">
         <p class="ft__signuphead">Get on the good list.</p>
         <p class="ft__signupbody">Cocktail ideas, Estrato sightings, and reasons to mix another round.</p>
-        <label for="ft-email">Email address</label>
-        <div class="ft__field">
-          <input id="ft-email" type="email" placeholder="you@email.com" autocomplete="email" />
-          <button type="submit">I&rsquo;m in</button>
-        </div>
-        <p class="ft__consent">
-          By signing up, you agree to receive marketing emails from Estrato.
-          You can unsubscribe at any time.
-        </p>
+        <!-- Klaviyo embedded signup form (renders into this div once klaviyo.js loads) -->
+        <div class="klaviyo-form-UdM8tP"></div>
         <div class="ft__social">
           <a href="https://www.instagram.com/estrato.mx/" target="_blank" rel="noopener noreferrer" aria-label="Estrato on Instagram">Instagram</a>
         </div>
-      </form>
+      </div>
     </div>
 
     <p class="ft__responsible">
@@ -170,50 +164,7 @@ const year = new Date().getFullYear();
     line-height: 1.5;
     color: color-mix(in srgb, var(--cream) 68%, transparent);
   }
-  .ft__signup label {
-    display: block;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.74rem;
-    color: color-mix(in srgb, var(--cream) 78%, transparent);
-    margin: 1.1rem 0 0.7rem;
-  }
-  .ft__field {
-    display: flex;
-    border: 1px solid color-mix(in srgb, var(--cream) 35%, transparent);
-  }
-  .ft__field input {
-    flex: 1;
-    background: none;
-    border: 0;
-    color: var(--cream);
-    font: inherit;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    padding: 0.7em 0.9em;
-  }
-  .ft__field input::placeholder { color: color-mix(in srgb, var(--cream) 45%, transparent); }
-  .ft__field input:focus { outline: 1px solid var(--cream); outline-offset: -1px; }
-  .ft__field button {
-    flex: none;
-    padding: 0 1.2em;
-    font-family: var(--font-mono);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.74rem;
-    color: var(--cream);
-    border-left: 1px solid color-mix(in srgb, var(--cream) 35%, transparent);
-  }
-  .ft__consent {
-    margin-top: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--cream) 50%, transparent);
-  }
-  .ft__social { margin-top: 1rem; display: flex; gap: 1.25rem; }
+  .ft__social { margin-top: 1.25rem; display: flex; gap: 1.25rem; }
 
   .ft__responsible,
   .ft__fulfill {

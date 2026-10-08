@@ -1,0 +1,11 @@
+---
+import { KLAVIYO_PUBLIC_KEY } from "../lib/klaviyo";
+---
+
+{/* Klaviyo onsite script: powers the embedded footer signup form and site
+    tracking. Vendor snippet, unchanged apart from the company ID coming from
+    src/lib/klaviyo.ts. */}
+<script is:inline async src={`https://static.klaviyo.com/onsite/js/${KLAVIYO_PUBLIC_KEY}/klaviyo.js?company_id=${KLAVIYO_PUBLIC_KEY}`}></script>
+<script is:inline>
+  !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();
+</script>
