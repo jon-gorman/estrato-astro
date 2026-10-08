@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import RuleHeading from "../components/RuleHeading.astro";
+import Turnstile from "../components/Turnstile.astro";
 
 const types = [
   "Distributor / wholesaler",
@@ -96,6 +97,8 @@ const types = [
               <label for="d-website">Website</label>
               <input id="d-website" name="website" type="text" tabindex="-1" autocomplete="off" />
             </div>
+
+            <Turnstile />
 
             <button class="dist__submit" type="submit">Send inquiry</button>
             <p class="dist__status" role="status" aria-live="polite" data-status></p>
@@ -235,6 +238,7 @@ const types = [
 
 <script>
   import { trackEvent } from "../lib/klaviyo";
+  import { submitInquiry, inquiryMessage } from "../lib/inquiry";
 
   const form = document.querySelector<HTMLFormElement>("#dist-form");
   const done = document.querySelector<HTMLElement>("[data-done]");
@@ -258,25 +262,27 @@ const types = [
     if (status) status.textContent = "";
 
     try {
-      await trackEvent(
-        "Distributor Inquiry",
-        {
-          email: get("email"),
-          first_name: get("first_name"),
-          last_name: get("last_name"),
-          organization: get("company"),
-          title: get("role") || undefined,
-          properties: { "Lead Type": "Distributor" },
-        },
-        {
-          company: get("company"),
-          role: get("role"),
-          phone: get("phone"),
-          business_type: get("business_type"),
-          territory: get("territory"),
-          message: get("message"),
-          page: location.href,
-        },
+      await submitInquiry("distributor", form, () =>
+        trackEvent(
+          "Distributor Inquiry",
+          {
+            email: get("email"),
+            first_name: get("first_name"),
+            last_name: get("last_name"),
+            organization: get("company"),
+            title: get("role") || undefined,
+            properties: { "Lead Type": "Distributor" },
+          },
+          {
+            company: get("company"),
+            role: get("role"),
+            phone: get("phone"),
+            business_type: get("business_type"),
+            territory: get("territory"),
+            message: get("message"),
+            page: location.href,
+          },
+        ),
       );
       form.hidden = true;
       if (done) {
@@ -285,7 +291,7 @@ const types = [
       }
     } catch (err) {
       console.error("Distributor inquiry failed", err);
-      if (status) status.textContent = "Something went wrong sending that. Please try again in a moment.";
+      if (status) status.textContent = inquiryMessage(err);
       if (submit) submit.disabled = false;
     }
   });

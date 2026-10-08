@@ -1,0 +1,8 @@
+---
+import { TURNSTILE_SITE_KEY } from "../lib/site";
+---
+
+{/* Cloudflare Turnstile spam check. Renders itself into the div and adds a
+    hidden "cf-turnstile-response" field to the surrounding form. */}
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="light" data-appearance="interaction-only"></div>

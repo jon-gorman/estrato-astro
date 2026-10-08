@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import RuleHeading from "../components/RuleHeading.astro";
+import Turnstile from "../components/Turnstile.astro";
 import { CONTACT_EMAIL } from "../lib/site";
 
 const topics = ["A question about Estrato", "Press or media", "Accessibility feedback", "Privacy request", "Something else"];
@@ -71,6 +72,8 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
               <label for="c-website">Website</label>
               <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off" />
             </div>
+
+            <Turnstile />
 
             <button class="ct__submit" type="submit">Send message</button>
             <p class="ct__status" role="status" aria-live="polite" data-status></p>
@@ -195,6 +198,7 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
 
 <script>
   import { trackEvent } from "../lib/klaviyo";
+  import { submitInquiry, inquiryMessage } from "../lib/inquiry";
 
   const form = document.querySelector<HTMLFormElement>("#contact-form");
   const done = document.querySelector<HTMLElement>("[data-done]");
@@ -219,10 +223,12 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
     if (status) status.textContent = "";
 
     try {
-      await trackEvent(
-        "Contact Form",
-        { email: get("email"), first_name: first, last_name: rest.join(" ") || undefined },
-        { topic: get("topic"), message: get("message"), page: location.href },
+      await submitInquiry("contact", form, () =>
+        trackEvent(
+          "Contact Form",
+          { email: get("email"), first_name: first, last_name: rest.join(" ") || undefined },
+          { topic: get("topic"), message: get("message"), page: location.href },
+        ),
       );
       form.hidden = true;
       if (done) {
@@ -231,7 +237,7 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
       }
     } catch (err) {
       console.error("Contact form failed", err);
-      if (status) status.textContent = "Something went wrong sending that. Please try again in a moment.";
+      if (status) status.textContent = inquiryMessage(err);
       if (submit) submit.disabled = false;
     }
   });
