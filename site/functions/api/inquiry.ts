@@ -82,8 +82,12 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   const form = FORMS[String(input.type)];
   if (!form) return json({ ok: false, error: "bad_request" }, 400);
 
-  // honeypot: bots fill the hidden field; pretend success and send nothing
-  if (String(input.website ?? "").trim()) return json({ ok: true });
+  // honeypot: bots fill the hidden field. Reject visibly rather than faking success, so a
+  // real visitor whose autofill filled it is told the message did not go through.
+  if (String(input.leave_blank ?? "").trim()) {
+    console.warn("inquiry: honeypot field was filled");
+    return json({ ok: false, error: "spam" }, 400);
+  }
 
   const values: Record<string, string> = {};
   for (const f of form.fields) {

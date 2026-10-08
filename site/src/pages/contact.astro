@@ -69,8 +69,8 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
 
             <!-- spam trap: real visitors never see or fill this -->
             <div class="ct__hp" aria-hidden="true">
-              <label for="c-website">Website</label>
-              <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              <label for="c-leave-blank">Leave this field empty</label>
+              <input id="c-leave-blank" name="leave_blank" type="text" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore />
             </div>
 
             <Turnstile />
@@ -209,10 +209,9 @@ const topics = ["A question about Estrato", "Press or media", "Accessibility fee
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
-    // honeypot filled in → a bot; pretend success and drop it
-    if (String(data.get("website") ?? "").trim()) {
-      form.hidden = true;
-      if (done) done.hidden = false;
+    // honeypot filled in → a bot (or aggressive autofill); don't send, and say so
+    if (String(data.get("leave_blank") ?? "").trim()) {
+      if (status) status.textContent = "That didn't go through. Please refresh the page and try again.";
       return;
     }
 
