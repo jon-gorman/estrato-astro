@@ -6,10 +6,12 @@ import Klaviyo from "../components/Klaviyo.astro";
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean; // keep a page out of search results (drafts)
 }
 const {
   title = "Estrato — Mexican Agave Spirit",
   description = "Estrato is a Mexican agave spirit built for mixing. Agave, made useful.",
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -28,6 +30,7 @@ const ogImage = new URL("/og-image.png", Astro.site).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Estrato" />
     <meta property="og:title" content={title} />

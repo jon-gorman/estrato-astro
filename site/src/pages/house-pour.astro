@@ -1,0 +1,745 @@
+---
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import Base from "../layouts/Base.astro";
+import LandingHeader from "../components/LandingHeader.astro";
+import LandingFooter from "../components/LandingFooter.astro";
+import Pending from "../components/Pending.astro";
+import { content } from "../data/house-pour";
+
+import hero from "../assets/house/hero-dinner.jpg";
+import cantarito from "../assets/house/cantarito-glass.jpg";
+import engMargarita from "../assets/icons-illustrated/margarita.png";
+import engPaloma from "../assets/icons-illustrated/paloma.png";
+import engRanch from "../assets/icons-illustrated/ranch-water.png";
+import prodPinas from "../assets/house/prod-pinas.jpg";
+import prodSplit from "../assets/house/prod-split.jpg";
+import prodOven from "../assets/house/prod-oven.jpg";
+import prodMill from "../assets/house/prod-mill.jpg";
+import batchPhoto from "../assets/batch/batch-photo.jpg";
+import church from "../assets/house/church.png";
+// bottle cutout with a full, contained contact shadow (the original PNG had its baked shadow clipped at the file edge)
+import bottle from "../assets/products/bottle-750-fullshadow.png";
+import agaveArt from "../assets/process/agave.png";
+import cookArt from "../assets/process/cook.png";
+import distillArt from "../assets/process/distill.png";
+import pourWide from "../assets/people/pour-wide.jpg";
+
+const margarita = (await getEntry("cocktails", "margarita"))!;
+const m = margarita.data;
+const cant = (await getEntry("cocktails", "cantarito"))!.data;
+const cantExtras = ["Ice", "Tajín (chili-lime seasoning) or coarse salt for the rim", "Lime, orange, and grapefruit wedges to garnish"];
+// "2 oz Estrato · 1 oz orange liqueur · 1 oz fresh lime juice"
+const recipeLine = m.build.map((b) => `${b.amount} ${b.item}`).join(" · ");
+
+const occasions = [
+  { name: "Margarita", img: engMargarita, alt: "Engraving of a salt-rimmed Margarita on the rocks with a lime wedge", href: "/cocktails/margarita/" },
+  { name: "Paloma", img: engPaloma, alt: "Engraving of a Paloma highball with grapefruit", href: "/cocktails/paloma/" },
+  { name: "Ranch Water", img: engRanch, alt: "Engraving of a Ranch Water highball with lime", href: "/cocktails/ranch-water/" },
+];
+
+// GUARDRAIL: the sourcing explanation (Zacatecas) appears only in the FAQ and is flagged in the brief as needing
+// confirmation against the approved classification before publication. "Baked for 18 hours" is from
+// the site's approved fact set (ProcessSection / FAQ).
+const reasons = [
+  { h: "100% blue agave", p: "Made with mature blue agave.", art: agaveArt, alt: "Engraving of a blue agave plant" },
+  { h: "Traditional production", p: "Fully mature agave is baked for 18 hours, then fermented and double-distilled.", art: cookArt, alt: "Engraving of agave piñas being cooked" },
+  { h: "No additives", p: "Let the agave speak for itself.", art: distillArt, alt: "Engraving of a copper still" },
+];
+
+// Real production photographs supplied by the brand. Captions describe only what is visible.
+const strip = [
+  { img: prodPinas, alt: "A large pile of harvested agave piñas", cap: "Harvested piñas" },
+  { img: prodSplit, alt: "Workers splitting large agave piñas by hand at the distillery", cap: "Splitting piñas" },
+  { img: prodOven, alt: "An oven door open to reveal a stack of cooked agave piñas", cap: "Cooked piñas" },
+  { img: prodMill, alt: "A row of roller mills on a raised platform under a covered roof", cap: "The roller mill" },
+];
+
+// Approved fact set (same facts as the home page's "The liquid" section). ABV is added only once confirmed.
+const spec = [
+  { k: "Agave", v: "100% blue agave" },
+  { k: "Cooked", v: "Baked for 18 hours" },
+  { k: "Made", v: "Fermented with selected yeast, double-distilled" },
+  { k: "Origin", v: "Produced in Tequila, Jalisco, Mexico" },
+  { k: "Additives", v: "None" },
+  { k: "Size", v: content.abv ? `750 ml · ${content.abv}` : "750 ml" },
+];
+const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1) + ".";
+const tasting = content.tasting
+  ? [
+      { k: "Nose", v: content.tasting.nose },
+      { k: "Palate", v: content.tasting.palate },
+      { k: "Finish", v: content.tasting.finish },
+    ]
+  : content.review
+    ? [
+        { k: "Nose", v: cap(content.review.nose) },
+        { k: "Palate", v: cap(content.review.palate) },
+        { k: "Finish", v: cap(content.review.finish) },
+      ]
+    : null;
+
+// Batch recipes, scaled from the single-drink builds in the cocktails collection (x8).
+const batches = [
+  {
+    name: "Pitcher Margarita",
+    items: ["16 oz Estrato", "8 oz orange liqueur", "8 oz fresh lime juice", "Lime wheels, coarse salt, and ice"],
+    how: "Chill everything, stir in a large pitcher, and taste. Pour over fresh ice into salt-rimmed glasses.",
+  },
+];
+
+// Attributed paraphrase of a third-party review (see data/house-pour.ts). Not a verbatim quote,
+// and never attributed to a bartender or account.
+const r = content.review;
+const reviewFull = r
+  ? `${r.source}'s reviewers describe the nose as ${r.nose}; the palate as ${r.palate}; and the finish as ${r.finish}.`
+  : null;
+const live = content.publish;
+
+const faqs: { q: string; a?: string; cite?: string; pending?: string | null; fallback?: string; link?: [string, string][] }[] = [
+  {
+    q: "Is Estrato tequila?",
+    a: "No. Estrato is an agave spirit made with 100% blue agave sourced from Zacatecas, outside tequila's designated growing region, and produced in Tequila, Jalisco.",
+  },
+  {
+    q: "What does it taste like?",
+    a: content.sensory ?? reviewFull ?? undefined,
+    cite: !content.sensory && r ? `Review of ${r.about} by ${r.source}.` : undefined,
+    fallback: content.sensory || r ? undefined : "An approved sensory description covering aroma, flavor, and finish. Avoid comparisons with other brands.",
+  },
+  {
+    q: "What can I make with it?",
+    a: "Start with the margarita recipe above, then try a Paloma, a Ranch Water, or anything else on the cocktails page.",
+    link: [["Paloma recipe", "/cocktails/paloma/"], ["All cocktails", "/cocktails/"]],
+  },
+  {
+    q: "Can I drink it straight?",
+    a: "The team reports that customers enjoy Estrato both straight and mixed.",
+    fallback: content.straight ? undefined : "A verified serving suggestion and tasting note.",
+    pending: content.straight,
+  },
+  { q: "Why is it $16.99?", a: content.priceReason ?? undefined, fallback: "A substantiated explanation of the price from the brand. Do not attribute savings to certification or sourcing without confirmation." },
+  {
+    q: "Where can I order it, and what does shipping cost?",
+    a: "Order online through the Estrato cart. Shipping is calculated at checkout, before you pay. Online orders are processed and fulfilled by licensed third-party retailers in the Bottle Nexus network, and shipping availability varies by state.",
+    link: [["Shipping & Returns", "/shipping-returns/"]],
+    pending: content.delivery,
+    fallback: content.delivery ? undefined : "Current delivery availability and timing estimates.",
+  },
+].filter((f) => f.a || f.pending || !live);
+const half = Math.ceil(faqs.length / 2);
+const faqCols = [faqs.slice(0, half), faqs.slice(half)];
+
+// the "Draft" banner shows until every piece of verified content is in
+const open = [
+  content.abv, content.flavor ?? content.review, content.sensory ?? content.review, content.testimonial.quote,
+  content.testimonial.name, content.testimonial.account,
+  content.straight, content.priceReason, content.delivery,
+].filter((v) => !v).length;
+---
+
+<Base
+  title="Meet your next house pour — Estrato"
+  description="Estrato is a 100% blue agave spirit for the cocktails you love to make and share. $16.99 per bottle."
+  noindex
+>
+  <div class="hp" id="top">
+    {!live && open > 0 && (
+      <p class="hp-draft">
+        Draft page &mdash; not linked or indexed. {open} {open === 1 ? "item still needs" : "items still need"} verified content.
+      </p>
+    )}
+    <LandingHeader />
+
+    <main>
+      <!-- HERO -->
+      <section class="hp-hero">
+        <div class="hp-hero__stage">
+          <div class="hp-hero__art">
+            <Image class="hp-hero__bg" src={hero} alt="Friends laughing around a candlelit dinner table as one pours a pitcher of margarita, with an Estrato Indigo bottle on the table" widths={[800, 1200, 1672]} sizes="(max-width: 860px) 100vw, 66vw" loading="eager" />
+          </div>
+
+          <div class="hp-hero__copy">
+            <h1 class="hp-hero__title">Meet your next<br />house pour.</h1>
+            <p class="hp-hero__eyebrow">100% Blue Weber Agave &ndash; Produced in Jalisco</p>
+            <p class="hp-hero__sub">
+              Estrato is made from 100% blue agave. It's the spirit that is perfect for the cocktails you love to make&mdash;and share. Traditionally
+              made, without additives, at a price that makes keeping a bottle on hand an easy decision.
+            </p>
+            <p class="hp-hero__price"><span class="hp-hero__cur">$</span>16.99 <span class="hp-hero__per">per bottle</span></p>
+            <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Shop Estrato <span aria-hidden="true">&#8594;</span></button>
+            <p class="hp-hero__fine">
+              750 ml{content.abv ? ` · ${content.abv}` : ""} &middot; Shipping calculated at checkout
+            </p>
+            {!content.abv && <Pending inline label="ABV, confirmed against the label" />}
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCT -->
+      <section class="hp-prod" id="product">
+        <div class="hp-wrap">
+          <header class="hp-prod__head">
+            <h2 class="hp-h2 hp-prod__title">Estrato. A choice you can make with confidence.</h2>
+            <p class="hp-prod__stmt">Aged agave, traditional production in Tequila, MX</p>
+          </header>
+
+          <div class="hp-prod__grid">
+            <div class="hp-prod__bottle">
+              <span class="hp-prod__disc" aria-hidden="true"></span>
+              <Image src={bottle} alt="An Estrato Indigo 750 ml bottle" widths={[500, 800, 1100]} sizes="(max-width: 860px) 90vw, 36vw" />
+            </div>
+
+            <div class="hp-prod__info">
+              {tasting && (
+                <div class="hp-prod__block">
+                  <h3>Tasting notes</h3>
+                  <dl class="hp-prod__notes">
+                    {tasting.map((t) => (
+                      <div><dt>{t.k}</dt><dd>{t.v}</dd></div>
+                    ))}
+                  </dl>
+                  {!content.tasting && content.review && (
+                    <p class="hp-prod__cite">As described in {content.review.source}&rsquo;s review of {content.review.about}.</p>
+                  )}
+                  {!content.tasting && <Pending label="Brand-approved tasting notes (aroma, flavor, finish) to replace the third-party review." />}
+                </div>
+              )}
+
+              <div class="hp-prod__block">
+                <h3>In the bottle</h3>
+                <dl class="hp-prod__spec">
+                  {spec.map((r) => (
+                    <div><dt>{r.k}</dt><dd>{r.v}</dd></div>
+                  ))}
+                </dl>
+                {!content.abv && <Pending inline label="ABV, confirmed against the label" />}
+              </div>
+
+              <div class="hp-prod__buy">
+                <p class="hp-prod__price"><span>$</span>16.99 <small>per bottle</small></p>
+                <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Shop Estrato <span aria-hidden="true">&#8594;</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hp-prod__story">
+            <div class="hp-prod__flow">
+              <div class="hp-prod__node">
+                <Image src={cookArt} alt="" widths={[200, 360]} sizes="130px" />
+                <p><strong>100%</strong>Blue agave</p>
+              </div>
+              <span class="hp-prod__arrow" aria-hidden="true">&#8594;</span>
+              <div class="hp-prod__node">
+                <Image src={church} alt="" widths={[260, 420]} sizes="150px" />
+                <p><strong>Produced</strong>Tequila, Jalisco</p>
+              </div>
+              <span class="hp-prod__arrow" aria-hidden="true">&#8594;</span>
+              <div class="hp-prod__node">
+                <Image src={distillArt} alt="" widths={[200, 360]} sizes="130px" />
+                <p><strong>Double</strong>distilled</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIGNATURE: THE CANTARITO -->
+      <section class="hp-sig" id="cantarito">
+        <div class="hp-wrap hp-sig__grid">
+          <figure class="hp-sig__media">
+            <Image src={cantarito} alt="A tall glass of Cantarito over ice with a chili-lime rim and grapefruit and lime garnish, beside halved citrus" widths={[600, 900, 1300]} sizes="(max-width: 860px) 94vw, 48vw" />
+            <figcaption class="hp-sig__badge">Our signature pour</figcaption>
+          </figure>
+          <div class="hp-sig__copy">
+            <h2 class="hp-h2 hp-sig__h">The Estrato<br />Cantarito.</h2>
+            <p class="hp-sig__lead">
+              Orange, lime, and grapefruit over ice, topped with cold grapefruit soda in a tall glass with a chili-lime
+              rim. A Jalisco classic, made the Mexican way: bright, a little salty, and easy to make at home.
+            </p>
+
+            <div class="hp-sig__cols">
+              <div>
+                <h3>What you&rsquo;ll need</h3>
+                <ul class="hp-sig__ing">
+                  {cant.build.map((b) => (
+                    <li><span>{b.amount}</span> {b.item}</li>
+                  ))}
+                  {cantExtras.map((e) => <li class="hp-sig__extra">{e}</li>)}
+                </ul>
+              </div>
+              <div>
+                <h3>How to make it</h3>
+                <ol class="hp-sig__steps">
+                  {cant.steps.map((st) => <li>{st}</li>)}
+                </ol>
+              </div>
+            </div>
+
+            <p class="hp-sig__tip">{cant.note}</p>
+
+
+            <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Get Estrato for your Cantarito <span aria-hidden="true">&#8594;</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- THE EVERYDAY OCCASION -->
+      <section class="hp-occ">
+        <div class="hp-wrap">
+          <h2 class="hp-h2 hp-occ__h">Your favorite cocktail. A new go-to bottle.</h2>
+          <p class="hp-occ__p">
+            A margarita while making dinner. A paloma with friends. A ranch water on the porch. Estrato deserves a
+            place in your routine because of what it brings to your glass.
+          </p>
+          <ul class="hp-occ__grid">
+            {occasions.map((o) => (
+              <li>
+                <a class="hp-occ__card" href={o.href}>
+                  <Image src={o.img} alt={o.alt} widths={[300, 500, 700]} sizes="(max-width: 860px) 60vw, 22vw" />
+                  <span class="hp-occ__name">{o.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {content.flavor && <p class="hp-occ__flavor">{content.flavor}</p>}
+        </div>
+      </section>
+
+      <!-- THE REASON TO BELIEVE -->
+      <section class="hp-why" id="why">
+        <Image class="hp-why__corner" src={agaveArt} alt="" widths={[360, 560]} sizes="260px" />
+        <div class="hp-wrap">
+          <div class="hp-why__head">
+            <h2 class="hp-h2 hp-why__title">What goes into your pour matters.</h2>
+            <p class="hp-why__made">Produced in<br />Tequila, Jalisco</p>
+          </div>
+          <ul class="hp-why__grid">
+            {reasons.map((x) => (
+              <li class="hp-why__item">
+                <Image class="hp-why__art" src={x.art} alt={x.alt} widths={[200, 360]} sizes="120px" />
+                <div>
+                  <h3 class="hp-why__h">{x.h}</h3>
+                  <p>{x.p}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ul class="hp-why__strip">
+          {strip.map((s) => (
+            <li>
+              <Image src={s.img} alt={s.alt} widths={[360, 640, 900]} sizes="(max-width: 860px) 50vw, 25vw" />
+              <span>{s.cap}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ACCOUNT TESTIMONY / WHAT REVIEWERS SAY -->
+      <section class="hp-tst">
+        <Image class="hp-tst__agave" src={agaveArt} alt="" widths={[360, 560]} sizes="260px" />
+        <div class="hp-wrap hp-tst__grid">
+          <div class="hp-tst__media">
+            {content.testimonial.videoSrc ? (
+              <video controls playsinline preload="metadata" poster={content.bartenderVideo?.poster ?? pourWide.src} src={content.testimonial.videoSrc}></video>
+            ) : content.bartenderVideo ? (
+              <div class="hp-tst__player" data-player>
+                <video playsinline preload="none" poster={content.bartenderVideo.poster} aria-label="A bartender squeezes lime, shakes, and serves a margarita made with Estrato">
+                  <source src={content.bartenderVideo.src} type="video/mp4" />
+                </video>
+                <button class="hp-tst__play" type="button" aria-label="Play video">
+                  <svg viewBox="0 0 24 24" width="28" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+                </button>
+              </div>
+            ) : (
+              <Image src={pourWide} alt="A bartender measuring Estrato from a jigger into a glass of crushed ice at a dim, amber-lit bar" widths={[600, 900, 1400]} sizes="(max-width: 860px) 94vw, 52vw" />
+            )}
+            {!content.testimonial.videoSrc && <Pending label="Real account video: a bartender at an account that has reordered Estrato prepares a cocktail and explains why they keep using it. (The clip above is branded footage, not a testimonial.)" />}
+            {/* NOTE: the bartender here is the stock photograph / generated footage, atmosphere only. Do not pair
+                it with a named quote or caption it as a real account. */}
+          </div>
+          <div class="hp-tst__copy">
+            <h2 class="hp-h2 hp-tst__title">Why it stays<br />behind the bar.</h2>
+            {content.testimonial.quote && content.testimonial.name ? (
+              <blockquote class="hp-tst__quote">
+                <span class="hp-tst__mark" aria-hidden="true">&ldquo;</span>
+                <p>{content.testimonial.quote}</p>
+                <footer>
+                  <strong>{content.testimonial.name}</strong>
+                  {content.testimonial.account && <span>{content.testimonial.account}</span>}
+                </footer>
+              </blockquote>
+            ) : reviewFull ? (
+              <div class="hp-tst__quote">
+                <span class="hp-tst__mark" aria-hidden="true">&ldquo;</span>
+                <p>{reviewFull}</p>
+                <footer><strong>{r.source}</strong><span>Review of {r.about}</span></footer>
+              </div>
+            ) : (
+              <Pending label="The exact, approved quote naming the drink and why they reorder, plus the bartender's name, account, and city." />
+            )}
+            {!content.testimonial.quote && reviewFull && (
+              <Pending label="Swap in a real account or bartender quote: exact words, name, account, and city." />
+            )}
+            {content.customerQuote && (
+              <blockquote class="hp-tst__quote hp-tst__quote--alt">
+                <p>{content.customerQuote.quote}</p>
+                <footer><strong>{content.customerQuote.by}</strong></footer>
+              </blockquote>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <!-- BATCH COCKTAILS -->
+      <section class="hp-batch" id="batch">
+        <div class="hp-batch__copy">
+          <h2 class="hp-h2 hp-batch__h">Batch it for the table.</h2>
+          <p class="hp-batch__lead">Mix it ahead, pour it over fresh ice, and keep the table going. Serves 8.</p>
+
+          <div class="hp-batch__cards">
+            {batches.map((c) => (
+              <article class="hp-batch__card">
+                <h3>{c.name}</h3>
+                <p class="hp-batch__serves">Serves 8</p>
+                <ul>{c.items.map((i) => <li>{i}</li>)}</ul>
+                <p class="hp-batch__how">{c.how}</p>
+              </article>
+            ))}
+          </div>
+
+          <div class="hp-batch__cta">
+            <button class="hp-btn hp-btn--dark" type="button" data-bn-add data-bn-qty="1">Get Estrato for your next round <span aria-hidden="true">&#8594;</span></button>
+            <a class="hp-batch__link" href="/cocktails/batch-margarita/">Full pitcher margarita recipe &rarr;</a>
+          </div>
+        </div>
+        <div class="hp-batch__media">
+          <Image src={batchPhoto} alt="A glass pitcher of margarita with lime wheels beside an Estrato Indigo bottle and four salt-rimmed glasses on a sunlit table" widths={[700, 1000, 1400]} sizes="(max-width: 860px) 100vw, 50vw" />
+        </div>
+      </section>
+
+      <!-- SHORT FAQ -->
+      <section class="hp-faq" id="faq">
+        <div class="hp-wrap">
+          <h2 class="hp-faq__title">Frequently asked questions</h2>
+          <div class="hp-faq__cols">
+            {faqCols.map((col) => (
+              <div class="hp-faq__col">
+                {col.map((f) => (
+                  <details class="hp-faq__item">
+                    <summary>{f.q}<span class="hp-faq__plus" aria-hidden="true"></span></summary>
+                    <div class="hp-faq__a">
+                      {f.a && <p>{f.a}</p>}
+                      {f.cite && <p class="hp-faq__cite">{f.cite}</p>}
+                      {f.link && (
+                        <p class="hp-faq__links">
+                          {f.link.map(([label, href]) => <a href={href}>{label} <span aria-hidden="true">&#8594;</span></a>)}
+                        </p>
+                      )}
+                      {f.pending && <p>{f.pending}</p>}
+                      {f.fallback && <Pending label={f.fallback} />}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <LandingFooter />
+  </div>
+</Base>
+
+<style>
+  /* This page has its own palette: the brighter citrus orange from the mockup. */
+  .hp {
+    --hp-orange: #e4441c;
+    --hp-cream: #fbf3e3;
+    --hp-ink: #171310;
+    background: var(--hp-cream);
+    color: var(--hp-ink);
+    scroll-behavior: smooth;
+  }
+  .hp-draft {
+    padding: 0.55rem 1rem;
+    background: var(--hp-ink);
+    color: var(--hp-cream);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .hp-wrap { max-width: 1240px; margin-inline: auto; }
+  .hp-h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.004em;
+    line-height: 0.95;
+    font-size: clamp(1.9rem, 0.9rem + 2.8vw, 3.2rem);
+  }
+
+  .hp-btn {
+    display: inline-block;
+    padding: 1.05em 2em;
+    background: var(--hp-orange);
+    color: #fff7ea;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: clamp(0.72rem, 0.64rem + 0.3vw, 0.86rem);
+    text-align: center;
+    transition: filter 0.15s ease;
+  }
+  .hp-btn:hover { filter: brightness(0.92); }
+  .hp-btn:disabled { opacity: 0.6; cursor: default; }
+  .hp-btn--dark { background: #1a1612; color: #fbf3e3; }
+  .hp-btn--dark:hover { filter: brightness(1.25); }
+
+  /* ---- hero ---- */
+  .hp-hero__stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: clamp(540px, 46vw, 680px);
+    overflow-x: clip; /* clip sideways only: the agave art must be free to overflow into the next section */
+    overflow-y: visible;
+    background: #14100c;
+    color: #fbf3e3;
+  }
+  .hp-hero__art { position: absolute; top: 0; right: 0; bottom: 0; width: 66%; }
+  .hp-hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 78% 50%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+  }
+  .hp-hero__copy {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 45vw, 560px);
+    padding: clamp(1.75rem, 3.6vw, 3rem) clamp(1.25rem, 4.5vw, 4rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(0.65rem, 1.2vw, 1rem);
+  }
+  .hp-hero__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.92;
+    font-size: clamp(2.7rem, 0.8rem + 4.8vw, 5rem);
+  }
+  .hp-hero__eyebrow { font-weight: 700; letter-spacing: 0.18em; line-height: 1.5; text-transform: uppercase; font-size: clamp(0.68rem, 0.6rem + 0.3vw, 0.86rem); }
+  .hp-hero__sub { font-size: clamp(0.82rem, 0.76rem + 0.25vw, 0.95rem); line-height: 1.65; color: color-mix(in srgb, #fbf3e3 86%, transparent); max-width: 42ch; }
+  .hp-hero__price { font-weight: 700; color: #f0562c; font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
+  .hp-hero__cur { font-size: 0.6em; vertical-align: 0.16em; margin-right: 0.04em; }
+  .hp-hero__per { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: #fbf3e3; vertical-align: 0.5em; }
+  .hp-hero__fine { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, #fbf3e3 68%, transparent); }
+
+  /* ---- signature Cantarito ---- */
+  .hp-sig { background: #f7ebd5; padding: clamp(2rem, 4.5vw, 3.5rem) clamp(1rem, 3.2vw, 2.4rem); border-top: 1px solid var(--hp-ink); }
+  .hp-sig__grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(1.5rem, 4.5vw, 3.5rem); align-items: start; }
+  .hp-sig__media { position: relative; margin: 0; }
+  .hp-sig__media :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 58%; }
+  .hp-sig__badge { position: absolute; left: 0; top: clamp(0.75rem, 2vw, 1.25rem); padding: 0.55em 1.1em; background: var(--hp-orange); color: #fff7ea; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.68rem; }
+  .hp-sig__h { font-size: clamp(2.4rem, 1rem + 4.4vw, 4.6rem); }
+  .hp-sig__lead { margin-top: clamp(0.8rem, 1.8vw, 1.2rem); max-width: 54ch; line-height: 1.7; font-size: clamp(0.88rem, 0.8rem + 0.3vw, 1rem); }
+  .hp-sig__cols { margin-top: clamp(1.1rem, 2.6vw, 1.75rem); display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(1.25rem, 3vw, 2.25rem); }
+  .hp-sig__cols h3 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.74rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--hp-ink); }
+  .hp-sig__ing { list-style: none; margin-top: 0.4rem; }
+  .hp-sig__ing li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in srgb, var(--hp-ink) 20%, transparent); font-size: 0.82rem; line-height: 1.45; }
+  .hp-sig__ing span { display: inline-block; min-width: 3.4rem; font-weight: 700; }
+  .hp-sig__extra { color: color-mix(in srgb, var(--hp-ink) 72%, transparent); }
+  .hp-sig__steps { list-style: none; counter-reset: step; margin-top: 0.4rem; display: grid; gap: 0.65rem; }
+  .hp-sig__steps li { counter-increment: step; position: relative; padding-left: 2.1rem; font-size: 0.82rem; line-height: 1.6; }
+  .hp-sig__steps li::before { content: counter(step); position: absolute; left: 0; top: 0.05rem; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--hp-orange); color: #fff7ea; font-size: 0.72rem; font-weight: 700; display: grid; place-items: center; }
+  .hp-sig__tip { margin-top: clamp(1rem, 2.4vw, 1.5rem); padding: 0.85rem 1rem; border-left: 3px solid var(--hp-orange); background: color-mix(in srgb, var(--hp-orange) 8%, transparent); font-size: 0.8rem; line-height: 1.6; }
+  .hp-sig__copy > .hp-btn { margin-top: clamp(1.1rem, 2.6vw, 1.6rem); }
+
+  /* ---- occasion ---- */
+  .hp-occ { padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3.2vw, 2.4rem) clamp(2.5rem, 5vw, 4rem); text-align: center; }
+  .hp-occ__h { max-width: 22ch; margin-inline: auto; }
+  .hp-occ__p { margin: clamp(0.8rem, 1.6vw, 1.1rem) auto 0; max-width: 60ch; line-height: 1.7; color: color-mix(in srgb, var(--hp-ink) 75%, transparent); }
+  .hp-occ__grid { list-style: none; margin-top: clamp(1rem, 2.5vw, 2rem); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.8rem, 2vw, 1.5rem); }
+  .hp-occ__card { display: block; }
+  .hp-occ__card { padding: clamp(0.5rem, 1.5vw, 1rem); transition: transform 0.15s ease; }
+  .hp-occ__card:hover { transform: translateY(-3px); }
+  .hp-occ__card :global(img) { display: block; width: min(100%, 300px); height: auto; aspect-ratio: 1 / 1; object-fit: contain; margin-inline: auto; }
+  .hp-occ__name { display: block; margin-top: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em; font-size: clamp(0.7rem, 0.62rem + 0.3vw, 0.86rem); }
+  .hp-occ__flavor { margin: 1.5rem auto 0; max-width: 60ch; line-height: 1.7; }
+
+  /* ---- reason to believe ---- */
+  .hp-why { position: relative; background: var(--hp-orange); color: #fff4e2; padding-top: clamp(2rem, 4vw, 3.25rem); overflow-x: clip; overflow-y: visible; }
+  /* ink agave straddles the section above and this one; it overflows upward instead of being clipped */
+  .hp-why__corner { position: absolute; left: 0; top: 0; transform: translateY(-62%); width: clamp(110px, 12vw, 190px); height: auto; z-index: 2; pointer-events: none; }
+  .hp-why .hp-wrap { padding-inline: clamp(1rem, 3.2vw, 2.4rem); position: relative; }
+  .hp-why__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; }
+  .hp-why__title { color: var(--hp-ink); max-width: 20ch; }
+  .hp-why__made { flex: none; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; line-height: 1.5; color: var(--hp-ink); }
+  .hp-why__grid { list-style: none; margin-top: clamp(1.5rem, 3.5vw, 2.5rem); display: grid; grid-template-columns: repeat(3, 1fr); }
+  .hp-why__item { display: flex; align-items: center; gap: clamp(0.75rem, 1.6vw, 1.25rem); padding: 0 clamp(0.75rem, 2vw, 1.75rem) clamp(1.5rem, 3vw, 2.25rem); }
+  .hp-why__item:first-child { padding-left: 0; }
+  .hp-why__item + .hp-why__item { border-left: 1px solid color-mix(in srgb, var(--hp-ink) 40%, transparent); }
+  .hp-why__art { flex: none; width: clamp(70px, 8vw, 110px); height: auto; }
+  .hp-why__h { font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; font-size: clamp(0.8rem, 0.7rem + 0.35vw, 1rem); color: var(--hp-ink); line-height: 1.25; }
+  .hp-why__item p { margin-top: 0.35rem; font-size: clamp(0.76rem, 0.7rem + 0.2vw, 0.86rem); line-height: 1.6; }
+  .hp-why__strip { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; background: var(--hp-orange); }
+  .hp-why__strip li { position: relative; }
+  .hp-why__strip :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .hp-why__strip span { position: absolute; left: 0; bottom: 0; padding: 0.4em 0.8em; background: rgba(23, 19, 16, 0.72); color: #fbf3e3; font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* ---- testimony ---- */
+  .hp-tst { position: relative; background: #1a1612; color: #f6ecdc; padding: clamp(2rem, 4vw, 3.25rem) clamp(1rem, 3.2vw, 2.4rem); overflow: clip; }
+  .hp-tst__agave { position: absolute; right: 1%; top: 1.25rem; width: clamp(110px, 13vw, 200px); height: auto; filter: invert(1); opacity: 0.4; pointer-events: none; }
+  .hp-tst__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+  .hp-tst__media :global(img), .hp-tst__media video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #000; }
+  .hp-tst__player { position: relative; }
+  .hp-tst__player video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #000; }
+  .hp-tst__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(26, 22, 18, 0.55);
+    color: #fbf3e3;
+    border: 2px solid #fbf3e3;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .hp-tst__play svg { margin-left: 3px; }
+  .hp-tst__play:hover { background: var(--hp-orange); transform: scale(1.06); }
+  .hp-tst__player[data-playing] .hp-tst__play { display: none; }
+  .hp-tst__title { color: #f6ecdc; }
+  .hp-tst__quote { margin-top: clamp(1.1rem, 2.5vw, 1.75rem); position: relative; padding-left: 2.6rem; }
+  .hp-tst__mark { position: absolute; left: 0; top: -0.35rem; font-family: var(--font-display); font-size: 3.6rem; line-height: 1; color: var(--hp-orange); }
+  .hp-tst__quote p { font-size: clamp(0.82rem, 0.76rem + 0.25vw, 0.96rem); line-height: 1.65; letter-spacing: 0.02em; }
+  .hp-tst__quote footer { margin-top: 0.9rem; display: grid; gap: 0.15rem; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .hp-tst__quote footer span { color: color-mix(in srgb, #f6ecdc 65%, transparent); }
+  .hp-tst__quote--alt { margin-top: 1.25rem; }
+
+  /* ---- batch cocktails ---- */
+  .hp-batch { display: grid; grid-template-columns: 1fr 1fr; background: var(--hp-orange); color: #fff4e2; }
+  .hp-batch__copy { padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.25rem, 4vw, 3.5rem); }
+  .hp-batch__h { color: var(--hp-ink); }
+  .hp-batch__lead { margin-top: clamp(0.7rem, 1.6vw, 1.1rem); max-width: 46ch; line-height: 1.65; }
+  .hp-batch__cards { margin-top: clamp(1.1rem, 2.6vw, 1.75rem); display: grid; grid-template-columns: 1fr; gap: clamp(0.75rem, 2vw, 1.25rem); max-width: 520px; }
+  .hp-batch__card { padding: clamp(0.9rem, 2vw, 1.25rem); border: 1px solid color-mix(in srgb, #fff4e2 55%, transparent); background: color-mix(in srgb, var(--hp-ink) 14%, transparent); }
+  .hp-batch__card h3 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8rem; line-height: 1.3; }
+  .hp-batch__serves { margin-top: 0.25rem; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; }
+  .hp-batch__card ul { list-style: none; margin-top: 0.7rem; display: grid; gap: 0.3rem; font-size: 0.78rem; line-height: 1.45; }
+  .hp-batch__card li { padding-bottom: 0.3rem; border-bottom: 1px solid color-mix(in srgb, #fff4e2 22%, transparent); }
+  .hp-batch__how { margin-top: 0.75rem; font-size: 0.74rem; line-height: 1.6; opacity: 0.95; }
+  .hp-batch__cta { margin-top: clamp(1.1rem, 2.6vw, 1.75rem); display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.5rem; }
+  .hp-batch__link { font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; text-decoration: underline; text-underline-offset: 0.25em; }
+  .hp-batch__media { position: relative; min-height: 320px; }
+  .hp-batch__media :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 33% 50%; }
+
+  /* ---- product ---- */
+  .hp-prod { padding: clamp(2.5rem, 5vw, 4.25rem) clamp(1rem, 3.2vw, 2.4rem); border-top: 1px solid var(--hp-ink); }
+  .hp-prod__head { text-align: center; }
+  .hp-prod__title { max-width: 24ch; margin-inline: auto; }
+  .hp-prod__stmt { margin-top: clamp(0.8rem, 1.8vw, 1.2rem); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--hp-orange); font-size: clamp(0.8rem, 0.72rem + 0.35vw, 1rem); }
+  .hp-prod__grid { margin-top: clamp(1.5rem, 3.5vw, 2.75rem); display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(1.5rem, 5vw, 4.5rem); align-items: center; }
+  .hp-prod__bottle { position: relative; display: flex; justify-content: center; align-items: flex-end; padding: clamp(1rem, 3vw, 2rem) 0; }
+  .hp-prod__disc { position: absolute; left: 50%; top: 50%; width: min(86%, 440px); aspect-ratio: 1; border-radius: 50%; background: var(--hp-orange); transform: translate(-50%, -48%); }
+  .hp-prod__bottle :global(img) { position: relative; width: auto; max-width: 100%; height: clamp(400px, 52vw, 680px); object-fit: contain; }
+  .hp-prod__block + .hp-prod__block { margin-top: clamp(1.25rem, 3vw, 2rem); }
+  .hp-prod__block h3 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.74rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--hp-ink); }
+  .hp-prod__notes > div, .hp-prod__spec > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.5rem 1rem; padding: 0.75rem 0; border-bottom: 1px solid color-mix(in srgb, var(--hp-ink) 20%, transparent); }
+  .hp-prod__notes dt, .hp-prod__spec dt { font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.7rem; color: var(--hp-orange); padding-top: 0.15rem; }
+  .hp-prod__notes dd, .hp-prod__spec dd { font-size: clamp(0.8rem, 0.74rem + 0.2vw, 0.9rem); line-height: 1.6; }
+  .hp-prod__cite { margin-top: 0.6rem; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: color-mix(in srgb, var(--hp-ink) 62%, transparent); }
+  .hp-prod__buy { margin-top: clamp(1.25rem, 3vw, 2rem); display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem clamp(1.25rem, 3vw, 2rem); }
+  .hp-prod__price { font-weight: 700; color: var(--hp-orange); font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
+  .hp-prod__price span { font-size: 0.6em; vertical-align: 0.16em; }
+  .hp-prod__price small { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: var(--hp-ink); vertical-align: 0.5em; }
+  .hp-prod__story { margin-top: clamp(1.75rem, 4vw, 3rem); padding: clamp(1rem, 2.4vw, 1.75rem) clamp(1rem, 3vw, 2.5rem); border: 1px solid var(--hp-ink); background: #f7ebd5; }
+  .hp-prod__flow { display: flex; align-items: center; justify-content: space-between; gap: clamp(0.75rem, 2vw, 1.5rem); max-width: 980px; margin-inline: auto; }
+  .hp-prod__node { display: flex; align-items: center; gap: 0.75rem; }
+  .hp-prod__node :global(img) { width: clamp(64px, 8vw, 110px); height: auto; }
+  .hp-prod__node p { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; }
+  .hp-prod__node strong { display: block; }
+  .hp-prod__arrow { font-size: 1.4rem; }
+
+  /* ---- faq ---- */
+  .hp-faq { padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3.2vw, 2.4rem) clamp(2.5rem, 5vw, 4rem); }
+  .hp-faq__title { text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; font-size: clamp(0.8rem, 0.72rem + 0.35vw, 1rem); }
+  .hp-faq__cols { margin: clamp(1.25rem, 3vw, 2rem) auto 0; max-width: 1040px; display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .hp-faq__item { border-top: 1px solid var(--hp-ink); }
+  .hp-faq__col > .hp-faq__item:last-child { border-bottom: 1px solid var(--hp-ink); }
+  .hp-faq__item summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.95rem 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: clamp(0.72rem, 0.66rem + 0.25vw, 0.84rem); }
+  .hp-faq__item summary::-webkit-details-marker { display: none; }
+  .hp-faq__plus { position: relative; flex: none; width: 12px; height: 12px; }
+  .hp-faq__plus::before, .hp-faq__plus::after { content: ""; position: absolute; background: currentColor; }
+  .hp-faq__plus::before { left: 0; right: 0; top: 5px; height: 2px; }
+  .hp-faq__plus::after { top: 0; bottom: 0; left: 5px; width: 2px; transition: transform 0.15s ease; }
+  .hp-faq__item[open] .hp-faq__plus::after { transform: scaleY(0); }
+  .hp-faq__a { padding: 0 0 1rem; font-size: 0.84rem; line-height: 1.7; color: color-mix(in srgb, var(--hp-ink) 78%, transparent); }
+  .hp-faq__a p + p { margin-top: 0.4rem; }
+  .hp-faq__cite { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .hp-faq__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; }
+  .hp-faq__links a { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; color: var(--hp-ink); border-bottom: 2px solid var(--hp-orange); }
+
+  @media (max-width: 1180px) {
+    .hp-sig__cols { grid-template-columns: 1fr; }
+  }
+
+  /* ---- responsive ---- */
+  @media (max-width: 860px) {
+    .hp-hero__stage { display: flex; flex-direction: column-reverse; align-items: stretch; min-height: 0; }
+    .hp-hero__art { position: relative; inset: auto; width: 100%; aspect-ratio: 3 / 2; }
+    .hp-hero__bg { -webkit-mask-image: none; mask-image: none; object-position: 60% 50%; }
+    .hp-sig__grid { grid-template-columns: 1fr; }
+    .hp-sig__media :global(img) { aspect-ratio: 1 / 1; object-position: 50% 42%; }
+    .hp-sig__cols { grid-template-columns: 1fr; }
+    .hp-hero__copy { width: 100%; }
+    .hp-occ__grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; }
+    .hp-prod__grid { grid-template-columns: 1fr; }
+    .hp-prod__flow { flex-direction: column; align-items: center; text-align: center; }
+    .hp-prod__node { flex-direction: column; gap: 0.5rem; }
+    .hp-prod__arrow { transform: rotate(90deg); margin: 0; }
+    .hp-prod__buy { justify-content: center; }
+    .hp-why__corner { display: none; }
+    .hp-why__head { flex-direction: column; }
+    .hp-why__title { padding-left: 0; }
+    .hp-why__grid { grid-template-columns: 1fr; gap: 0; }
+    .hp-why__item { padding: 1rem 0; }
+    .hp-why__item + .hp-why__item { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--hp-ink) 40%, transparent); }
+    .hp-why__strip { grid-template-columns: 1fr 1fr; }
+    .hp-tst__grid { grid-template-columns: 1fr; }
+    .hp-tst__agave { display: none; }
+    .hp-batch { grid-template-columns: 1fr; }
+    .hp-batch__media { min-height: 0; aspect-ratio: 3 / 2; }
+    .hp-faq__cols { grid-template-columns: 1fr; }
+    .hp-faq__col:first-child > .hp-faq__item:last-child { border-bottom: 0; }
+  }
+</style>
+
+<script>
+  // Click-to-play (with sound) for the branded bartender clip. Nothing loads until the visitor presses play.
+  document.querySelectorAll<HTMLElement>("[data-player]").forEach((box) => {
+    const video = box.querySelector("video");
+    const btn = box.querySelector<HTMLButtonElement>(".hp-tst__play");
+    if (!video || !btn) return;
+    btn.addEventListener("click", () => {
+      video.controls = true;
+      box.setAttribute("data-playing", "");
+      void video.play();
+    });
+    video.addEventListener("ended", () => {
+      video.controls = false;
+      box.removeAttribute("data-playing");
+      video.currentTime = 0;
+    });
+  });
+</script>

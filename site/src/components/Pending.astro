@@ -1,0 +1,39 @@
+---
+/* Visible "still to add" marker for content that needs a verified fact or an
+   approved quote. The page is noindex and unlinked while any of these remain. */
+import { content } from "../data/house-pour";
+interface Props { label: string; inline?: boolean }
+const { label, inline = false } = Astro.props;
+---
+
+{!content.publish && <span class:list={["pending", { "pending--inline": inline }]} data-pending>
+  <span class="pending__tag">To add</span>
+  <span class="pending__text">{label}</span>
+</span>}
+
+<style>
+  .pending {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    align-items: baseline;
+    margin-top: 0.9rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px dashed currentColor;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+  .pending--inline { display: inline-flex; margin-top: 0; padding: 0.2rem 0.5rem; }
+  .pending__tag {
+    flex: none;
+    padding: 0.1em 0.5em;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.62rem;
+  }
+</style>
