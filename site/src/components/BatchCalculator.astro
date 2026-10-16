@@ -1,0 +1,290 @@
+---
+/* Batch calculator: "how many people?" -> scaled ingredient list, bottles needed, and an
+   Add-to-cart button for that many bottles. Self-contained and safe to drop on any page.
+
+   Usage:   import BatchCalculator from "../components/BatchCalculator.astro";
+            <BatchCalculator />
+            <BatchCalculator recipe="cantarito" theme="cream" heading="Planning a party?" />
+
+   Props (all optional):
+     recipe         starting recipe key (default "margarita")
+     recipes        which recipes to offer as tabs (default: all in RECIPE_ORDER)
+     people         starting guest count (default 8)
+     drinks         starting drinks per guest, 1-3 (default 2)
+     theme          "orange" (on the orange brand band), "cream" (light pages), or "dark"
+     heading        optional heading shown above the controls
+
+   Recipes live in src/data/batch-recipes.ts; the math in src/lib/batch-calc.ts.
+   The Add to cart button uses the shared [data-bn-add] handler from BottleNexus.astro, which is
+   loaded by Base.astro, so no extra setup is needed. Works without JavaScript (shows the
+   starting list); the controls come alive when the script runs. */
+import { RECIPES, RECIPE_ORDER, DRINKS_OPTIONS, PEOPLE_MIN, PEOPLE_MAX } from "../data/batch-recipes";
+import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks } from "../lib/batch-calc";
+import { BOTTLE_PRICE } from "../lib/bottlenexus";
+
+interface Props {
+  recipe?: string;
+  recipes?: string[];
+  people?: number;
+  drinks?: number;
+  theme?: "orange" | "cream" | "dark";
+  heading?: string;
+}
+const { recipe = "margarita", recipes = [...RECIPE_ORDER], people = 8, drinks = 2, theme = "orange", heading } = Astro.props;
+
+// unique per instance so several calculators can share a page
+const g = globalThis as unknown as { __bcCount?: number };
+g.__bcCount = (g.__bcCount ?? 0) + 1;
+const uid = `bc${g.__bcCount}`;
+
+const offered = recipes.filter((k) => RECIPES[k]);
+const startKey = offered.includes(recipe) ? recipe : offered[0];
+const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
+---
+
+<section class="bc" data-batch-calc data-theme={theme} data-recipe={startKey} data-people={r.people} data-drinks={r.perPerson}>
+  {heading && <h3 class="bc__heading">{heading}</h3>}
+
+  {offered.length > 1 && (
+    <div class="bc__tabs" role="group" aria-label="Choose a drink">
+      {offered.map((k) => (
+        <button type="button" class="bc__tab" data-recipe-tab={k} aria-pressed={k === startKey ? "true" : "false"}>{RECIPES[k].label}</button>
+      ))}
+    </div>
+  )}
+
+  <div class="bc__controls">
+    <div class="bc__field">
+      <span class="bc__label" id={`${uid}-people`}>How many people?</span>
+      <div class="bc__stepper" role="group" aria-labelledby={`${uid}-people`}>
+        <button type="button" class="bc__step" data-step="-1" aria-label="One fewer person">&minus;</button>
+        <input class="bc__people" type="number" inputmode="numeric" min={PEOPLE_MIN} max={PEOPLE_MAX} value={r.people} aria-label="Number of people" />
+        <button type="button" class="bc__step" data-step="1" aria-label="One more person">+</button>
+      </div>
+    </div>
+
+    <div class="bc__field">
+      <span class="bc__label" id={`${uid}-drinks`}>Drinks each</span>
+      <div class="bc__seg" role="group" aria-labelledby={`${uid}-drinks`}>
+        {DRINKS_OPTIONS.map((n) => (
+          <button type="button" class="bc__opt" data-drinks={n} aria-pressed={n === r.perPerson ? "true" : "false"}>{n}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="bc__result" aria-live="polite">
+    <p class="bc__makes"><strong data-bc="title">{r.recipe.title}</strong> for <span data-bc="drinks">{r.drinks}</span> drinks</p>
+    <ul class="bc__rows" data-bc="rows" set:html={rowsHtml(r.rows)} />
+    <ul class="bc__extras" data-bc="extras" set:html={extrasHtml(r.extras)} />
+    <p class="bc__method" data-bc="method">{r.method}</p>
+  </div>
+
+  <div class="bc__buy">
+    <p class="bc__need">
+      <span class="bc__need-label">You&rsquo;ll need</span>
+      <strong data-bc="bottles">{bottleLabel(r.bottles)}</strong>
+      <span class="bc__need-price">&middot; $<span data-bc="total">{r.total}</span></span>
+    </p>
+    <button type="button" class="bc__cta" data-bn-add data-bn-qty={r.bottles} data-bc="cta">
+      Add {bottleLabel(r.bottles)} to cart <span aria-hidden="true">&#8594;</span>
+    </button>
+  </div>
+
+  <p class="bc__fine">
+    A 750&nbsp;ml bottle makes about 12 drinks at 2&nbsp;oz. ${BOTTLE_PRICE} per bottle. Please enjoy responsibly.
+  </p>
+  <a class="bc__link" data-bc="link" href={r.recipe.href} hidden={!r.recipe.href}>Full recipe &rarr;</a>
+</section>
+
+<style>
+  .bc {
+    /* theme tokens — everything below reads these, so a new theme is one block */
+    --bc-fg: #fff4e2;
+    --bc-muted: color-mix(in srgb, var(--bc-fg) 72%, transparent);
+    --bc-line: color-mix(in srgb, var(--bc-fg) 30%, transparent);
+    --bc-card: color-mix(in srgb, #171310 14%, transparent);
+    --bc-accent: #171310;
+    --bc-accent-fg: #fbf3e3;
+    --bc-chip: #fff4e2;
+    --bc-chip-fg: #171310;
+
+    color: var(--bc-fg);
+    max-width: 560px;
+    font-family: var(--font-mono);
+  }
+  .bc[data-theme="cream"] {
+    --bc-fg: #171310;
+    --bc-muted: #4b443c;
+    --bc-line: color-mix(in srgb, #171310 25%, transparent);
+    --bc-card: #f7ebd5;
+    --bc-accent: var(--hp-orange, var(--rust, #a63b22));
+    --bc-accent-fg: #fff7ea;
+    --bc-chip: #171310;
+    --bc-chip-fg: #fbf3e3;
+  }
+  .bc[data-theme="dark"] {
+    --bc-fg: #f6ecdc;
+    --bc-card: color-mix(in srgb, #f6ecdc 7%, transparent);
+    --bc-accent: var(--hp-orange, var(--rust, #a63b22));
+    --bc-accent-fg: #fff7ea;
+    --bc-chip: #f6ecdc;
+    --bc-chip-fg: #171310;
+  }
+
+  .bc__heading { font-family: var(--font-display); text-transform: uppercase; line-height: 1; font-size: clamp(1.4rem, 1rem + 1.4vw, 2rem); margin-bottom: 0.9rem; }
+
+  .bc button { font: inherit; cursor: pointer; }
+  .bc button:focus-visible, .bc input:focus-visible, .bc a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+  .bc__tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .bc__tab {
+    padding: 0.7em 1.1em;
+    border: 1px solid var(--bc-line);
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.7rem;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .bc__tab[aria-pressed="true"] { background: var(--bc-chip); color: var(--bc-chip-fg); border-color: var(--bc-chip); }
+
+  .bc__controls { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: flex-end; }
+  .bc__label { display: block; margin-bottom: 0.4rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.66rem; }
+  .bc__stepper { display: inline-flex; border: 1px solid var(--bc-line); }
+  .bc__step { width: 2.6rem; background: transparent; color: inherit; font-size: 1.2rem; line-height: 1; }
+  .bc__step:hover { background: color-mix(in srgb, var(--bc-fg) 12%, transparent); }
+  .bc__people {
+    width: 3.6rem;
+    padding: 0.6em 0;
+    border: 0;
+    border-inline: 1px solid var(--bc-line);
+    background: transparent;
+    color: inherit;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .bc__people::-webkit-outer-spin-button, .bc__people::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .bc__seg { display: inline-flex; border: 1px solid var(--bc-line); }
+  .bc__opt { width: 2.6rem; padding: 0.65em 0; background: transparent; color: inherit; font-weight: 700; }
+  .bc__opt + .bc__opt { border-left: 1px solid var(--bc-line); }
+  .bc__opt[aria-pressed="true"] { background: var(--bc-chip); color: var(--bc-chip-fg); }
+
+  .bc__result { margin-top: 1.1rem; padding: clamp(0.9rem, 2vw, 1.25rem); border: 1px solid var(--bc-line); background: var(--bc-card); }
+  .bc__makes { font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .bc__rows { list-style: none; margin-top: 0.6rem; }
+  .bc__rows :global(li) { display: grid; grid-template-columns: minmax(5.5rem, 0.42fr) 1fr; gap: 0.2rem 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid var(--bc-line); font-size: 0.82rem; line-height: 1.4; }
+  .bc__rows :global(.bc__amt) { font-weight: 700; }
+  .bc__rows :global(small) { display: block; font-size: 0.68rem; color: var(--bc-muted); }
+  .bc__extras { list-style: none; margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.3rem 0.5rem; }
+  .bc__extras :global(li) { padding: 0.2em 0.6em; border: 1px solid var(--bc-line); font-size: 0.68rem; }
+  .bc__method { margin-top: 0.8rem; font-size: 0.76rem; line-height: 1.6; color: var(--bc-muted); }
+
+  .bc__buy { margin-top: 1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.25rem; }
+  .bc__need { font-size: 0.78rem; line-height: 1.3; }
+  .bc__need-label { display: block; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bc-muted); }
+  .bc__need strong { font-size: 1.25rem; }
+  .bc__need-price { color: var(--bc-muted); }
+  .bc__cta {
+    padding: 1em 1.6em;
+    background: var(--bc-accent);
+    color: var(--bc-accent-fg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    transition: filter 0.15s ease;
+  }
+  .bc__cta:hover { filter: brightness(1.2); }
+  .bc__cta:disabled { opacity: 0.6; cursor: default; }
+  .bc[data-theme="orange"] .bc__cta:hover { filter: brightness(1.35); }
+
+  .bc__fine { margin-top: 0.8rem; font-size: 0.66rem; line-height: 1.6; color: var(--bc-muted); }
+  .bc__link { display: inline-block; margin-top: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; text-decoration: underline; text-underline-offset: 0.25em; }
+  .bc__link[hidden] { display: none; }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { RECIPES } from "../data/batch-recipes";
+  import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks } from "../lib/batch-calc";
+
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function init(root: HTMLElement) {
+    let recipe = root.dataset.recipe ?? "margarita";
+    let people = Number(root.dataset.people) || 8;
+    let drinks = clampDrinks(Number(root.dataset.drinks) || 2);
+
+    const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+    const input = $<HTMLInputElement>(".bc__people");
+    const cta = $<HTMLButtonElement>('[data-bc="cta"]');
+
+    function render(animate = true, syncInput = true) {
+      const r = compute(recipe, people, drinks);
+      people = r.people;
+      if (syncInput) input.value = String(r.people);
+
+      $('[data-bc="title"]').textContent = r.recipe.title;
+      $('[data-bc="drinks"]').textContent = String(r.drinks);
+      $('[data-bc="rows"]').innerHTML = rowsHtml(r.rows);
+      $('[data-bc="extras"]').innerHTML = extrasHtml(r.extras);
+      $('[data-bc="method"]').textContent = r.method;
+      $('[data-bc="bottles"]').textContent = bottleLabel(r.bottles);
+      $('[data-bc="total"]').textContent = r.total;
+
+      const link = $<HTMLAnchorElement>('[data-bc="link"]');
+      link.hidden = !r.recipe.href;
+      if (r.recipe.href) link.href = r.recipe.href;
+
+      cta.dataset.bnQty = String(r.bottles);
+      if (!cta.disabled) cta.innerHTML = `Add ${bottleLabel(r.bottles)} to cart <span aria-hidden="true">&#8594;</span>`;
+
+      root.querySelectorAll<HTMLElement>("[data-recipe-tab]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.recipeTab === recipe)));
+      root.querySelectorAll<HTMLElement>("[data-drinks]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.drinks) === drinks)));
+
+      if (animate && !reduce) {
+        gsap.fromTo($('[data-bc="rows"]').children, { opacity: 0.3, y: 5 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.04, ease: "power2.out", overwrite: true });
+        gsap.fromTo($('[data-bc="bottles"]'), { scale: 1.12 }, { scale: 1, duration: 0.45, ease: "back.out(2.2)", transformOrigin: "0 50%", overwrite: true });
+      }
+    }
+
+    root.querySelectorAll<HTMLElement>("[data-recipe-tab]").forEach((b) =>
+      b.addEventListener("click", () => {
+        if (!RECIPES[b.dataset.recipeTab!]) return;
+        recipe = b.dataset.recipeTab!;
+        render();
+      }),
+    );
+    root.querySelectorAll<HTMLElement>("[data-step]").forEach((b) =>
+      b.addEventListener("click", () => {
+        people = clampPeople(people + Number(b.dataset.step));
+        render();
+      }),
+    );
+    root.querySelectorAll<HTMLElement>("[data-drinks]").forEach((b) =>
+      b.addEventListener("click", () => {
+        drinks = clampDrinks(Number(b.dataset.drinks));
+        render();
+      }),
+    );
+    // typing a number updates live; the value is tidied when the field loses focus
+    input.addEventListener("input", () => {
+      const n = Number(input.value);
+      if (!input.value || !Number.isFinite(n)) return;
+      people = clampPeople(n);
+      render(true, false);
+    });
+    input.addEventListener("blur", () => {
+      people = clampPeople(Number(input.value));
+      render(false);
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-batch-calc]").forEach(init);
+</script>

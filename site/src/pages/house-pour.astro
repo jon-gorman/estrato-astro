@@ -5,6 +5,7 @@ import Base from "../layouts/Base.astro";
 import LandingHeader from "../components/LandingHeader.astro";
 import LandingFooter from "../components/LandingFooter.astro";
 import Pending from "../components/Pending.astro";
+import BatchCalculator from "../components/BatchCalculator.astro";
 import { content } from "../data/house-pour";
 
 import hero from "../assets/house/hero-dinner.jpg";
@@ -80,14 +81,6 @@ const tasting = content.tasting
       ]
     : null;
 
-// Batch recipes, scaled from the single-drink builds in the cocktails collection (x8).
-const batches = [
-  {
-    name: "Pitcher Margarita",
-    items: ["16 oz Estrato", "8 oz orange liqueur", "8 oz fresh lime juice", "Lime wheels, coarse salt, and ice"],
-    how: "Chill everything, stir in a large pitcher, and taste. Pour over fresh ice into salt-rimmed glasses.",
-  },
-];
 
 // Attributed paraphrase of a third-party review (see data/house-pour.ts). Not a verbatim quote,
 // and never attributed to a bartender or account.
@@ -125,7 +118,6 @@ const faqs: { q: string; a?: string; cite?: string; pending?: string | null; fal
     a: "Order online through the Estrato cart. Shipping is calculated at checkout, before you pay. Online orders are processed and fulfilled by licensed third-party retailers in the Bottle Nexus network, and shipping availability varies by state.",
     link: [["Shipping & Returns", "/shipping-returns/"]],
     pending: content.delivery,
-    fallback: content.delivery ? undefined : "Current delivery availability and timing estimates.",
   },
 ].filter((f) => f.a || f.pending || !live);
 const half = Math.ceil(faqs.length / 2);
@@ -134,7 +126,7 @@ const faqCols = [faqs.slice(0, half), faqs.slice(half)];
 // the "Draft" banner shows until every piece of verified content is in
 const open = [
   content.abv, content.flavor ?? content.review, content.sensory ?? content.review,
-  content.straight, content.priceReason, content.delivery,
+  content.straight, content.priceReason,
 ].filter((v) => !v).length;
 ---
 
@@ -393,23 +385,9 @@ const open = [
       <section class="hp-batch" id="batch">
         <div class="hp-batch__copy">
           <h2 class="hp-h2 hp-batch__h">Batch it for the table.</h2>
-          <p class="hp-batch__lead">Mix it ahead, pour it over fresh ice, and keep the table going. Serves 8.</p>
+          <p class="hp-batch__lead">Tell us how many people, and we&rsquo;ll scale the recipe and count the bottles.</p>
 
-          <div class="hp-batch__cards">
-            {batches.map((c) => (
-              <article class="hp-batch__card">
-                <h3>{c.name}</h3>
-                <p class="hp-batch__serves">Serves 8</p>
-                <ul>{c.items.map((i) => <li>{i}</li>)}</ul>
-                <p class="hp-batch__how">{c.how}</p>
-              </article>
-            ))}
-          </div>
-
-          <div class="hp-batch__cta">
-            <button class="hp-btn hp-btn--dark" type="button" data-bn-add data-bn-qty="1">Get Estrato for your next round <span aria-hidden="true">&#8594;</span></button>
-            <a class="hp-batch__link" href="/cocktails/batch-margarita/">Full pitcher margarita recipe &rarr;</a>
-          </div>
+          <BatchCalculator theme="orange" />
         </div>
         <div class="hp-batch__media">
           <Image src={batchPhoto} alt="A glass pitcher of margarita with lime wheels beside an Estrato Indigo bottle and four salt-rimmed glasses on a sunlit table" widths={[700, 1000, 1400]} sizes="(max-width: 860px) 100vw, 50vw" />
@@ -629,15 +607,6 @@ const open = [
   .hp-batch__copy { padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.25rem, 4vw, 3.5rem); }
   .hp-batch__h { color: var(--hp-ink); }
   .hp-batch__lead { margin-top: clamp(0.7rem, 1.6vw, 1.1rem); max-width: 46ch; line-height: 1.65; }
-  .hp-batch__cards { margin-top: clamp(1.1rem, 2.6vw, 1.75rem); display: grid; grid-template-columns: 1fr; gap: clamp(0.75rem, 2vw, 1.25rem); max-width: 520px; }
-  .hp-batch__card { padding: clamp(0.9rem, 2vw, 1.25rem); border: 1px solid color-mix(in srgb, #fff4e2 55%, transparent); background: color-mix(in srgb, var(--hp-ink) 14%, transparent); }
-  .hp-batch__card h3 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8rem; line-height: 1.3; }
-  .hp-batch__serves { margin-top: 0.25rem; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; }
-  .hp-batch__card ul { list-style: none; margin-top: 0.7rem; display: grid; gap: 0.3rem; font-size: 0.78rem; line-height: 1.45; }
-  .hp-batch__card li { padding-bottom: 0.3rem; border-bottom: 1px solid color-mix(in srgb, #fff4e2 22%, transparent); }
-  .hp-batch__how { margin-top: 0.75rem; font-size: 0.74rem; line-height: 1.6; opacity: 0.95; }
-  .hp-batch__cta { margin-top: clamp(1.1rem, 2.6vw, 1.75rem); display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.5rem; }
-  .hp-batch__link { font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; text-decoration: underline; text-underline-offset: 0.25em; }
   .hp-batch__media { position: relative; min-height: 320px; }
   .hp-batch__media :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 33% 50%; }
 
