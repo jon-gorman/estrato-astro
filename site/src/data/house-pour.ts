@@ -22,22 +22,23 @@ export const content = {
   // product "tequila", which conflicts with this page.
   review: {
     source: "Agave Matchmaker",
-    about: "Estrato Blanco (Still Strength)",
+    about: "Estrato Blanco",
     nose: "sweet, bold cooked agave with vegetal and citrus notes",
     palate: "a rich, viscous mouthfeel, led by cooked-agave sweetness and balanced by fresh vegetal and citrus tones",
     finish: "long, with the vegetal notes coming forward at the end",
   },
   // Brand-approved tasting notes. When set they replace the attributed review in the product section.
-  // Confirmed by the brand. (Wording originated in a third-party review; it is now presented as the brand's notes.)
+  // Brand-approved tasting notes (supplied 2026-10-16). Sentence-cased from the approved all-caps text.
   tasting: {
-    nose: "Sweet, bold cooked agave with vegetal and citrus notes.",
-    palate: "A rich, viscous mouthfeel, led by cooked-agave sweetness and balanced by fresh vegetal and citrus tones.",
-    finish: "Long, with the vegetal notes coming forward at the end.",
-  } as { nose: string; palate: string; finish: string } | null,
+    appearance: "Crystal clear and brilliantly transparent. Fine, slow-forming legs reveal a silky texture and excellent structure.",
+    nose: "Fresh and expressive, led by cooked agave with delicate floral notes and bright citrus nuances. Subtle hints of honey, natural vanilla, and refined minerality add depth and balance.",
+    palate: "Exceptionally smooth and silky on entry. Flavors of mature agave are complemented by floral notes, honey, vanilla, and delicate white fruit, supported by a refreshing mineral character.",
+    finish: "Long, clean, and persistent, leaving elegant impressions of cooked agave and wildflowers.",
+  } as { appearance: string; nose: string; palate: string; finish: string } | null,
   // short, verified flavor description of what Estrato brings to a cocktail (brand-approved)
   flavor: null as string | null,
   // approved sensory description for the FAQ (brand-approved; the review above is used until set)
-  sensory: "Sweet, bold cooked agave with vegetal and citrus notes on the nose, a rich and viscous palate led by cooked-agave sweetness and balanced by fresh vegetal and citrus tones, and a long finish." as string | null,
+  sensory: "Fresh and expressive on the nose, led by cooked agave with floral and citrus notes. Silky on the palate, with mature agave, honey, vanilla, and a refreshing mineral character. The finish is long, clean, and persistent." as string | null,
 
   // Branded footage of a bartender making a margarita with the Estrato bottle (Seedance, generated
   // from the stock bartender photo). It is product footage, NOT an account testimonial — do not
@@ -61,7 +62,7 @@ export const content = {
   tastingNote: null as string | null,
 
   // serving suggestion + tasting note for "Can I drink it straight?"
-  straight: null as string | null,
+  straight: "Naturally smooth and well balanced, Estrato is equally enjoyable neat, lightly chilled, or as the foundation of cocktails that preserve the true character of the agave." as string | null, // from the approved "Character" note
   // substantiated reason for the $16.99 price
   priceReason: null as string | null,
   // delivery availability and timing (shipping cost shows at checkout)

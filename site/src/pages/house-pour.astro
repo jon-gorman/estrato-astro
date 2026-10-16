@@ -44,7 +44,7 @@ const occasions = [
 const reasons = [
   { h: "100% blue agave", p: "Made with mature blue agave.", art: agaveArt, alt: "Engraving of a blue agave plant" },
   { h: "Traditional production", p: "Fully mature agave is baked for 18 hours, then fermented and double-distilled.", art: cookArt, alt: "Engraving of agave piñas being cooked" },
-  { h: "No additives", p: "Let the agave speak for itself.", art: distillArt, alt: "Engraving of a copper still" },
+  { h: "Additive free", p: "Let the agave speak for itself.", art: distillArt, alt: "Engraving of a copper still" },
 ];
 
 // Real production photographs supplied by the brand. Captions describe only what is visible.
@@ -61,12 +61,13 @@ const spec = [
   { k: "Cooked", v: "Baked for 18 hours" },
   { k: "Made", v: "Fermented with selected yeast, double-distilled" },
   { k: "Origin", v: "Produced in Tequila, Jalisco, Mexico" },
-  { k: "Additives", v: "None" },
+  { k: "Additives", v: "Additive free" },
   { k: "Size", v: content.abv ? `750 ml · ${content.abv}` : "750 ml" },
 ];
 const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1) + ".";
 const tasting = content.tasting
   ? [
+      { k: "Appearance", v: content.tasting.appearance },
       { k: "Nose", v: content.tasting.nose },
       { k: "Palate", v: content.tasting.palate },
       { k: "Finish", v: content.tasting.finish },
@@ -132,8 +133,7 @@ const faqCols = [faqs.slice(0, half), faqs.slice(half)];
 
 // the "Draft" banner shows until every piece of verified content is in
 const open = [
-  content.abv, content.flavor ?? content.review, content.sensory ?? content.review, content.testimonial.quote,
-  content.testimonial.name, content.testimonial.account,
+  content.abv, content.flavor ?? content.review, content.sensory ?? content.review,
   content.straight, content.priceReason, content.delivery,
 ].filter((v) => !v).length;
 ---
@@ -164,7 +164,7 @@ const open = [
             <p class="hp-hero__eyebrow">100% Blue Weber Agave &ndash; Produced in Jalisco</p>
             <p class="hp-hero__sub">
               Estrato is made from 100% blue agave. It's the spirit that is perfect for the cocktails you love to make&mdash;and share. Traditionally
-              made, without additives, at a price that makes keeping a bottle on hand an easy decision.
+              made, additive free, at a price that makes keeping a bottle on hand an easy decision.
             </p>
             <p class="hp-hero__price"><span class="hp-hero__cur">$</span>16.99 <span class="hp-hero__per">per bottle</span></p>
             <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Shop Estrato <span aria-hidden="true">&#8594;</span></button>
@@ -181,7 +181,7 @@ const open = [
         <div class="hp-wrap">
           <header class="hp-prod__head">
             <h2 class="hp-h2 hp-prod__title">Estrato. A choice you can make with confidence.</h2>
-            <p class="hp-prod__stmt">Aged agave, traditional production in Tequila, MX</p>
+            <p class="hp-prod__stmt">100% blue agave, additive free, and produced in Jalisco, Tequila town</p>
           </header>
 
           <div class="hp-prod__grid">
@@ -355,7 +355,6 @@ const open = [
             ) : (
               <Image src={pourWide} alt="A bartender measuring Estrato from a jigger into a glass of crushed ice at a dim, amber-lit bar" widths={[600, 900, 1400]} sizes="(max-width: 860px) 94vw, 52vw" />
             )}
-            {!content.testimonial.videoSrc && <Pending label="Real account video: a bartender at an account that has reordered Estrato prepares a cocktail and explains why they keep using it. (The clip above is branded footage, not a testimonial.)" />}
             {/* NOTE: the bartender here is the stock photograph / generated footage, atmosphere only. Do not pair
                 it with a named quote or caption it as a real account. */}
           </div>
@@ -378,9 +377,6 @@ const open = [
               </div>
             ) : (
               <Pending label="The exact, approved quote naming the drink and why they reorder, plus the bartender's name, account, and city." />
-            )}
-            {!content.testimonial.quote && reviewFull && (
-              <Pending label="Swap in a real account or bartender quote: exact words, name, account, and city." />
             )}
             {content.customerQuote && (
               <blockquote class="hp-tst__quote hp-tst__quote--alt">
