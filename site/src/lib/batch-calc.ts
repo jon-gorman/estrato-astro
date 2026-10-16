@@ -59,3 +59,18 @@ export function rowsHtml(rows: Row[]) {
 
 export const bottleLabel = (n: number) => `${n} bottle${n === 1 ? "" : "s"}`;
 export const extrasHtml = (extras: string[]) => extras.map((e) => `<li>${e}</li>`).join("");
+
+/** Plain-text shopping list for texting / sharing / copying. `url` reopens the calculator with the same choices. */
+export function shareMessage(r: ReturnType<typeof compute>, url: string) {
+  const lines = r.rows.map((row) => `• ${row.amount} ${row.name}${row.fruit ? ` (${row.fruit})` : ""}${row.note ? ` (${row.note})` : ""}`);
+  return [
+    `Estrato ${r.recipe.title} for ${r.people} people (${r.drinks} drinks)`,
+    "",
+    ...lines,
+    `Also: ${r.extras.join(", ")}`,
+    "",
+    `You'll need ${bottleLabel(r.bottles)} of Estrato ($${r.total}).`,
+    `Plan: ${url}`,
+    "Please enjoy responsibly.",
+  ].join("\n");
+}

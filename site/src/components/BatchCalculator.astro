@@ -11,6 +11,7 @@
      recipes        which recipes to offer as tabs (default: all in RECIPE_ORDER)
      people         starting guest count (default 8)
      drinks         starting drinks per guest, 1-3 (default 2)
+     share          show the "Send me this list" / Copy buttons (default true)
      theme          "orange" (on the orange brand band), "cream" (light pages), or "dark"
      heading        optional heading shown above the controls
 
@@ -31,8 +32,9 @@ interface Props {
   drinks?: number;
   theme?: "orange" | "cream" | "dark";
   heading?: string;
+  share?: boolean;
 }
-const { recipe = "margarita", recipes = [...RECIPE_ORDER], people = 8, drinks = 2, theme = "orange", heading } = Astro.props;
+const { recipe = "margarita", recipes = [...RECIPE_ORDER], people = 8, drinks = 2, theme = "orange", heading, share = true } = Astro.props;
 
 // unique per instance so several calculators can share a page
 const g = globalThis as unknown as { __bcCount?: number };
@@ -92,6 +94,14 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
       Add {bottleLabel(r.bottles)} to cart <span aria-hidden="true">&#8594;</span>
     </button>
   </div>
+
+  {share && (
+    <div class="bc__share">
+      <button type="button" class="bc__send" data-bc="send">Send me this list</button>
+      <button type="button" class="bc__copy" data-bc="copy">Copy</button>
+      <span class="bc__status" data-bc="status" role="status" aria-live="polite"></span>
+    </div>
+  )}
 
   <p class="bc__fine">
     A 750&nbsp;ml bottle makes about 12 drinks at 2&nbsp;oz. ${BOTTLE_PRICE} per bottle. Please enjoy responsibly.
@@ -206,6 +216,21 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
   .bc__cta:disabled { opacity: 0.6; cursor: default; }
   .bc[data-theme="orange"] .bc__cta:hover { filter: brightness(1.35); }
 
+  .bc__share { margin-top: 0.9rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+  .bc__send, .bc__copy {
+    padding: 0.8em 1.2em;
+    border: 1px solid var(--bc-line);
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.66rem;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .bc__send:hover, .bc__copy:hover { background: var(--bc-chip); color: var(--bc-chip-fg); border-color: var(--bc-chip); }
+  .bc__status { font-size: 0.7rem; color: var(--bc-muted); }
+
   .bc__fine { margin-top: 0.8rem; font-size: 0.66rem; line-height: 1.6; color: var(--bc-muted); }
   .bc__link { display: inline-block; margin-top: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; text-decoration: underline; text-underline-offset: 0.25em; }
   .bc__link[hidden] { display: none; }
@@ -214,9 +239,13 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
 <script>
   import { gsap } from "gsap";
   import { RECIPES } from "../data/batch-recipes";
-  import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks } from "../lib/batch-calc";
+  import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks, shareMessage } from "../lib/batch-calc";
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // The shared link reopens the calculator with the same choices: ?batch=cantarito&people=12&drinks=3
+  const params = new URLSearchParams(location.search);
+  let linkApplied = false;
 
   function init(root: HTMLElement) {
     let recipe = root.dataset.recipe ?? "margarita";
@@ -255,6 +284,79 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
         gsap.fromTo($('[data-bc="bottles"]'), { scale: 1.12 }, { scale: 1, duration: 0.45, ease: "back.out(2.2)", transformOrigin: "0 50%", overwrite: true });
       }
     }
+
+    // apply a shared link to the first calculator on the page
+    if (!linkApplied && (params.has("batch") || params.has("people") || params.has("drinks"))) {
+      linkApplied = true;
+      const wanted = params.get("batch");
+      if (wanted && RECIPES[wanted] && root.querySelector(`[data-recipe-tab="${wanted}"]`)) recipe = wanted;
+      if (params.has("people")) people = clampPeople(Number(params.get("people")));
+      if (params.has("drinks")) drinks = clampDrinks(Number(params.get("drinks")));
+      render(false);
+      const announce = () => root.dispatchEvent(new CustomEvent("batchcalc:recipe", { bubbles: true, detail: { recipe } }));
+      // wait until every page script has registered its listener
+      document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", announce, { once: true }) : announce();
+    }
+
+    /* share: phone share sheet -> pre-filled text message -> copy to clipboard */
+    const status = root.querySelector<HTMLElement>('[data-bc="status"]');
+    const say = (msg: string) => {
+      if (!status) return;
+      status.textContent = msg;
+      setTimeout(() => (status.textContent = ""), 4000);
+    };
+    const listUrl = () => {
+      const u = new URL(location.href);
+      u.search = "";
+      u.hash = root.closest("[id]")?.id ?? "";
+      u.searchParams.set("batch", recipe);
+      u.searchParams.set("people", String(people));
+      u.searchParams.set("drinks", String(drinks));
+      return u.toString();
+    };
+    const text = () => shareMessage(compute(recipe, people, drinks), listUrl());
+    const track = (what: string) => (window as unknown as { clicky?: { log: (h: string, t: string, ty: string) => void } }).clicky?.log("#batch-list", `Batch list: ${what}`, "click");
+
+    const copy = async () => {
+      try {
+        await navigator.clipboard.writeText(text());
+        say("Copied. Paste it into a message.");
+      } catch {
+        // clipboard blocked (older browsers / insecure page): select the text in a temporary field
+        const ta = document.createElement("textarea");
+        ta.value = text();
+        ta.style.cssText = "position:fixed;opacity:0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        ta.remove();
+        say(ok ? "Copied. Paste it into a message." : "Couldn't copy. Please select the list and copy it.");
+      }
+    };
+
+    root.querySelector('[data-bc="copy"]')?.addEventListener("click", () => {
+      track("copied");
+      void copy();
+    });
+    root.querySelector('[data-bc="send"]')?.addEventListener("click", async () => {
+      const body = text();
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "Estrato batch list", text: body });
+          track("shared");
+          return;
+        } catch (err) {
+          if ((err as DOMException).name === "AbortError") return; // they closed the share sheet
+        }
+      }
+      if (matchMedia("(pointer: coarse)").matches) {
+        track("texted");
+        location.href = `sms:?&body=${encodeURIComponent(body)}`; // opens their messaging app
+        return;
+      }
+      track("copied");
+      void copy();
+    });
 
     root.querySelectorAll<HTMLElement>("[data-recipe-tab]").forEach((b) =>
       b.addEventListener("click", () => {
