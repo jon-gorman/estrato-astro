@@ -15,6 +15,8 @@
      heading        optional heading shown above the controls
 
    Recipes live in src/data/batch-recipes.ts; the math in src/lib/batch-calc.ts.
+   When the drink changes it dispatches a bubbling `batchcalc:recipe` CustomEvent from the component
+   root with detail { recipe }, so a page can react (the landing page swaps its batch photo).
    The Add to cart button uses the shared [data-bn-add] handler from BottleNexus.astro, which is
    loaded by Base.astro, so no extra setup is needed. Works without JavaScript (shows the
    starting list); the controls come alive when the script runs. */
@@ -257,8 +259,10 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
     root.querySelectorAll<HTMLElement>("[data-recipe-tab]").forEach((b) =>
       b.addEventListener("click", () => {
         if (!RECIPES[b.dataset.recipeTab!]) return;
+        const changed = recipe !== b.dataset.recipeTab;
         recipe = b.dataset.recipeTab!;
         render();
+        if (changed) root.dispatchEvent(new CustomEvent("batchcalc:recipe", { bubbles: true, detail: { recipe } }));
       }),
     );
     root.querySelectorAll<HTMLElement>("[data-step]").forEach((b) =>
