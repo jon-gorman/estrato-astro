@@ -64,7 +64,7 @@ export const content = {
   // serving suggestion + tasting note for "Can I drink it straight?"
   straight: "Naturally smooth and well balanced, Estrato is equally enjoyable neat, lightly chilled, or as the foundation of cocktails that preserve the true character of the agave." as string | null, // from the approved "Character" note
   // substantiated reason for the $16.99 price
-  priceReason: null as string | null,
+  priceReason: "Great agave shouldn't come with a markup. Estrato is distilled in Tequila, Jalisco from mature agave using a traditional process, priced so you can actually make it your go-to. Craft for the everyday pour." as string | null,
   // delivery availability and timing (shipping cost shows at checkout)
   delivery: null as string | null,
 };
