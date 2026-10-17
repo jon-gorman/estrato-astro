@@ -28,7 +28,7 @@ export function initBall(root: HTMLElement) {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const disc = root.querySelector<HTMLElement>(".hp-prod__disc");
-  const bottle = root.querySelector<HTMLElement>("img");
+  const bottle = root.querySelector<HTMLElement>("img[data-bottle]") ?? root.querySelector<HTMLElement>("img");
   const burst = root.querySelector<HTMLElement>(".hp-prod__burst");
   if (!disc || !bottle || !burst) return;
 

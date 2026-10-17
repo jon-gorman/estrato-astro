@@ -23,6 +23,12 @@ import church from "../assets/house/church.png";
 // bottle cutout with a full, contained contact shadow (the original PNG had its baked shadow clipped at the file edge)
 import bottle from "../assets/products/bottle-750-fullshadow.png";
 import agaveArt from "../assets/process/agave.png";
+import agaveAqua from "../assets/house/agave-photo.png";
+import cookAqua from "../assets/house/cook-aqua.png";
+import distillAqua from "../assets/house/distill-aqua.png";
+import churchAqua from "../assets/house/church-aqua.png";
+import paintStripe from "../assets/house/brush-aqua.png";
+import circleAqua from "../assets/house/circle-aqua.png";
 import cookArt from "../assets/process/cook.png";
 import distillArt from "../assets/process/distill.png";
 import pourWide from "../assets/people/pour-wide.jpg";
@@ -180,7 +186,8 @@ const open = [
           <div class="hp-prod__grid">
             <div class="hp-prod__bottle" data-ball>
               <span class="hp-prod__ballwrap" aria-hidden="true"><span class="hp-prod__disc"></span></span>
-              <Image src={bottle} alt="An Estrato Indigo 750 ml bottle" widths={[500, 800, 1100]} sizes="(max-width: 860px) 90vw, 36vw" />
+              <Image class="hp-prod__agave" src={agaveAqua} alt="" widths={[300, 500]} sizes="(max-width: 860px) 40vw, 18vw" />
+              <Image data-bottle src={bottle} alt="An Estrato Indigo 750 ml bottle" widths={[500, 800, 1100]} sizes="(max-width: 860px) 90vw, 36vw" />
               <span class="hp-prod__burst" aria-hidden="true"></span>
             </div>
 
@@ -220,17 +227,17 @@ const open = [
           <div class="hp-prod__story">
             <div class="hp-prod__flow">
               <div class="hp-prod__node">
-                <Image src={cookArt} alt="" widths={[200, 360]} sizes="130px" />
+                <Image src={cookAqua} alt="" widths={[200, 360]} sizes="130px" />
                 <p><strong>100%</strong>Blue agave</p>
               </div>
               <span class="hp-prod__arrow" aria-hidden="true">&#8594;</span>
               <div class="hp-prod__node">
-                <Image src={church} alt="" widths={[260, 420]} sizes="150px" />
+                <Image src={churchAqua} alt="" widths={[260, 420]} sizes="150px" />
                 <p><strong>Produced</strong>Tequila, Jalisco</p>
               </div>
               <span class="hp-prod__arrow" aria-hidden="true">&#8594;</span>
               <div class="hp-prod__node">
-                <Image src={distillArt} alt="" widths={[200, 360]} sizes="130px" />
+                <Image src={distillAqua} alt="" widths={[200, 360]} sizes="130px" />
                 <p><strong>Double</strong>distilled</p>
               </div>
             </div>
@@ -240,6 +247,7 @@ const open = [
 
       <!-- SIGNATURE: THE CANTARITO -->
       <section class="hp-sig" id="cantarito">
+        <Image class="hp-sig__agave" src={agaveAqua} alt="" widths={[300, 500]} sizes="220px" />
         <div class="hp-wrap hp-sig__grid">
           <figure class="hp-sig__media">
             <Image src={cantarito} alt="A tall glass of Cantarito over ice with a chili-lime rim and grapefruit and lime garnish, beside halved citrus" widths={[600, 900, 1300]} sizes="(max-width: 860px) 94vw, 48vw" />
@@ -280,6 +288,7 @@ const open = [
 
       <!-- THE EVERYDAY OCCASION -->
       <section class="hp-occ">
+        <Image class="hp-occ__paint" src={paintStripe} alt="" widths={[600, 1000, 1400]} sizes="40vw" />
         <div class="hp-wrap">
           <h2 class="hp-h2 hp-occ__h">Your favorite cocktail. A new go-to bottle.</h2>
           <p class="hp-occ__p">
@@ -290,7 +299,7 @@ const open = [
             {occasions.map((o) => (
               <li>
                 <a class="hp-occ__card" href={o.href}>
-                  <Image src={o.img} alt={o.alt} widths={[300, 500, 700]} sizes="(max-width: 860px) 60vw, 22vw" />
+                  <span class="hp-occ__ball"><Image class="hp-occ__disc" src={circleAqua} alt="" widths={[300, 500]} sizes="(max-width: 860px) 56vw, 22vw" /><Image class="hp-occ__eng" src={o.img} alt={o.alt} widths={[300, 500, 700]} sizes="(max-width: 860px) 52vw, 20vw" /></span>
                   <span class="hp-occ__name">{o.name}</span>
                 </a>
               </li>
@@ -332,7 +341,7 @@ const open = [
 
       <!-- ACCOUNT TESTIMONY / WHAT REVIEWERS SAY -->
       <section class="hp-tst">
-        <Image class="hp-tst__agave" src={agaveArt} alt="" widths={[360, 560]} sizes="260px" />
+        <Image class="hp-tst__agave" src={agaveAqua} alt="" widths={[360, 560]} sizes="260px" />
         <div class="hp-wrap hp-tst__grid">
           <div class="hp-tst__media">
             {content.testimonial.videoSrc ? (
@@ -436,6 +445,8 @@ const open = [
     --hp-orange: #e4441c;
     --hp-cream: #fbf3e3;
     --hp-ink: #171310;
+    --hp-aqua: var(--aqua, #179a96);
+    --hp-aqua-deep: var(--aqua-deep, #116f6c);
     background: var(--hp-cream);
     color: var(--hp-ink);
     scroll-behavior: smooth;
@@ -449,6 +460,7 @@ const open = [
     text-transform: uppercase;
     text-align: center;
   }
+  .hp :focus-visible { outline: 3px solid var(--hp-aqua); outline-offset: 3px; }
   .hp-wrap { max-width: 1240px; margin-inline: auto; }
   .hp-h2 {
     font-family: var(--font-display);
@@ -482,6 +494,7 @@ const open = [
     align-items: center;
     min-height: clamp(540px, 46vw, 680px);
     overflow-x: clip; /* clip sideways only: the agave art must be free to overflow into the next section */
+    border-bottom: 5px solid var(--hp-aqua);
     overflow-y: visible;
     background: #14100c;
     color: #fbf3e3;
@@ -521,11 +534,14 @@ const open = [
   .hp-hero__fine { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, #fbf3e3 68%, transparent); }
 
   /* ---- signature Cantarito ---- */
-  .hp-sig { background: #f7ebd5; padding: clamp(2rem, 4.5vw, 3.5rem) clamp(1rem, 3.2vw, 2.4rem); border-top: 1px solid var(--hp-ink); }
+  .hp-sig { background: #f7ebd5; padding: clamp(2rem, 4.5vw, 3.5rem) clamp(1rem, 3.2vw, 2.4rem); border-top: 3px solid var(--hp-aqua); }
   .hp-sig__grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(1.5rem, 4.5vw, 3.5rem); align-items: start; }
   .hp-sig__media { position: relative; margin: 0; }
   .hp-sig__media :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 58%; }
-  .hp-sig__badge { position: absolute; left: 0; top: clamp(0.75rem, 2vw, 1.25rem); padding: 0.55em 1.1em; background: var(--hp-orange); color: #fff7ea; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.68rem; }
+  .hp-sig { position: relative; overflow-x: clip; }
+  .hp-sig__agave { position: absolute; right: -2%; top: -18px; width: clamp(130px, 15vw, 230px); height: auto; pointer-events: none; z-index: 0; }
+  .hp-sig__grid { position: relative; z-index: 1; }
+  .hp-sig__badge { position: absolute; left: 0; top: clamp(0.75rem, 2vw, 1.25rem); padding: 0.55em 1.1em; background: var(--hp-aqua); color: var(--hp-ink); font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.68rem; }
   .hp-sig__h { font-size: clamp(2.4rem, 1rem + 4.4vw, 4.6rem); }
   .hp-sig__lead { margin-top: clamp(0.8rem, 1.8vw, 1.2rem); max-width: 54ch; line-height: 1.7; font-size: clamp(0.88rem, 0.8rem + 0.3vw, 1rem); }
   .hp-sig__cols { margin-top: clamp(1.1rem, 2.6vw, 1.75rem); display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(1.25rem, 3vw, 2.25rem); }
@@ -536,7 +552,7 @@ const open = [
   .hp-sig__extra { color: color-mix(in srgb, var(--hp-ink) 72%, transparent); }
   .hp-sig__steps { list-style: none; counter-reset: step; margin-top: 0.4rem; display: grid; gap: 0.65rem; }
   .hp-sig__steps li { counter-increment: step; position: relative; padding-left: 2.1rem; font-size: 0.82rem; line-height: 1.6; }
-  .hp-sig__steps li::before { content: counter(step); position: absolute; left: 0; top: 0.05rem; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--hp-orange); color: #fff7ea; font-size: 0.72rem; font-weight: 700; display: grid; place-items: center; }
+  .hp-sig__steps li::before { content: counter(step); position: absolute; left: 0; top: 0.05rem; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--hp-aqua); color: var(--hp-ink); font-size: 0.72rem; font-weight: 700; display: grid; place-items: center; }
   .hp-sig__tip { margin-top: clamp(1rem, 2.4vw, 1.5rem); padding: 0.85rem 1rem; border-left: 3px solid var(--hp-orange); background: color-mix(in srgb, var(--hp-orange) 8%, transparent); font-size: 0.8rem; line-height: 1.6; }
   .hp-sig__copy > .hp-btn { margin-top: clamp(1.1rem, 2.6vw, 1.6rem); }
 
@@ -548,8 +564,23 @@ const open = [
   .hp-occ__card { display: block; }
   .hp-occ__card { padding: clamp(0.5rem, 1.5vw, 1rem); transition: transform 0.15s ease; }
   .hp-occ__card:hover { transform: translateY(-3px); }
-  .hp-occ__card :global(img) { display: block; width: min(100%, 300px); height: auto; aspect-ratio: 1 / 1; object-fit: contain; margin-inline: auto; }
-  .hp-occ__name { display: block; margin-top: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em; font-size: clamp(0.7rem, 0.62rem + 0.3vw, 0.86rem); }
+  .hp-occ__ball { position: relative; display: grid; place-items: center; width: min(100%, 250px); aspect-ratio: 1; margin-inline: auto; }
+  /* the circle and the drink are separate layers: the circle sits offset behind the glass and drifts on its own */
+  .hp-occ__ball :global(.hp-occ__disc) { position: absolute; left: 50%; top: 50%; width: 100%; height: 100%; object-fit: contain; pointer-events: none; transform: translate(calc(-50% + var(--dx, 0%)), calc(-50% + var(--dy, 0%))); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .hp-occ__ball :global(.hp-occ__eng) { position: relative; display: block; width: 84%; height: auto; aspect-ratio: 1 / 1; object-fit: contain; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .hp-occ__grid li:nth-child(1) .hp-occ__ball { --dx: -9%; --dy: -3%; }
+  .hp-occ__grid li:nth-child(2) .hp-occ__ball { --dx: 8%; --dy: -4%; }
+  .hp-occ__grid li:nth-child(3) .hp-occ__ball { --dx: -6%; --dy: -2%; }
+  .hp-occ__card:hover .hp-occ__ball :global(.hp-occ__disc) { transform: translate(calc(-50% + var(--dx, 0%) * 1.7), calc(-50% + var(--dy, 0%) * 1.7)) rotate(8deg); }
+  .hp-occ__card:hover .hp-occ__ball :global(.hp-occ__eng) { transform: translateY(-6px) rotate(-2deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .hp-occ__ball :global(.hp-occ__disc), .hp-occ__ball :global(.hp-occ__eng) { transition: none; }
+  }
+  /* paint stripe bleeding in from the left edge, behind the drinks */
+  .hp-occ { position: relative; overflow-x: clip; }
+  .hp-occ__paint { position: absolute; left: -10%; top: 50%; width: min(28vw, 400px); height: auto; transform: rotate(-8deg); pointer-events: none; z-index: 0; }
+  .hp-occ .hp-wrap { position: relative; z-index: 1; }
+  .hp-occ__name { display: block; margin-top: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em; font-size: clamp(0.7rem, 0.62rem + 0.3vw, 0.86rem); }
   .hp-occ__flavor { margin: 1.5rem auto 0; max-width: 60ch; line-height: 1.7; }
 
   /* ---- reason to believe ---- */
@@ -574,7 +605,7 @@ const open = [
 
   /* ---- testimony ---- */
   .hp-tst { position: relative; background: #1a1612; color: #f6ecdc; padding: clamp(2rem, 4vw, 3.25rem) clamp(1rem, 3.2vw, 2.4rem); overflow: clip; }
-  .hp-tst__agave { position: absolute; right: 1%; top: 1.25rem; width: clamp(110px, 13vw, 200px); height: auto; filter: invert(1); opacity: 0.4; pointer-events: none; }
+  .hp-tst__agave { position: absolute; right: 1%; top: 1.25rem; width: clamp(110px, 13vw, 200px); height: auto; opacity: 0.95; pointer-events: none; }
   .hp-tst__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
   .hp-tst__media :global(img), .hp-tst__media video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #000; }
   .hp-tst__player { position: relative; }
@@ -622,13 +653,15 @@ const open = [
   .hp-prod__grid { margin-top: clamp(1.5rem, 3.5vw, 2.75rem); display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(1.5rem, 5vw, 4.5rem); align-items: center; }
   .hp-prod__bottle { position: relative; display: flex; justify-content: center; align-items: flex-end; padding: clamp(1rem, 3vw, 2rem) 0; }
   .hp-prod__ballwrap { position: absolute; inset: 0 0 4% 0; display: grid; place-items: center; pointer-events: none; }
-  .hp-prod__disc { display: block; width: min(86%, 440px); aspect-ratio: 1; border-radius: 50%; background: var(--hp-orange); }
+  .hp-prod__disc { display: block; width: min(86%, 440px); aspect-ratio: 1; border-radius: 50%; background: var(--hp-orange); box-shadow: 0 0 0 0 transparent; }
+  /* the aqua agave sits in front of the orange ball and behind the bottle */
+  .hp-prod__agave { position: absolute; left: -4%; bottom: 7%; width: 52%; height: auto; pointer-events: none; }
   .hp-prod__bottle.is-live { cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
   .hp-prod__burst { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
   .hp-prod__burst :global(.hp-prod__bit) { position: absolute; display: block; will-change: transform; }
-  .hp-prod__bottle :global(img) { position: relative; width: auto; max-width: 100%; height: clamp(400px, 52vw, 680px); object-fit: contain; }
+  .hp-prod__bottle :global(img[data-bottle]) { position: relative; width: auto; max-width: 100%; height: clamp(400px, 52vw, 680px); object-fit: contain; }
   .hp-prod__block + .hp-prod__block { margin-top: clamp(1.25rem, 3vw, 2rem); }
-  .hp-prod__block h3 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.74rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--hp-ink); }
+  .hp-prod__block h3 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.74rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--hp-aqua); }
   .hp-prod__notes > div, .hp-prod__spec > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.5rem 1rem; padding: 0.75rem 0; border-bottom: 1px solid color-mix(in srgb, var(--hp-ink) 20%, transparent); }
   .hp-prod__notes dt, .hp-prod__spec dt { font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.7rem; color: var(--hp-orange); padding-top: 0.15rem; }
   .hp-prod__notes dd, .hp-prod__spec dd { font-size: clamp(0.8rem, 0.74rem + 0.2vw, 0.9rem); line-height: 1.6; }
@@ -637,7 +670,7 @@ const open = [
   .hp-prod__price { font-weight: 700; color: var(--hp-orange); font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
   .hp-prod__price span { font-size: 0.6em; vertical-align: 0.16em; }
   .hp-prod__price small { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: var(--hp-ink); vertical-align: 0.5em; }
-  .hp-prod__story { margin-top: clamp(1.75rem, 4vw, 3rem); padding: clamp(1rem, 2.4vw, 1.75rem) clamp(1rem, 3vw, 2.5rem); border: 1px solid var(--hp-ink); background: #f7ebd5; }
+  .hp-prod__story { margin-top: clamp(1.75rem, 4vw, 3rem); padding: clamp(1rem, 2.4vw, 1.75rem) clamp(1rem, 3vw, 2.5rem); border: 1px solid var(--hp-aqua); background: color-mix(in srgb, var(--hp-aqua) 13%, var(--hp-cream)); }
   .hp-prod__flow { display: flex; align-items: center; justify-content: space-between; gap: clamp(0.75rem, 2vw, 1.5rem); max-width: 980px; margin-inline: auto; }
   .hp-prod__node { display: flex; align-items: center; gap: 0.75rem; }
   .hp-prod__node :global(img) { width: clamp(64px, 8vw, 110px); height: auto; }

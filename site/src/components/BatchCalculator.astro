@@ -118,8 +118,10 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
     --bc-card: color-mix(in srgb, #171310 14%, transparent);
     --bc-accent: #171310;
     --bc-accent-fg: #fbf3e3;
-    --bc-chip: #fff4e2;
-    --bc-chip-fg: #171310;
+    --bc-chip: #171310; /* orange theme: the active tab/option is an ink chip with an aqua edge (aqua alone is too close to the orange) */
+    --bc-chip-fg: #fbf3e3;
+    --bc-aqua: var(--aqua, #179a96);
+    --bc-chip-edge: var(--aqua, #179a96);
 
     color: var(--bc-fg);
     max-width: 560px;
@@ -147,7 +149,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
   .bc__heading { font-family: var(--font-display); text-transform: uppercase; line-height: 1; font-size: clamp(1.4rem, 1rem + 1.4vw, 2rem); margin-bottom: 0.9rem; }
 
   .bc button { font: inherit; cursor: pointer; }
-  .bc button:focus-visible, .bc input:focus-visible, .bc a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  .bc button:focus-visible, .bc input:focus-visible, .bc a:focus-visible { outline: 3px solid var(--bc-aqua); outline-offset: 3px; }
 
   .bc__tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .bc__tab {
@@ -161,7 +163,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
     font-size: 0.7rem;
     transition: background 0.15s ease, color 0.15s ease;
   }
-  .bc__tab[aria-pressed="true"] { background: var(--bc-chip); color: var(--bc-chip-fg); border-color: var(--bc-chip); }
+  .bc__tab[aria-pressed="true"] { background: var(--bc-chip); color: var(--bc-chip-fg); border-color: var(--bc-chip-edge, var(--bc-chip)); box-shadow: inset 0 0 0 1px var(--bc-chip-edge, transparent); }
 
   .bc__controls { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: flex-end; }
   .bc__label { display: block; margin-bottom: 0.4rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.66rem; }
@@ -185,7 +187,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
   .bc__seg { display: inline-flex; border: 1px solid var(--bc-line); }
   .bc__opt { width: 2.6rem; padding: 0.65em 0; background: transparent; color: inherit; font-weight: 700; }
   .bc__opt + .bc__opt { border-left: 1px solid var(--bc-line); }
-  .bc__opt[aria-pressed="true"] { background: var(--bc-chip); color: var(--bc-chip-fg); }
+  .bc__opt[aria-pressed="true"] { background: var(--bc-chip); color: var(--bc-chip-fg); box-shadow: inset 0 0 0 2px var(--bc-chip-edge, transparent); }
 
   .bc__result { margin-top: 1.1rem; padding: clamp(0.9rem, 2vw, 1.25rem); border: 1px solid var(--bc-line); background: var(--bc-card); }
   .bc__makes { font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }

@@ -12,6 +12,9 @@
   --rust-dark:    #8f3019;
   --night:        #161616;
   --engrave:      #3c4a3f;
+  /* aqua — brand accent: shapes only (circles, brush strokes, agave), never text, never solid against the orange. */
+  --aqua:         #179a96;
+  --aqua-deep:    #116f6c;
   --line:         #171310;
 
   --font-display: "Anton", "Oswald", Impact, sans-serif;
