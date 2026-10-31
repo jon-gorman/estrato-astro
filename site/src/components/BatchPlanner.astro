@@ -1,0 +1,46 @@
+---
+import BatchCalculator from "./BatchCalculator.astro";
+---
+
+{/* Home page "how much do I need?" section. Sits right after the Batch Margarita band, which already
+    carries the batch photo, so this one is just the calculator on cream. */}
+<section class="plan" id="batch-calculator" aria-labelledby="plan-title">
+  <div class="plan__wrap">
+    <header class="plan__head">
+      <p class="eyebrow">Hosting?</p>
+      <h2 class="plan__title" id="plan-title">Batch it for the table.</h2>
+      <p class="plan__lede">Tell us how many people. We&rsquo;ll scale the recipe and count the bottles.</p>
+    </header>
+
+    <BatchCalculator theme="cream" />
+  </div>
+</section>
+
+<style>
+  .plan {
+    background: var(--cream);
+    padding: clamp(3rem, 7vw, 5.5rem) calc(var(--frame-inset) + 0.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .plan__wrap { max-width: 920px; margin-inline: auto; }
+  /* the calculator is a fixed 560px column; centre it under the heading */
+  .plan__wrap :global(.bc) { margin-inline: auto; }
+
+  .plan__head { text-align: center; margin-bottom: clamp(1.5rem, 3.5vw, 2.5rem); }
+  .plan__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 1.02;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.9rem, 1rem + 3vw, 3.4rem);
+    margin: clamp(0.6rem, 1.5vw, 1rem) auto 0;
+  }
+  .plan__lede {
+    margin: clamp(0.9rem, 2vw, 1.4rem) auto 0;
+    max-width: 52ch;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.25vw, 0.95rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+</style>

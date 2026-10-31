@@ -17,6 +17,7 @@
     img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; display: block; }
     body { margin: 0 !important; padding: 0 !important; width: 100% !important; background: #f1e7d8; }
     a { color: inherit; }
+    .foot a { color: #cfc6b6 !important; text-decoration: underline !important; }
     @media only screen and (max-width: 620px) {
       .wrap { width: 100% !important; }
       .pad { padding-left: 20px !important; padding-right: 20px !important; }
@@ -128,10 +129,10 @@
               <p style="margin:0;font-family:'Courier New',Courier,monospace;font-size:11px;line-height:18px;letter-spacing:1px;color:#cfc6b6;">
                 Estrato. Enjoy responsibly. Must be 21+.
               </p>
-              <p style="margin:12px 0 0;font-family:'Courier New',Courier,monospace;font-size:11px;line-height:18px;color:#8f877b;">
+              <p class="foot" style="margin:12px 0 0;font-family:'Courier New',Courier,monospace;font-size:11px;line-height:18px;color:#8f877b;">
                 You&rsquo;re getting this because you entered the Estrato raffle at Austin Tequila Fest 2026.<br />
                 {{ organization.full_address }}<br />
-                <a href="{% unsubscribe_url %}" style="color:#cfc6b6;text-decoration:underline;">Unsubscribe</a>
+                {% unsubscribe 'Unsubscribe' %}
                 &nbsp;&middot;&nbsp;
                 <a href="https://estratomx.com/privacy/" style="color:#cfc6b6;text-decoration:underline;">Privacy</a>
               </p>
