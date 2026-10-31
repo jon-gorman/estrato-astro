@@ -18,6 +18,34 @@ async function post(path: string, body: Json) {
   if (res.status !== 202) throw new Error(`Klaviyo ${path} failed (${res.status})`);
 }
 
+/** Klaviyo list IDs (public, like the company ID above). */
+export const LISTS = {
+  eventsHalloween2026: "SZ2bGp",
+} as const;
+
+/** Subscribe a profile to email marketing and add it to a list. Phone is stored on the profile (E.164), not texted. */
+export function subscribe(
+  listId: string,
+  profile: { email: string; first_name?: string; phone_number?: string },
+  source: string,
+) {
+  return post("subscriptions", {
+    data: {
+      type: "subscription",
+      attributes: {
+        custom_source: source,
+        profile: {
+          data: {
+            type: "profile",
+            attributes: { ...profile, subscriptions: { email: { marketing: { consent: "SUBSCRIBED" } } } },
+          },
+        },
+      },
+      relationships: { list: { data: { type: "list", id: listId } } },
+    },
+  });
+}
+
 /** Record a named event against a profile (creates the profile if new). */
 export function trackEvent(
   metric: string,

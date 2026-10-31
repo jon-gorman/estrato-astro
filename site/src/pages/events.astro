@@ -1,0 +1,292 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import raffle from "../assets/events/raffle-cooler-b.jpg";
+
+/* QR landing page for Austin Tequila Fest 2026 (Sat Oct 31, Casa Chapala). The festival name is the
+   event's own name; the product itself is never described as tequila. */
+const facts = [
+  { k: "When", v: "Sat, Oct 31 · 6–10 PM" },
+  { k: "Where", v: "Casa Chapala, 9041 Research Blvd. #100, Austin" },
+  { k: "Who", v: "21+ only" },
+];
+---
+
+<Base title="Cooler and Glasses Raffle — Estrato" description="Enter the Estrato raffle at Austin Tequila Fest 2026 for a chance to win a cooler and a set of four Estrato glasses.">
+  <SiteHeader />
+
+  <section class="ev">
+    <div class="ev__hero">
+      <p class="ev__eyebrow">Austin Tequila Fest 2026</p>
+      <h1 class="ev__title">Cooler and<br />Glasses Raffle</h1>
+      <dl class="ev__facts">
+        {facts.map((f) => (
+          <div><dt>{f.k}</dt><dd>{f.v}</dd></div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="ev__wrap">
+      <div class="ev__grid">
+        <figure class="ev__media">
+          <Image
+            src={raffle}
+            alt="A green cooler with a spigot beside four Estrato rocks glasses"
+            widths={[600, 900, 1200]}
+            sizes="(max-width: 860px) 100vw, 55vw"
+            loading="eager"
+          />
+          <figcaption>The prize: a cooler and four Estrato glasses.</figcaption>
+        </figure>
+
+        <div class="ev__panel">
+          <h2 class="ev__panelhead">Enter to win</h2>
+          <p class="ev__sub">Add your details and you're in the draw. The winner is chosen in late December.</p>
+
+          <form class="ev__form" id="events-form" novalidate>
+            <div class="ev__field">
+              <label for="e-first">First name</label>
+              <input id="e-first" name="first_name" type="text" autocomplete="given-name" required />
+            </div>
+            <div class="ev__field">
+              <label for="e-phone">Phone</label>
+              <input id="e-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555" required />
+            </div>
+            <div class="ev__field">
+              <label for="e-email">Email</label>
+              <input id="e-email" name="email" type="email" autocomplete="email" required />
+            </div>
+
+            <!-- spam trap: real visitors never see or fill this -->
+            <div class="ev__hp" aria-hidden="true">
+              <label for="e-leave-blank">Leave this field empty</label>
+              <input id="e-leave-blank" name="leave_blank" type="text" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore />
+            </div>
+
+            <button class="ev__submit" type="submit">Enter the raffle</button>
+            <p class="ev__status" role="status" aria-live="polite" data-status></p>
+            <p class="ev__fine">
+              Must be 21 or older to enter. By entering you agree to receive emails from Estrato about this raffle and
+              future events. Unsubscribe any time. See our{" "}
+              <a href="/privacy/">Privacy Policy</a>.
+            </p>
+          </form>
+
+          <div class="ev__done" data-done hidden>
+            <p class="ev__donehead">You're entered.</p>
+            <p class="ev__donebody">Good luck! The winner is chosen in late December. Check your inbox for a confirmation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .ev { background: var(--cream); }
+
+  /* event masthead: dark band, big display title, the facts a scanner needs first */
+  .ev__hero {
+    background: var(--night);
+    color: var(--cream-warm);
+    text-align: center;
+    padding: clamp(2rem, 6vw, 4rem) calc(var(--frame-inset) + 0.5rem) clamp(1.75rem, 4.5vw, 3rem);
+    border-bottom: 6px solid var(--rust);
+  }
+  .ev__eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: clamp(0.68rem, 0.6rem + 0.35vw, 0.86rem);
+    color: color-mix(in srgb, var(--cream-warm) 78%, transparent);
+  }
+  .ev__title {
+    margin-top: clamp(0.75rem, 2vw, 1.25rem);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    font-size: clamp(2.8rem, 1.2rem + 7.5vw, 6.4rem);
+  }
+  .ev__facts {
+    margin: clamp(1.25rem, 3vw, 2rem) auto 0;
+    max-width: 62rem;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    gap: 0.9rem clamp(1.5rem, 4vw, 3.5rem);
+    font-family: var(--font-mono);
+  }
+  .ev__facts dt {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--cream-warm) 62%, transparent);
+  }
+  .ev__facts dd { margin-top: 0.3rem; font-size: clamp(0.78rem, 0.7rem + 0.3vw, 0.95rem); line-height: 1.45; }
+
+  .ev__wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding: clamp(1.5rem, 4vw, 3.5rem) calc(var(--frame-inset) + 0.5rem) clamp(3rem, 7vw, 5rem);
+  }
+  .ev__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .ev__media { border: 1px solid var(--line); background: #d9d9da; }
+  .ev__media :global(img) { width: 100%; height: auto; display: block; }
+  .ev__media figcaption {
+    padding: 0.7rem 0.9rem;
+    border-top: 1px solid var(--line);
+    background: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.68rem;
+  }
+
+  .ev__panel { border: 1px solid var(--line); background: var(--cream-warm); padding: clamp(1.25rem, 3.5vw, 2.25rem); }
+  .ev__panelhead {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 1;
+    font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem);
+  }
+  .ev__sub {
+    margin: 0.6rem 0 clamp(1rem, 2.5vw, 1.5rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.82rem, 0.75rem + 0.25vw, 0.95rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .ev__form { display: grid; gap: clamp(0.9rem, 2vw, 1.25rem); }
+  .ev__field { display: grid; gap: 0.4rem; min-width: 0; }
+  .ev__field label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.68rem;
+  }
+  .ev__field input {
+    width: 100%;
+    padding: 0.85em 0.9em;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 1rem; /* 16px+ stops iOS zooming the page on focus */
+    appearance: none;
+  }
+  .ev__field input:focus { outline: 2px solid var(--rust); outline-offset: -1px; }
+  .ev__field input:user-invalid { border-color: var(--rust); }
+
+  .ev__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .ev__submit {
+    padding: 1.1em 2.6em;
+    background: var(--rust);
+    color: var(--cream-warm);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.85rem;
+    text-align: center;
+    transition: background 0.15s ease;
+  }
+  .ev__submit:hover { background: var(--rust-dark); }
+  .ev__submit:disabled { opacity: 0.6; cursor: default; }
+  .ev__status { min-height: 1.2em; font-family: var(--font-mono); font-size: 0.8rem; color: var(--rust); }
+  .ev__fine { font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.6; color: var(--ink-soft); }
+  .ev__fine a { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+
+  /* the grid display above would otherwise override the hidden attribute */
+  .ev__form[hidden] { display: none; }
+  .ev__done[hidden] { display: none; }
+  .ev__donehead {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.95;
+    font-size: clamp(2.2rem, 1.2rem + 3.5vw, 3.6rem);
+  }
+  .ev__donebody { margin-top: 0.9rem; font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
+
+  @media (max-width: 860px) {
+    .ev__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .ev__facts { grid-template-columns: 1fr 1fr; gap: 0.8rem 1rem; }
+    .ev__facts > div:nth-child(2) { grid-column: 1 / -1; order: 3; } /* long address goes full width, below When / Who */
+  }
+</style>
+
+<script>
+  import { subscribe, LISTS } from "../lib/klaviyo";
+
+  const form = document.querySelector<HTMLFormElement>("#events-form");
+  const done = document.querySelector<HTMLElement>("[data-done]");
+  const status = document.querySelector<HTMLElement>("[data-status]");
+
+  // Klaviyo needs E.164. US numbers: 10 digits, or 11 starting with 1.
+  function toE164(raw: string) {
+    const digits = raw.replace(/\D/g, "");
+    if (raw.trim().startsWith("+") && digits.length >= 8 && digits.length <= 15) return `+${digits}`;
+    if (digits.length === 10) return `+1${digits}`;
+    if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+    return null;
+  }
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    // honeypot filled in → a bot (or aggressive autofill); don't send, and say so
+    if (String(data.get("leave_blank") ?? "").trim()) {
+      if (status) status.textContent = "That didn't go through. Please refresh the page and try again.";
+      return;
+    }
+
+    const get = (k: string) => String(data.get(k) ?? "").trim();
+    const phone = toE164(get("phone"));
+    if (!phone) {
+      if (status) status.textContent = "Please enter a valid phone number, including area code.";
+      return;
+    }
+
+    const submit = form.querySelector<HTMLButtonElement>(".ev__submit");
+    if (submit) submit.disabled = true;
+    if (status) status.textContent = "";
+
+    try {
+      await subscribe(
+        LISTS.eventsHalloween2026,
+        { email: get("email"), first_name: get("first_name"), phone_number: phone },
+        "Cooler and glasses raffle",
+      );
+      form.hidden = true;
+      if (done) {
+        done.hidden = false;
+        done.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    } catch (err) {
+      console.error("Events signup failed", err);
+      if (status) status.textContent = "Something went wrong. Please try again in a moment.";
+      if (submit) submit.disabled = false;
+    }
+  });
+</script>
