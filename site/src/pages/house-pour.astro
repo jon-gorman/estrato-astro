@@ -37,7 +37,7 @@ const margarita = (await getEntry("cocktails", "margarita"))!;
 const m = margarita.data;
 const cant = (await getEntry("cocktails", "cantarito"))!.data;
 const cantExtras = ["Ice", "Tajín (chili-lime seasoning) or coarse salt for the rim", "Lime, orange, and grapefruit wedges to garnish"];
-// "2 oz Estrato · 1 oz orange liqueur · 1 oz fresh lime juice"
+// "1 1/2 oz Estrato · 1/2 oz Orange liqueur · 1 oz Fresh lime juice · 1/2 oz Light agave syrup"
 const recipeLine = m.build.map((b) => `${b.amount} ${b.item}`).join(" · ");
 
 const occasions = [

@@ -23,13 +23,15 @@ export const RECIPES: Record<string, Recipe> = {
   margarita: {
     label: "Pitcher Margarita",
     title: "Pitcher Margarita",
+    // 3 : 1 : 2 : 1 — 1½ oz Estrato, ½ oz orange liqueur, 1 oz lime, ½ oz agave syrup (3½ oz a drink)
     ingredients: [
-      { name: "Estrato", oz: 2, estrato: true },
-      { name: "Orange liqueur", oz: 1 },
+      { name: "Estrato", oz: 1.5, estrato: true },
+      { name: "Orange liqueur", oz: 0.5 },
       { name: "Fresh lime juice", oz: 1, fruit: { oz: 1, one: "lime", many: "limes" } },
+      { name: "Light agave syrup", oz: 0.5 },
     ],
-    extras: ["Lime wheels", "Coarse salt for the rims", "Ice"],
-    method: "Chill everything, stir in a large pitcher, and taste. Pour over fresh ice into salt-rimmed glasses.",
+    extras: ["Dehydrated or fresh lime to garnish", "Coarse salt for the rims (optional)", "Ice"],
+    method: "Stir everything together in a large pitcher or dispenser and keep it cold. To serve, shake about 4 oz with ice and pour, ice and all, into a glass.",
     href: "/cocktails/batch-margarita/",
   },
   cantarito: {

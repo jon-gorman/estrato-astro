@@ -22,7 +22,7 @@
    loaded by Base.astro, so no extra setup is needed. Works without JavaScript (shows the
    starting list); the controls come alive when the script runs. */
 import { RECIPES, RECIPE_ORDER, DRINKS_OPTIONS, PEOPLE_MIN, PEOPLE_MAX } from "../data/batch-recipes";
-import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks } from "../lib/batch-calc";
+import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks, fmt } from "../lib/batch-calc";
 import { BOTTLE_PRICE } from "../lib/bottlenexus";
 
 interface Props {
@@ -104,7 +104,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
   )}
 
   <p class="bc__fine">
-    A 750&nbsp;ml bottle makes about 12 drinks at 2&nbsp;oz. ${BOTTLE_PRICE} per bottle. Please enjoy responsibly.
+    A 750&nbsp;ml bottle makes about <span data-bc="perbottle">{r.perBottle}</span> drinks at <span data-bc="pour">{fmt(r.pourOz)}</span>&nbsp;oz of Estrato. ${BOTTLE_PRICE} per bottle. Please enjoy responsibly.
   </p>
   <a class="bc__link" data-bc="link" href={r.recipe.href} hidden={!r.recipe.href}>Full recipe &rarr;</a>
 </section>
@@ -241,7 +241,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
 <script>
   import { gsap } from "gsap";
   import { RECIPES } from "../data/batch-recipes";
-  import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks, shareMessage } from "../lib/batch-calc";
+  import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks, shareMessage, fmt } from "../lib/batch-calc";
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -270,6 +270,8 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
       $('[data-bc="method"]').textContent = r.method;
       $('[data-bc="bottles"]').textContent = bottleLabel(r.bottles);
       $('[data-bc="total"]').textContent = r.total;
+      $('[data-bc="perbottle"]').textContent = String(r.perBottle);
+      $('[data-bc="pour"]').textContent = fmt(r.pourOz);
 
       const link = $<HTMLAnchorElement>('[data-bc="link"]');
       link.hidden = !r.recipe.href;

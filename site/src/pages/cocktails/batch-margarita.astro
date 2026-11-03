@@ -3,22 +3,25 @@ import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
+import BatchCalculator from "../../components/BatchCalculator.astro";
 import photo from "../../assets/batch/batch-photo.jpg";
 import citrus from "../../assets/batch/batch-citrus.png";
 
 const ingredients = [
-  "16 oz Estrato",
-  "8 oz orange liqueur",
+  "12 oz Estrato",
+  "4 oz orange liqueur",
   "8 oz fresh lime juice",
+  "4 oz light agave syrup",
   "Lime wheels",
-  "Coarse salt",
+  "Coarse salt (optional)",
   "Ice",
 ];
 
+
 const steps = [
-  { h: "Chill everything", p: "Place the Estrato, orange liqueur, and lime juice in the refrigerator before mixing. Starting cold keeps the batch crisp without unnecessary dilution." },
-  { h: "Build the pitcher", p: "Add the Estrato, orange liqueur, and fresh lime juice to a large pitcher. Stir until everything is thoroughly combined." },
-  { h: "Taste and adjust", p: "Taste before adding ice. If you prefer a slightly softer Margarita, stir in 4–6 ounces of cold water. Add a small amount of agave syrup only if you want additional sweetness." },
+  { h: "Chill everything", p: "Place the Estrato, orange liqueur, agave syrup, and lime juice in the refrigerator before mixing. Starting cold keeps the batch crisp without unnecessary dilution." },
+  { h: "Build the pitcher", p: "Add the Estrato, orange liqueur, fresh lime juice, and agave syrup to a large pitcher. Stir until everything is thoroughly combined." },
+  { h: "Taste and adjust", p: "Taste before adding ice. If you prefer a slightly softer Margarita, stir in 4–6 ounces of cold water. Prefer it a touch sweeter? Stir in a little more agave syrup." },
   { h: "Prep the glasses", p: "Run a lime wedge around the rim of each glass and dip it into coarse salt. Fill the glasses with fresh ice." },
   { h: "Pour and serve", p: "Add several lime wheels and ice to the pitcher immediately before serving. Stir briefly, pour over fresh ice, and serve." },
 ];
@@ -26,7 +29,7 @@ const steps = [
 const variations = [
   { h: "Spicy", p: "Add sliced jalapeño to the pitcher and let it rest for 10–15 minutes before serving. Taste frequently and remove the peppers when the heat feels right." },
   { h: "Fruit forward", p: "Add a small amount of fresh grapefruit, blood orange, watermelon, or pineapple juice. Keep the lime present so the drink stays bright." },
-  { h: "A little sweeter", p: "Stir in agave syrup half an ounce at a time. Taste after each addition—the orange liqueur already brings sweetness." },
+  { h: "A little sweeter", p: "Stir in more agave syrup a quarter ounce at a time. Taste after each addition." },
   { h: "Top it with bubbles", p: "Finish each glass with a short pour of sparkling mineral water for a lighter, longer drink." },
 ];
 
@@ -51,8 +54,8 @@ const needs = [
         <h1 class="bm__title">Batch Margarita</h1>
         <p class="bm__deck">Eight drinks. One easy pour.</p>
         <p class="bm__intro">
-          The classic Margarita&mdash;made for the whole table. Bright lime, orange
-          liqueur, and Estrato come together in one pitcher, so you can spend less
+          The classic Margarita&mdash;made for the whole table. Bright lime, a little
+          orange liqueur and agave, and Estrato come together in one pitcher, so you can spend less
           time measuring and more time with everyone else.
         </p>
       </header>
@@ -82,16 +85,24 @@ const needs = [
         </ol>
       </section>
 
+      <section class="bm__scale-it" aria-labelledby="bm-scale">
+        <p class="eyebrow">Bigger or smaller crowd?</p>
+        <h2 class="bm__h" id="bm-scale">Scale it to your table</h2>
+        <p class="bm__scalelede">Same recipe, any size. Tell us how many people and we&rsquo;ll do the math and count the bottles.</p>
+        <BatchCalculator theme="cream" recipes={["margarita"]} />
+      </section>
+
       <section class="bm__ratio" aria-labelledby="bm-ratio">
         <Image class="bm__ratiobg" src={citrus} alt="" widths={[600, 1000]} sizes="50vw" loading="lazy" />
         <h2 class="bm__h" id="bm-ratio">The ratio</h2>
-        <p class="bm__big">2 : 1 : 1</p>
+        <p class="bm__big">3 : 1 : 2 : 1</p>
         <ul>
-          <li>2 parts Estrato</li>
+          <li>3 parts Estrato</li>
           <li>1 part orange liqueur</li>
-          <li>1 part fresh lime</li>
+          <li>2 parts fresh lime</li>
+          <li>1 part light agave syrup</li>
         </ul>
-        <p class="bm__scale">Use the same ratio to make two drinks or twenty.</p>
+        <p class="bm__scale">Use the same ratio to make two drinks or fifty.</p>
       </section>
 
       <section class="bm__mods" aria-labelledby="bm-yours">
@@ -111,7 +122,7 @@ const needs = [
           <h2 class="bm__h" id="bm-notes">Batch notes</h2>
           <p>For the freshest flavor, mix the batch no more than a few hours before serving and keep it refrigerated. Wait to add ice until guests arrive so the pitcher does not become overly diluted.</p>
           <p>Fresh lime matters here. Bottled lime juice will not have the same bright flavor or aroma.</p>
-          <p>For a smaller group, cut every measurement in half. For a larger gathering, keep the 2:1:1 ratio and scale as needed.</p>
+          <p>For a smaller group, cut every measurement in half. For a larger gathering, keep the ratio and scale as needed.</p>
         </section>
         <section aria-labelledby="bm-need">
           <h2 class="bm__h" id="bm-need">What you&rsquo;ll need</h2>
@@ -245,6 +256,18 @@ const needs = [
   }
   .bm__steps p {
     margin-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 0.72rem + 0.2vw, 0.92rem);
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  .bm__scale-it { margin-top: clamp(2.25rem, 5vw, 3.5rem); }
+  .bm__scale-it .bm__h { margin-top: 0.5rem; }
+  .bm__scale-it :global(.bc__link) { display: none; } /* it would link to this same page */
+  .bm__scalelede {
+    margin: 0.8rem 0 1.25rem;
     font-family: var(--font-mono);
     font-size: clamp(0.8rem, 0.72rem + 0.2vw, 0.92rem);
     line-height: 1.65;

@@ -39,11 +39,13 @@ export function compute(recipeKey: string, peopleIn: number, drinksIn: number) {
     };
   });
 
-  const estratoOz = (recipe.ingredients.find((i) => i.estrato)?.oz ?? 2) * drinks;
+  const pourOz = recipe.ingredients.find((i) => i.estrato)?.oz ?? 2; // Estrato per drink
+  const estratoOz = pourOz * drinks;
   const bottles = Math.max(1, Math.ceil(estratoOz / OZ_PER_BOTTLE - 1e-9));
   const total = (bottles * BOTTLE_PRICE).toFixed(2);
+  const perBottle = Math.floor(OZ_PER_BOTTLE / pourOz + 1e-9); // whole drinks from one 750 ml bottle
 
-  return { recipe, people, perPerson, drinks, rows, estratoOz, bottles, total, extras: recipe.extras, method: recipe.method };
+  return { recipe, people, perPerson, drinks, rows, estratoOz, pourOz, perBottle, bottles, total, extras: recipe.extras, method: recipe.method };
 }
 
 /** Ingredient list markup (shared by the build and the browser). */
