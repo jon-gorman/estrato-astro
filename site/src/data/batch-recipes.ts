@@ -31,7 +31,7 @@ export const RECIPES: Record<string, Recipe> = {
       { name: "Light agave syrup", oz: 0.5 },
     ],
     extras: ["Dehydrated or fresh lime to garnish", "Coarse salt for the rims (optional)", "Ice"],
-    method: "Stir everything together in a large pitcher or dispenser and keep it cold. To serve, shake about 4 oz with ice and pour, ice and all, into a glass.",
+    method: "Stir everything together in a large pitcher or dispenser and keep it cold. To serve, shake about 3½ oz with ice and pour, ice and all, into a glass.",
     href: "/cocktails/batch-margarita/",
   },
   cantarito: {
