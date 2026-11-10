@@ -25,9 +25,6 @@ import church from "../assets/house/church.png";
 import bottle from "../assets/products/bottle-750-fullshadow.png";
 import agaveArt from "../assets/process/agave.png";
 import agaveAqua from "../assets/house/agave-photo.png";
-import cookAqua from "../assets/house/cook-aqua.png";
-import distillAqua from "../assets/house/distill-aqua.png";
-import churchAqua from "../assets/house/church-aqua.png";
 import paintStripe from "../assets/house/brush-aqua.png";
 import circleAqua from "../assets/house/circle-aqua.png";
 import cookArt from "../assets/process/cook.png";
@@ -224,27 +221,11 @@ const open = [
               </div>
             </div>
           </div>
-
-          <div class="hp-prod__story">
-            <div class="hp-prod__flow">
-              <div class="hp-prod__node">
-                <Image src={cookAqua} alt="" widths={[200, 360]} sizes="130px" />
-                <p><strong>100%</strong>Blue agave</p>
-              </div>
-              <span class="hp-prod__arrow" aria-hidden="true">&#8594;</span>
-              <div class="hp-prod__node">
-                <Image src={churchAqua} alt="" widths={[260, 420]} sizes="150px" />
-                <p><strong>Produced</strong>Tequila, Jalisco</p>
-              </div>
-              <span class="hp-prod__arrow" aria-hidden="true">&#8594;</span>
-              <div class="hp-prod__node">
-                <Image src={distillAqua} alt="" widths={[200, 360]} sizes="130px" />
-                <p><strong>Double</strong>distilled</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
+
+      <!-- CUSTOMER QUOTES -->
+      <CustomerQuotes quotes={content.customerQuotes} />
 
       <!-- SIGNATURE: THE CANTARITO -->
       <section class="hp-sig" id="cantarito">
@@ -389,9 +370,6 @@ const open = [
           </div>
         </div>
       </section>
-
-      <!-- CUSTOMER QUOTES -->
-      <CustomerQuotes quotes={content.customerQuotes} />
 
       <!-- BATCH COCKTAILS -->
       <section class="hp-batch" id="batch">
@@ -674,13 +652,6 @@ const open = [
   .hp-prod__price { font-weight: 700; color: var(--hp-orange); font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
   .hp-prod__price span { font-size: 0.6em; vertical-align: 0.16em; }
   .hp-prod__price small { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: var(--hp-ink); vertical-align: 0.5em; }
-  .hp-prod__story { margin-top: clamp(1.75rem, 4vw, 3rem); padding: clamp(1rem, 2.4vw, 1.75rem) clamp(1rem, 3vw, 2.5rem); border: 1px solid var(--hp-aqua); background: color-mix(in srgb, var(--hp-aqua) 13%, var(--hp-cream)); }
-  .hp-prod__flow { display: flex; align-items: center; justify-content: space-between; gap: clamp(0.75rem, 2vw, 1.5rem); max-width: 980px; margin-inline: auto; }
-  .hp-prod__node { display: flex; align-items: center; gap: 0.75rem; }
-  .hp-prod__node :global(img) { width: clamp(64px, 8vw, 110px); height: auto; }
-  .hp-prod__node p { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; }
-  .hp-prod__node strong { display: block; }
-  .hp-prod__arrow { font-size: 1.4rem; }
 
   /* ---- faq ---- */
   .hp-faq { padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3.2vw, 2.4rem) clamp(2.5rem, 5vw, 4rem); }
@@ -716,9 +687,6 @@ const open = [
     .hp-hero__copy { width: 100%; }
     .hp-occ__grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; }
     .hp-prod__grid { grid-template-columns: 1fr; }
-    .hp-prod__flow { flex-direction: column; align-items: center; text-align: center; }
-    .hp-prod__node { flex-direction: column; gap: 0.5rem; }
-    .hp-prod__arrow { transform: rotate(90deg); margin: 0; }
     .hp-prod__buy { justify-content: center; }
     .hp-why__corner { display: none; }
     .hp-why__head { flex-direction: column; }
