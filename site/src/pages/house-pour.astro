@@ -6,6 +6,7 @@ import LandingHeader from "../components/LandingHeader.astro";
 import LandingFooter from "../components/LandingFooter.astro";
 import Pending from "../components/Pending.astro";
 import BatchCalculator from "../components/BatchCalculator.astro";
+import CustomerQuotes from "../components/CustomerQuotes.astro";
 import { content } from "../data/house-pour";
 
 import hero from "../assets/house/hero-dinner.jpg";
@@ -348,7 +349,7 @@ const open = [
               <video controls playsinline preload="metadata" poster={content.bartenderVideo?.poster ?? pourWide.src} src={content.testimonial.videoSrc}></video>
             ) : content.bartenderVideo ? (
               <div class="hp-tst__player" data-player>
-                <video playsinline preload="none" poster={content.bartenderVideo.poster} aria-label="A bartender squeezes lime, shakes, and serves a margarita made with Estrato">
+                <video playsinline preload="none" poster={content.bartenderVideo.poster} aria-label="A bartender pours Estrato, squeezes fresh grapefruit, shakes, and garnishes three cocktails">
                   <source src={content.bartenderVideo.src} type="video/mp4" />
                 </video>
                 <button class="hp-tst__play" type="button" aria-label="Play video">
@@ -363,14 +364,18 @@ const open = [
           </div>
           <div class="hp-tst__copy">
             <h2 class="hp-h2 hp-tst__title">Why it stays<br />behind the bar.</h2>
-            {content.testimonial.quote && content.testimonial.name ? (
-              <blockquote class="hp-tst__quote">
+            {content.testimonial.quote ? (
+              <blockquote class="hp-tst__quote hp-tst__quote--lead">
                 <span class="hp-tst__mark" aria-hidden="true">&ldquo;</span>
                 <p>{content.testimonial.quote}</p>
-                <footer>
-                  <strong>{content.testimonial.name}</strong>
-                  {content.testimonial.account && <span>{content.testimonial.account}</span>}
-                </footer>
+                {content.testimonial.name ? (
+                  <footer>
+                    <strong>{content.testimonial.name}</strong>
+                    {content.testimonial.account && <span>{content.testimonial.account}</span>}
+                  </footer>
+                ) : (
+                  <footer><Pending inline label="The bartender's name and account." /></footer>
+                )}
               </blockquote>
             ) : reviewFull ? (
               <div class="hp-tst__quote">
@@ -381,15 +386,12 @@ const open = [
             ) : (
               <Pending label="The exact, approved quote naming the drink and why they reorder, plus the bartender's name, account, and city." />
             )}
-            {content.customerQuote && (
-              <blockquote class="hp-tst__quote hp-tst__quote--alt">
-                <p>{content.customerQuote.quote}</p>
-                <footer><strong>{content.customerQuote.by}</strong></footer>
-              </blockquote>
-            )}
           </div>
         </div>
       </section>
+
+      <!-- CUSTOMER QUOTES -->
+      <CustomerQuotes quotes={content.customerQuotes} />
 
       <!-- BATCH COCKTAILS -->
       <section class="hp-batch" id="batch">
@@ -606,10 +608,11 @@ const open = [
   /* ---- testimony ---- */
   .hp-tst { position: relative; background: #1a1612; color: #f6ecdc; padding: clamp(2rem, 4vw, 3.25rem) clamp(1rem, 3.2vw, 2.4rem); overflow: clip; }
   .hp-tst__agave { position: absolute; right: 1%; top: 1.25rem; width: clamp(110px, 13vw, 200px); height: auto; opacity: 0.95; pointer-events: none; }
-  .hp-tst__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+  .hp-tst__grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(240px, 380px) 1fr; justify-content: center; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
   .hp-tst__media :global(img), .hp-tst__media video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #000; }
-  .hp-tst__player { position: relative; }
-  .hp-tst__player video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #000; }
+  /* the bartender clip is vertical (9:16), so it gets a phone-shaped player instead of the 16:10 crop */
+  .hp-tst__player { position: relative; width: min(100%, 380px); margin-inline: auto; }
+  .hp-tst__player video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; background: #000; }
   .hp-tst__play {
     position: absolute;
     inset: 0;
@@ -633,7 +636,8 @@ const open = [
   .hp-tst__quote p { font-size: clamp(0.82rem, 0.76rem + 0.25vw, 0.96rem); line-height: 1.65; letter-spacing: 0.02em; }
   .hp-tst__quote footer { margin-top: 0.9rem; display: grid; gap: 0.15rem; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
   .hp-tst__quote footer span { color: color-mix(in srgb, #f6ecdc 65%, transparent); }
-  .hp-tst__quote--alt { margin-top: 1.25rem; }
+  /* the bartender's line leads the section, so it reads larger than the review paragraph */
+  .hp-tst__quote--lead p { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.12; font-size: clamp(1.35rem, 1rem + 1.5vw, 2.1rem); }
 
   /* ---- batch cocktails ---- */
   .hp-batch { display: grid; grid-template-columns: 1fr 1fr; background: var(--hp-orange); color: #fff4e2; }

@@ -40,23 +40,36 @@ export const content = {
   // approved sensory description for the FAQ (brand-approved; the review above is used until set)
   sensory: "Fresh and expressive on the nose, led by cooked agave with floral and citrus notes. Silky on the palate, with mature agave, honey, vanilla, and a refreshing mineral character. The finish is long, clean, and persistent." as string | null,
 
-  // Branded footage of a bartender making a margarita with the Estrato bottle (Seedance, generated
-  // from the stock bartender photo). It is product footage, NOT an account testimonial — do not
-  // caption it as a real account or bartender. Replace/add a real account video via testimonial.videoSrc.
+  // Real footage of a bartender making Estrato cocktails (our own shoot; vertical 9:16, with a music bed).
+  // It is brand footage, NOT an account testimonial — do not caption it as a named account or bartender.
+  // Add a real account video via testimonial.videoSrc.
   bartenderVideo: {
-    src: "/video/bartender-margarita.mp4",
-    poster: "/video/bartender-margarita-poster.jpg",
+    src: "/video/estrato-bartender.mp4",
+    poster: "/video/estrato-bartender-poster.jpg",
   } as { src: string; poster: string } | null,
 
-  // bartender at an account that has reordered Estrato
+  // bartender quote (supplied 2026-11-10). Account/city is optional: add it to show it under the name.
   testimonial: {
-    quote: null as string | null, // exact, approved quote
-    name: null as string | null, // bartender's name
+    quote: "The best bottle on the back bar isn\u2019t always the most expensive. It\u2019s the one that works in the drink." as string | null, // exact, approved quote
+    name: "Mariana G." as string | null, // bartender's name
     account: null as string | null, // account name, city
     videoSrc: null as string | null, // mp4 path under /public, or null
   },
-  // optional second quote from a customer who knew it was an agave spirit
-  customerQuote: null as { quote: string; by: string } | null,
+  // customer quotes (supplied 2026-11-10; names confirmed). `by` is optional: when null the line is left out.
+  customerQuotes: [
+    {
+      quote: "We made Cantaritos for friends, and Estrato worked beautifully with the fresh citrus. Easy to see this becoming our go-to cocktail bottle.",
+      by: "Alex M.",
+    },
+    {
+      quote: "I was skeptical at $16.99, but I really enjoyed it in cocktails. A welcome find for the bar cart.",
+      by: "Danielle R.",
+    },
+    {
+      quote: "For the price you can\u2019t go wrong. Everyone loved the cocktails I made with it.",
+      by: "Chris T.",
+    },
+  ] as { quote: string; by: string | null }[],
 
   // tasting note for the margarita recipe
   tastingNote: null as string | null,

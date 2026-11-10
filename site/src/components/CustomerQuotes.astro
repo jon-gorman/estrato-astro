@@ -1,0 +1,85 @@
+---
+import Pending from "./Pending.astro";
+import { content } from "../data/house-pour";
+
+/* "What people are saying": customer quotes from src/data/house-pour.ts. A quote's name (`by`) is
+   shown when it is set. Until then the draft page shows a "To add" marker and the live page leaves the
+   line out, so nothing is ever attributed to someone who hasn't confirmed it. */
+interface Props { quotes: { quote: string; by: string | null }[] }
+const { quotes } = Astro.props;
+---
+
+{quotes.length > 0 && (
+  <section class="cq" aria-labelledby="cq-title">
+    <div class="cq__wrap">
+      <h2 class="cq__title" id="cq-title">What people are saying.</h2>
+      <ul class="cq__grid">
+        {quotes.map((q) => (
+          <li class="cq__card">
+            <figure>
+              <span class="cq__mark" aria-hidden="true">&ldquo;</span>
+              <blockquote><p>{q.quote}</p></blockquote>
+              {q.by ? (
+                <figcaption>{q.by}</figcaption>
+              ) : !content.publish ? (
+                <figcaption><Pending inline label="Name." /></figcaption>
+              ) : null}
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .cq {
+    background: #f7ebd5;
+    color: var(--hp-ink, #171310);
+    padding: clamp(2.25rem, 5vw, 4rem) clamp(1rem, 3.2vw, 2.4rem);
+    border-top: 1px solid var(--hp-ink, #171310);
+  }
+  .cq__wrap { max-width: 1240px; margin-inline: auto; }
+  .cq__title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.004em;
+    line-height: 0.95;
+    font-size: clamp(1.9rem, 0.9rem + 2.8vw, 3.2rem);
+  }
+  .cq__grid {
+    list-style: none;
+    margin-top: clamp(1.25rem, 3vw, 2.25rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2.5vw, 1.75rem);
+  }
+  .cq__card {
+    border: 1px solid var(--hp-ink, #171310);
+    background: var(--hp-cream, #fbf3e3);
+    padding: clamp(1.1rem, 2.5vw, 1.6rem);
+  }
+  .cq__card figure { display: flex; flex-direction: column; height: 100%; }
+  .cq__mark {
+    font-family: var(--font-display);
+    font-size: 3.4rem;
+    line-height: 0.7;
+    height: 1.4rem;
+    color: var(--hp-orange, #e4441c);
+  }
+  .cq__card blockquote { margin-top: 0.9rem; flex: 1; }
+  .cq__card p { font-size: clamp(0.84rem, 0.78rem + 0.25vw, 0.98rem); line-height: 1.65; }
+  .cq__card figcaption {
+    margin-top: 1.1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid color-mix(in srgb, var(--hp-ink, #171310) 22%, transparent);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 860px) {
+    .cq__grid { grid-template-columns: 1fr; }
+  }
+</style>
