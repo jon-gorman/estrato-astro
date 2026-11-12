@@ -7,6 +7,7 @@ import LandingFooter from "../components/LandingFooter.astro";
 import Pending from "../components/Pending.astro";
 import BatchCalculator from "../components/BatchCalculator.astro";
 import CustomerQuotes from "../components/CustomerQuotes.astro";
+import { BOTTLE_PRICE, CART_MINIMUM, PAIR_QTY } from "../lib/bottlenexus";
 import { content } from "../data/house-pour";
 
 import hero from "../assets/house/hero-dinner.jpg";
@@ -94,6 +95,8 @@ const reviewFull = r
   ? `${r.source}'s reviewers describe the nose as ${r.nose}; the palate as ${r.palate}; and the finish as ${r.finish}.`
   : null;
 const live = content.publish;
+// Bottle Nexus needs a $29.99 cart minimum, so every buy button on this page adds the two-bottle pair.
+const pairPrice = (BOTTLE_PRICE * PAIR_QTY).toFixed(2);
 
 const faqs: { q: string; a?: string; cite?: string; pending?: string | null; fallback?: string; link?: [string, string][] }[] = [
   {
@@ -117,6 +120,7 @@ const faqs: { q: string; a?: string; cite?: string; pending?: string | null; fal
     fallback: content.straight ? undefined : "A verified serving suggestion and tasting note.",
     pending: content.straight,
   },
+  { q: "Is there an online minimum?", a: `Online checkout requires a $${CART_MINIMUM} merchandise minimum. Two bottles total $${pairPrice}.` },
   { q: "Why is it $16.99?", a: content.priceReason ?? undefined, fallback: content.priceReason ? undefined : "A substantiated explanation of the price from the brand. Do not attribute savings to certification or sourcing without confirmation." },
   {
     q: "Where can I order it, and what does shipping cost?",
@@ -158,15 +162,17 @@ const open = [
 
           <div class="hp-hero__copy">
             <h1 class="hp-hero__title">Meet your next<br />house pour.</h1>
+            <p class="hp-hero__lede">Batch margaritas for your next get-together.</p>
             <p class="hp-hero__eyebrow">100% Blue Weber Agave &ndash; Produced in Jalisco</p>
             <p class="hp-hero__sub">
               Estrato is made from 100% blue agave. It's the spirit that is perfect for the cocktails you love to make&mdash;and share. Traditionally
               made, additive free, at a price that makes keeping a bottle on hand an easy decision.
             </p>
-            <p class="hp-hero__price"><span class="hp-hero__cur">$</span>16.99 <span class="hp-hero__per">per bottle</span></p>
-            <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Shop Estrato <span aria-hidden="true">&#8594;</span></button>
+            <p class="hp-hero__price"><span class="hp-hero__per">Two bottles &mdash;</span> <span class="hp-hero__cur">$</span>{pairPrice}</p>
+            <p class="hp-hero__each">${BOTTLE_PRICE} per bottle &middot; Shipping and tax additional.</p>
+            <button class="hp-btn" type="button" data-bn-add data-bn-qty={PAIR_QTY}>Get the two-bottle pair <span aria-hidden="true">&#8594;</span></button>
             <p class="hp-hero__fine">
-              750 ml{content.abv ? ` · ${content.abv}` : ""} &middot; Shipping calculated at checkout
+              750 ml{content.abv ? ` · ${content.abv}` : ""}
             </p>
             {!content.abv && <Pending inline label="ABV, confirmed against the label" />}
           </div>
@@ -216,8 +222,9 @@ const open = [
               </div>
 
               <div class="hp-prod__buy">
-                <p class="hp-prod__price"><span>$</span>16.99 <small>per bottle</small></p>
-                <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Shop Estrato <span aria-hidden="true">&#8594;</span></button>
+                <p class="hp-prod__price"><small>Two bottles &mdash;</small> <span>$</span>{pairPrice}</p>
+                <button class="hp-btn" type="button" data-bn-add data-bn-qty={PAIR_QTY}>Get the two-bottle pair <span aria-hidden="true">&#8594;</span></button>
+                <p class="hp-prod__each">${BOTTLE_PRICE} per bottle &middot; Shipping and tax additional.</p>
               </div>
             </div>
           </div>
@@ -226,6 +233,20 @@ const open = [
 
       <!-- CUSTOMER QUOTES -->
       <CustomerQuotes quotes={content.customerQuotes} />
+
+      <!-- BATCH COCKTAILS -->
+      <section class="hp-batch" id="batch">
+        <div class="hp-batch__copy">
+          <h2 class="hp-h2 hp-batch__h">Batch it for the table.</h2>
+          <p class="hp-batch__lead">Tell us how many people, and we&rsquo;ll scale the recipe and count the bottles.</p>
+
+          <BatchCalculator theme="orange" pair />
+        </div>
+        <div class="hp-batch__media" data-batch-media>
+          <Image data-recipe="margarita" src={batchPhoto} alt="A glass pitcher of margarita with lime wheels beside an Estrato Indigo bottle and four salt-rimmed glasses on a sunlit table" widths={[700, 1000, 1400]} sizes="(max-width: 860px) 100vw, 50vw" />
+          <Image data-recipe="cantarito" src={batchCantarito} alt="A glass pitcher of Cantarito with grapefruit, orange, and lime slices beside an Estrato Indigo bottle and four chili-lime-rimmed glasses on a sunlit table" widths={[700, 1000, 1400]} sizes="(max-width: 860px) 100vw, 50vw" loading="lazy" />
+        </div>
+      </section>
 
       <!-- SIGNATURE: THE CANTARITO -->
       <section class="hp-sig" id="cantarito">
@@ -263,7 +284,7 @@ const open = [
             <p class="hp-sig__tip">{cant.note}</p>
 
 
-            <button class="hp-btn" type="button" data-bn-add data-bn-qty="1">Get Estrato for your Cantarito <span aria-hidden="true">&#8594;</span></button>
+            <button class="hp-btn" type="button" data-bn-add data-bn-qty={PAIR_QTY}>Get the two-bottle pair <span aria-hidden="true">&#8594;</span></button>
           </div>
         </div>
       </section>
@@ -368,20 +389,6 @@ const open = [
               <Pending label="The exact, approved quote naming the drink and why they reorder, plus the bartender's name, account, and city." />
             )}
           </div>
-        </div>
-      </section>
-
-      <!-- BATCH COCKTAILS -->
-      <section class="hp-batch" id="batch">
-        <div class="hp-batch__copy">
-          <h2 class="hp-h2 hp-batch__h">Batch it for the table.</h2>
-          <p class="hp-batch__lead">Tell us how many people, and we&rsquo;ll scale the recipe and count the bottles.</p>
-
-          <BatchCalculator theme="orange" />
-        </div>
-        <div class="hp-batch__media" data-batch-media>
-          <Image data-recipe="margarita" src={batchPhoto} alt="A glass pitcher of margarita with lime wheels beside an Estrato Indigo bottle and four salt-rimmed glasses on a sunlit table" widths={[700, 1000, 1400]} sizes="(max-width: 860px) 100vw, 50vw" />
-          <Image data-recipe="cantarito" src={batchCantarito} alt="A glass pitcher of Cantarito with grapefruit, orange, and lime slices beside an Estrato Indigo bottle and four chili-lime-rimmed glasses on a sunlit table" widths={[700, 1000, 1400]} sizes="(max-width: 860px) 100vw, 50vw" loading="lazy" />
         </div>
       </section>
 
@@ -511,6 +518,8 @@ const open = [
   .hp-hero__price { font-weight: 700; color: #f0562c; font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
   .hp-hero__cur { font-size: 0.6em; vertical-align: 0.16em; margin-right: 0.04em; }
   .hp-hero__per { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: #fbf3e3; vertical-align: 0.5em; }
+  .hp-hero__lede { font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem); font-weight: 700; line-height: 1.4; color: #fbf3e3; text-wrap: balance; }
+  .hp-hero__each { font-size: 0.74rem; letter-spacing: 0.08em; line-height: 1.5; color: color-mix(in srgb, #fbf3e3 80%, transparent); }
   .hp-hero__fine { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, #fbf3e3 68%, transparent); }
 
   /* ---- signature Cantarito ---- */
@@ -651,6 +660,7 @@ const open = [
   .hp-prod__buy { margin-top: clamp(1.25rem, 3vw, 2rem); display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem clamp(1.25rem, 3vw, 2rem); }
   .hp-prod__price { font-weight: 700; color: var(--hp-orange); font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
   .hp-prod__price span { font-size: 0.6em; vertical-align: 0.16em; }
+  .hp-prod__each { flex-basis: 100%; font-size: 0.74rem; letter-spacing: 0.08em; line-height: 1.5; color: color-mix(in srgb, var(--hp-ink) 72%, transparent); }
   .hp-prod__price small { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: var(--hp-ink); vertical-align: 0.5em; }
 
   /* ---- faq ---- */

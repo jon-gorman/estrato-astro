@@ -12,6 +12,8 @@
      people         starting guest count (default 8)
      drinks         starting drinks per guest, 1-3 (default 2)
      share          show the "Send me this list" / Copy buttons (default true)
+     pair           sell a two-bottle minimum: when the list needs fewer than 2 bottles the button becomes
+                    "Get the two-bottle pair" (adds 2) with an "another for next time" note (default false)
      theme          "orange" (on the orange brand band), "cream" (light pages), or "dark"
      heading        optional heading shown above the controls
 
@@ -23,7 +25,7 @@
    starting list); the controls come alive when the script runs. */
 import { RECIPES, RECIPE_ORDER, DRINKS_OPTIONS, PEOPLE_MIN, PEOPLE_MAX } from "../data/batch-recipes";
 import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks, fmt } from "../lib/batch-calc";
-import { BOTTLE_PRICE } from "../lib/bottlenexus";
+import { BOTTLE_PRICE, PAIR_QTY } from "../lib/bottlenexus";
 
 interface Props {
   recipe?: string;
@@ -33,8 +35,9 @@ interface Props {
   theme?: "orange" | "cream" | "dark";
   heading?: string;
   share?: boolean;
+  pair?: boolean;
 }
-const { recipe = "margarita", recipes = [...RECIPE_ORDER], people = 8, drinks = 2, theme = "orange", heading, share = true } = Astro.props;
+const { recipe = "margarita", recipes = [...RECIPE_ORDER], people = 8, drinks = 2, theme = "orange", heading, share = true, pair = false } = Astro.props;
 
 // unique per instance so several calculators can share a page
 const g = globalThis as unknown as { __bcCount?: number };
@@ -46,7 +49,7 @@ const startKey = offered.includes(recipe) ? recipe : offered[0];
 const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
 ---
 
-<section class="bc" data-batch-calc data-theme={theme} data-recipe={startKey} data-people={r.people} data-drinks={r.perPerson}>
+<section class="bc" data-batch-calc data-theme={theme} data-pair={pair ? "true" : undefined} data-recipe={startKey} data-people={r.people} data-drinks={r.perPerson}>
   {heading && <h3 class="bc__heading">{heading}</h3>}
 
   {offered.length > 1 && (
@@ -90,9 +93,14 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
       <strong data-bc="bottles">{bottleLabel(r.bottles)}</strong>
       <span class="bc__need-price">&middot; $<span data-bc="total">{r.total}</span></span>
     </p>
-    <button type="button" class="bc__cta" data-bn-add data-bn-qty={r.bottles} data-bc="cta">
-      Add {bottleLabel(r.bottles)} to cart <span aria-hidden="true">&#8594;</span>
+    <button type="button" class="bc__cta" data-bn-add data-bn-qty={pair ? Math.max(PAIR_QTY, r.bottles) : r.bottles} data-bc="cta">
+      {pair && r.bottles < PAIR_QTY ? "Get the two-bottle pair" : `Add ${bottleLabel(r.bottles)} to cart`} <span aria-hidden="true">&#8594;</span>
     </button>
+    {pair && (
+      <p class="bc__pair" data-bc="pair" hidden={r.bottles >= PAIR_QTY}>
+        One for this gathering. Another for next time. <strong>Two bottles &middot; ${(BOTTLE_PRICE * PAIR_QTY).toFixed(2)}</strong>
+      </p>
+    )}
   </div>
 
   {share && (
@@ -104,7 +112,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
   )}
 
   <p class="bc__fine">
-    A 750&nbsp;ml bottle makes about <span data-bc="perbottle">{r.perBottle}</span> drinks at <span data-bc="pour">{fmt(r.pourOz)}</span>&nbsp;oz of Estrato. ${BOTTLE_PRICE} per bottle. Please enjoy responsibly.
+    A 750&nbsp;ml bottle makes about <span data-bc="perbottle">{r.perBottle}</span> drinks at <span data-bc="pour">{fmt(r.pourOz)}</span>&nbsp;oz of Estrato. ${BOTTLE_PRICE} per bottle.{pair ? " Shipping and tax additional." : ""} Please enjoy responsibly.
   </p>
   <a class="bc__link" data-bc="link" href={r.recipe.href} hidden={!r.recipe.href}>Full recipe &rarr;</a>
 </section>
@@ -216,6 +224,9 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
   }
   .bc__cta:hover { filter: brightness(1.2); }
   .bc__cta:disabled { opacity: 0.6; cursor: default; }
+  .bc__pair { flex-basis: 100%; font-size: 0.74rem; line-height: 1.5; color: var(--bc-muted); }
+  .bc__pair strong { color: var(--bc-fg); }
+  .bc__pair[hidden] { display: none; }
   .bc[data-theme="orange"] .bc__cta:hover { filter: brightness(1.35); }
 
   .bc__share { margin-top: 0.9rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
@@ -241,6 +252,7 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
 <script>
   import { gsap } from "gsap";
   import { RECIPES } from "../data/batch-recipes";
+  import { PAIR_QTY } from "../lib/bottlenexus";
   import { compute, rowsHtml, extrasHtml, bottleLabel, clampPeople, clampDrinks, shareMessage, fmt } from "../lib/batch-calc";
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -277,8 +289,12 @@ const r = compute(startKey, clampPeople(people), clampDrinks(drinks));
       link.hidden = !r.recipe.href;
       if (r.recipe.href) link.href = r.recipe.href;
 
-      cta.dataset.bnQty = String(r.bottles);
-      if (!cta.disabled) cta.innerHTML = `Add ${bottleLabel(r.bottles)} to cart <span aria-hidden="true">&#8594;</span>`;
+      const pairMode = root.dataset.pair === "true";
+      const short = pairMode && r.bottles < PAIR_QTY; // needs 1 bottle: offer the pair instead
+      cta.dataset.bnQty = String(pairMode ? Math.max(PAIR_QTY, r.bottles) : r.bottles);
+      if (!cta.disabled) cta.innerHTML = `${short ? "Get the two-bottle pair" : `Add ${bottleLabel(r.bottles)} to cart`} <span aria-hidden="true">&#8594;</span>`;
+      const pairNote = root.querySelector<HTMLElement>('[data-bc="pair"]');
+      if (pairNote) pairNote.hidden = !short;
 
       root.querySelectorAll<HTMLElement>("[data-recipe-tab]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.recipeTab === recipe)));
       root.querySelectorAll<HTMLElement>("[data-drinks]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.drinks) === drinks)));

@@ -9,3 +9,8 @@ export const BN_PRODUCT_ID = 7652;
 // Price per 750 ml bottle. Flat — no bulk discount. Used by the batch calculator; keep in
 // step with the price shown on the pages and in the Bottle Nexus cart.
 export const BOTTLE_PRICE = 16.99;
+
+// Bottle Nexus online checkout needs a $29.99 merchandise minimum, so the house-pour page sells a
+// two-bottle pair ($33.98) instead of a single bottle.
+export const CART_MINIMUM = 29.99;
+export const PAIR_QTY = 2;
