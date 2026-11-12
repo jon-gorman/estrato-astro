@@ -163,11 +163,7 @@ const open = [
           <div class="hp-hero__copy">
             <h1 class="hp-hero__title">Meet your next<br />house pour.</h1>
             <p class="hp-hero__lede">Batch margaritas for your next get-together.</p>
-            <p class="hp-hero__eyebrow">100% Blue Weber Agave &ndash; Produced in Jalisco</p>
-            <p class="hp-hero__sub">
-              Estrato is made from 100% blue agave. It's the spirit that is perfect for the cocktails you love to make&mdash;and share. Traditionally
-              made, additive free, at a price that makes keeping a bottle on hand an easy decision.
-            </p>
+            <p class="hp-hero__eyebrow">100% Blue Weber Agave &ndash; Additive Free &ndash; Produced in Jalisco</p>
             <p class="hp-hero__price"><span class="hp-hero__per">Two bottles &mdash;</span> <span class="hp-hero__cur">$</span>{pairPrice}</p>
             <p class="hp-hero__each">${BOTTLE_PRICE} per bottle &middot; Shipping and tax additional.</p>
             <button class="hp-btn" type="button" data-bn-add data-bn-qty={PAIR_QTY}>Get the two-bottle pair <span aria-hidden="true">&#8594;</span></button>
@@ -237,7 +233,7 @@ const open = [
       <!-- BATCH COCKTAILS -->
       <section class="hp-batch" id="batch">
         <div class="hp-batch__copy">
-          <h2 class="hp-h2 hp-batch__h">Batch it for the table.</h2>
+          <h2 class="hp-h2 hp-batch__h">Perfect for Batches. Use our batch calculator!</h2>
           <p class="hp-batch__lead">Tell us how many people, and we&rsquo;ll scale the recipe and count the bottles.</p>
 
           <BatchCalculator theme="orange" pair />
@@ -293,11 +289,8 @@ const open = [
       <section class="hp-occ">
         <Image class="hp-occ__paint" src={paintStripe} alt="" widths={[600, 1000, 1400]} sizes="40vw" />
         <div class="hp-wrap">
-          <h2 class="hp-h2 hp-occ__h">Your favorite cocktail. A new go-to bottle.</h2>
-          <p class="hp-occ__p">
-            A margarita while making dinner. A paloma with friends. A ranch water on the porch. Estrato deserves a
-            place in your routine because of what it brings to your glass.
-          </p>
+          <h2 class="hp-h2 hp-occ__h">Make your favorite cocktails with Estrato.</h2>
+          <p class="hp-occ__p">Mix into a Margarita, Paloma or Ranch Water.</p>
           <ul class="hp-occ__grid">
             {occasions.map((o) => (
               <li>
@@ -514,7 +507,6 @@ const open = [
     font-size: clamp(2.7rem, 0.8rem + 4.8vw, 5rem);
   }
   .hp-hero__eyebrow { font-weight: 700; letter-spacing: 0.18em; line-height: 1.5; text-transform: uppercase; font-size: clamp(0.68rem, 0.6rem + 0.3vw, 0.86rem); }
-  .hp-hero__sub { font-size: clamp(0.82rem, 0.76rem + 0.25vw, 0.95rem); line-height: 1.65; color: color-mix(in srgb, #fbf3e3 86%, transparent); max-width: 42ch; }
   .hp-hero__price { font-weight: 700; color: #f0562c; font-size: clamp(2.2rem, 1rem + 3.4vw, 3.6rem); line-height: 1; }
   .hp-hero__cur { font-size: 0.6em; vertical-align: 0.16em; margin-right: 0.04em; }
   .hp-hero__per { font-size: 0.3em; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: #fbf3e3; vertical-align: 0.5em; }
@@ -547,7 +539,7 @@ const open = [
 
   /* ---- occasion ---- */
   .hp-occ { padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3.2vw, 2.4rem) clamp(2.5rem, 5vw, 4rem); text-align: center; }
-  .hp-occ__h { max-width: 22ch; margin-inline: auto; }
+  .hp-occ__h { max-width: 24ch; margin-inline: auto; text-wrap: balance; }
   .hp-occ__p { margin: clamp(0.8rem, 1.6vw, 1.1rem) auto 0; max-width: 60ch; line-height: 1.7; color: color-mix(in srgb, var(--hp-ink) 75%, transparent); }
   .hp-occ__grid { list-style: none; margin-top: clamp(1rem, 2.5vw, 2rem); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.8rem, 2vw, 1.5rem); }
   .hp-occ__card { display: block; }
